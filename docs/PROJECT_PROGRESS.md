@@ -29,6 +29,7 @@ Last updated: 13 July 2026
 - End-to-end path: synthetic generation → preparation → deduplication/outliers → split → baseline/advanced comparison → evaluation → save → load → prediction.
 - Generated metrics and charts are labelled synthetic.
 - Model artifacts and generated reports are ignored and used only for local verification.
+- Local Git branch: `main`; initial commit `a5f36e1` plus final deployment/CI metadata commit.
 
 ## Remaining limitations
 

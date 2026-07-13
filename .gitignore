@@ -16,4 +16,5 @@ data/interim/*
 data/processed/*
 models/*
 !models/demo_bundle.pkl
+!models/README.md
 reports/generated/*
