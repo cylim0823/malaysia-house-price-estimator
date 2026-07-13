@@ -104,6 +104,6 @@ Last updated: 13 July 2026
 - Files modified: path-bearing app/API/scripts/tests, `.gitignore`, CI compilation scope, README, roadmap, model guide, aggregate/EDA/evaluation/architecture documentation, and this progress log.
 - Tests performed: pre/post full suites, compilation, package import, CLI help, five real-data rebuild scripts, fixed aggregate prediction, model loading, artifact checksums, Streamlit AppTest and HTTP startup, obsolete/absolute path scans, and Git diff validation.
 - Test results: 57/57 tests passed before refactoring; 58/58 pass after adding the artifact-layout regression. All source, processed-data, and model checksums match their pre-move values. The fixed historical prediction and published metrics are unchanged.
-- Commit identifier: pending verified maintenance commit.
+- Commit identifier: `43607d8` (`refactor: simplify repository structure`).
 - Remaining limitations: the package retains focused helper and source-specific modules rather than collapsing them into a monolith; this preserves independent testing and existing pickle import paths. The local Codex runtime may show an ignored empty `.agents/` directory. Individual-property data/model blockers are unchanged.
 - Dependencies and blockers: no dependency changed and no new blocker was introduced.
