@@ -9,7 +9,7 @@ _PROPERTY_TYPES = {
     "flat": "Flat", "terrace": "Terraced House", "terraced house": "Terraced House",
     "semi d": "Semi-Detached House", "semi detached": "Semi-Detached House",
     "semi detached house": "Semi-Detached House", "bungalow": "Bungalow",
-    "detached house": "Bungalow", "townhouse": "Townhouse",
+    "detached house": "Bungalow", "townhouse": "Townhouse", "studio": "Studio",
 }
 _TENURES = {"freehold": "Freehold", "leasehold": "Leasehold"}
 _FURNISHING = {

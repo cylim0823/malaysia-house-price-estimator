@@ -159,9 +159,12 @@ class EndToEndTests(unittest.TestCase):
         from streamlit.testing.v1 import AppTest
         app=AppTest.from_file(str(Path(__file__).parents[1]/"app"/"streamlit_app.py"),default_timeout=10).run()
         self.assertFalse(app.exception)
-        self.assertIn("Historical Market Explorer", [item.value for item in app.radio])
+        self.assertEqual(
+            [item.label for item in app.tabs],
+            ["Historical Market Explorer", "Individual Property Estimator"],
+        )
         self.assertTrue(
-            any("does not estimate the value of a specific property" in item.value for item in app.warning)
+            any("does not estimate the exact value" in item.value for item in app.warning)
         )
         next(item for item in app.button if item.label == "Show historical quarterly average").click().run()
         self.assertFalse(app.exception)
@@ -178,15 +181,46 @@ class EndToEndTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertGreaterEqual(len(app.metric), 2)
 
-    def test_streamlit_individual_mode_is_disabled_and_data_pending(self):
+    def test_streamlit_individual_form_is_visible_and_accepts_blank_optionals(self):
         from streamlit.testing.v1 import AppTest
         app=AppTest.from_file(str(Path(__file__).parents[1]/"app"/"streamlit_app.py"),default_timeout=10).run()
-        app.radio[0].set_value("Individual Property Estimator — Data Pending").run()
         self.assertFalse(app.exception)
-        self.assertTrue(any("Individual-property prediction is not yet available" in item.value for item in app.warning))
-        pending = next(item for item in app.button if item.label == "Property-level dataset required")
-        self.assertTrue(pending.disabled)
-        self.assertEqual(len(app.metric), 0)
+        self.assertTrue(any("official NAPIC/JPPH" in item.value for item in app.success))
+        labels = {
+            item.label
+            for collection in (app.selectbox, app.text_input, app.checkbox)
+            for item in collection
+        }
+        expected = {
+            "District", "City or township", "Development or project name",
+            "Property type", "Property subtype", "Tenure", "Furnishing",
+            "Renovation status", "Property condition",
+            "I know the built-up area (sq ft)", "I know the bedrooms",
+            "I know the additional/helper bedrooms", "I know the bathrooms",
+            "I know the car parks", "I know the completion year",
+            "I know the property age (years)", "I know the asking price (rm)",
+        }
+        self.assertTrue(expected.issubset(labels), expected - labels)
+        next(item for item in app.selectbox if item.key == "property-state").select("Penang").run()
+        next(item for item in app.selectbox if item.key == "property-district").select("Timur Laut").run()
+        next(item for item in app.selectbox if item.key == "property-type").select("Condominium/Apartment").run()
+        self.assertTrue(any("Land area: Not applicable" in item.value for item in app.info))
+        self.assertTrue(any("Storeys: Not applicable" in item.value for item in app.info))
+        next(item for item in app.button if item.label == "Estimate completed transaction price").click().run()
+        self.assertFalse(app.exception)
+        self.assertTrue(any(item.label == "Estimated completed transaction price" for item in app.metric))
+        self.assertTrue(any("Missing optional information" in item.value for item in app.markdown))
+
+    def test_streamlit_landed_form_marks_floor_level_not_applicable(self):
+        from streamlit.testing.v1 import AppTest
+        app=AppTest.from_file(str(Path(__file__).parents[1]/"app"/"streamlit_app.py"),default_timeout=10).run()
+        next(item for item in app.selectbox if item.key == "property-state").select("Johor").run()
+        next(item for item in app.selectbox if item.key == "property-district").select("Johor Bahru").run()
+        next(item for item in app.selectbox if item.key == "property-type").select("2 - 2 1/2 Storey Terraced").run()
+        self.assertFalse(app.exception)
+        self.assertTrue(any("Floor level: Not applicable" in item.value for item in app.info))
+        self.assertTrue(any(item.label == "I know the land area (sq ft)" for item in app.checkbox))
+        self.assertTrue(any(item.label == "I know the storeys" for item in app.checkbox))
 
 
 if __name__=="__main__":unittest.main()
