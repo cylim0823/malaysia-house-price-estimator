@@ -1,5 +1,12 @@
 """Local Streamlit demonstration UI; all prediction logic lives in the package."""
 from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SOURCE_ROOT = PROJECT_ROOT / "src"
+if str(SOURCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOURCE_ROOT))
+
 try:
     import streamlit as st
 except ImportError as exc:
@@ -11,7 +18,7 @@ from house_price_estimator.synthetic import SYNTHETIC_LABEL
 st.set_page_config(page_title="Malaysia House Price Estimator",layout="centered")
 st.title("Malaysia House Price Estimator")
 st.warning("Synthetic demonstration only — not real Malaysian property-market data and not an official property valuation.")
-model_path=Path(__file__).resolve().parents[1]/"models"/"demo_bundle.pkl"
+model_path=PROJECT_ROOT/"models"/"demo_bundle.pkl"
 if not model_path.exists():st.error("Generate the local demonstration model first: python -m house_price_estimator train-demo --output-dir models");st.stop()
 bundle=PredictionBundle.load(model_path,trusted=True);service=PredictionService(bundle)
 st.caption(f"Dataset: synthetic-demo-v1 · Price type: {bundle.supported_price_type} · Model: {bundle.model_version}")
