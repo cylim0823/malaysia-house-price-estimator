@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_version": "synthetic-demo-v1",
+  "random_seed": 42,
+  "duplicate_tolerance": 0.75,
+  "validation_fraction": 0.2,
+  "test_fraction": 0.2,
+  "split_strategy": "time_group",
+  "minimum_segment_size": 10,
+  "supported_target_type": "asking",
+  "model_candidates": ["median", "group_median", "linear"]
+}
+

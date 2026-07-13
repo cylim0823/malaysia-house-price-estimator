@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "malaysia-house-price-estimator"
+version = "0.1.0"
+description = "Traceable data preparation for a future Malaysian residential price estimator"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3", "pandas>=2.1,<4"]
+
+[project.optional-dependencies]
+ml = ["scikit-learn>=1.4,<2", "joblib>=1.3,<2"]
+ui = ["streamlit>=1.37,<2"]
+api = ["fastapi>=0.110,<1", "uvicorn>=0.29,<1"]
+charts = ["matplotlib>=3.8,<4"]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+house-price-estimator = "house_price_estimator.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
