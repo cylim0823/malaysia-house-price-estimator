@@ -1,0 +1,213 @@
+state,district,property_type,year,quarter,transaction_count,transaction_value_rm,average_price_rm,price_type
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Semi-Detached,2017,1,1,730000.0,730000.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Semi-Detached,2017,2,6,3128000.0,521333.3333333333,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Semi-Detached,2017,3,3,2140000.0,713333.3333333334,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Semi-Detached,2017,4,6,3825000.0,637500.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Terraced,2017,1,16,7622000.0,476375.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Terraced,2017,2,16,8138000.0,508625.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Terraced,2017,3,19,9946888.0,523520.4210526316,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),1 - 1 1/2 Storey Terraced,2017,4,19,9269500.0,487868.4210526316,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Semi-Detached,2017,1,16,23224580.0,1451536.25,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Semi-Detached,2017,2,15,21174000.0,1411600.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Semi-Detached,2017,3,19,25018600.0,1316768.4210526317,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Semi-Detached,2017,4,20,27465880.0,1373294.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Terraced,2017,1,73,60630460.0,830554.2465753425,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Terraced,2017,2,66,59355946.0,899332.5151515151,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Terraced,2017,3,72,59383224.0,824767.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),2 - 2 1/2 Storey Terraced,2017,4,50,41325800.0,826516.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Cluster House,2017,1,11,1998800.0,181709.0909090909,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Cluster House,2017,2,12,2293000.0,191083.33333333334,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Cluster House,2017,3,7,1563000.0,223285.7142857143,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Cluster House,2017,4,12,3373000.0,281083.3333333333,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Condominium/Apartment,2017,1,132,73061000.0,553492.4242424242,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Condominium/Apartment,2017,2,116,67585440.0,582633.1034482758,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Condominium/Apartment,2017,3,155,79745567.0,514487.5290322581,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Condominium/Apartment,2017,4,148,83323135.0,562994.1554054054,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Detached,2017,1,9,9143797.0,1015977.4444444445,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Detached,2017,2,18,12260900.0,681161.1111111111,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Detached,2017,3,11,16434200.0,1494018.1818181819,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Detached,2017,4,14,11957500.0,854107.1428571428,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Flat,2017,1,70,19889000.0,284128.5714285714,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Flat,2017,2,74,19737500.0,266722.97297297296,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Flat,2017,3,61,15945334.0,261398.9180327869,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Flat,2017,4,85,20934666.0,246290.18823529413,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost Flat,2017,1,85,9373000.0,110270.58823529411,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost Flat,2017,2,61,7121500.0,116745.90163934426,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost Flat,2017,3,73,9081033.0,124397.71232876713,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost Flat,2017,4,70,8884300.0,126918.57142857143,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost House,2017,1,5,744000.0,148800.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost House,2017,2,8,1217000.0,152125.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost House,2017,3,2,695000.0,347500.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Low-Cost House,2017,4,1,110000.0,110000.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Town House,2017,1,5,3010000.0,602000.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Town House,2017,2,3,2079000.0,693000.0,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Town House,2017,3,3,1660000.0,553333.3333333334,completed_transaction_average
+Penang,Barat Daya (southwest island / Teluk Bahang),Town House,2017,4,1,520000.0,520000.0,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Semi-Detached,2017,1,28,11183548.0,399412.4285714286,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Semi-Detached,2017,2,38,15060064.0,396317.4736842105,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Semi-Detached,2017,3,32,10810845.0,337838.90625,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Semi-Detached,2017,4,28,7881024.0,281465.14285714284,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Terraced,2017,1,91,19276339.0,211827.9010989011,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Terraced,2017,2,112,23822500.0,212700.89285714287,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Terraced,2017,3,113,22596228.0,199966.61946902654,completed_transaction_average
+Penang,Seberang Perai Selatan,1 - 1 1/2 Storey Terraced,2017,4,121,24404138.0,201687.0909090909,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Semi-Detached,2017,1,31,14718993.0,474806.22580645164,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Semi-Detached,2017,2,104,51214220.0,492444.42307692306,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Semi-Detached,2017,3,120,63288550.0,527404.5833333334,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Semi-Detached,2017,4,64,34455249.0,538363.265625,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Terraced,2017,1,134,45435162.0,339068.37313432834,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Terraced,2017,2,100,32443217.0,324432.17,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Terraced,2017,3,111,37292074.0,335964.63063063065,completed_transaction_average
+Penang,Seberang Perai Selatan,2 - 2 1/2 Storey Terraced,2017,4,204,90786882.0,445033.73529411765,completed_transaction_average
+Penang,Seberang Perai Selatan,Cluster House,2017,1,2,620000.0,310000.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Cluster House,2017,2,5,635300.0,127060.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Cluster House,2017,3,21,1162000.0,55333.333333333336,completed_transaction_average
+Penang,Seberang Perai Selatan,Cluster House,2017,4,4,929500.0,232375.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Detached,2017,1,14,8195000.0,585357.1428571428,completed_transaction_average
+Penang,Seberang Perai Selatan,Detached,2017,2,16,6529600.0,408100.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Detached,2017,3,22,18808788.0,854944.9090909091,completed_transaction_average
+Penang,Seberang Perai Selatan,Detached,2017,4,24,11572700.0,482195.8333333333,completed_transaction_average
+Penang,Seberang Perai Selatan,Flat,2017,4,1,232000.0,232000.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost Flat,2017,1,20,1028000.0,51400.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost Flat,2017,2,19,973790.0,51252.10526315789,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost Flat,2017,3,16,710000.0,44375.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost Flat,2017,4,21,1108000.0,52761.90476190476,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost House,2017,1,31,3052340.0,98462.58064516129,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost House,2017,2,32,3310000.0,103437.5,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost House,2017,3,31,3338000.0,107677.41935483871,completed_transaction_average
+Penang,Seberang Perai Selatan,Low-Cost House,2017,4,33,3563800.0,107993.93939393939,completed_transaction_average
+Penang,Seberang Perai Selatan,Town House,2017,1,5,290000.0,58000.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Town House,2017,2,3,175500.0,58500.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Town House,2017,3,6,364500.0,60750.0,completed_transaction_average
+Penang,Seberang Perai Selatan,Town House,2017,4,5,327000.0,65400.0,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Semi-Detached,2017,1,21,6262000.0,298190.4761904762,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Semi-Detached,2017,2,27,9742613.0,360837.51851851854,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Semi-Detached,2017,3,33,9683468.0,293438.42424242425,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Semi-Detached,2017,4,24,8868148.0,369506.1666666667,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Terraced,2017,1,105,24670000.0,234952.38095238095,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Terraced,2017,2,103,21832667.0,211967.64077669903,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Terraced,2017,3,81,19890000.0,245555.55555555556,completed_transaction_average
+Penang,Seberang Perai Tengah,1 - 1 1/2 Storey Terraced,2017,4,89,19212300.0,215868.5393258427,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Semi-Detached,2017,1,65,38469388.0,591836.7384615385,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Semi-Detached,2017,2,69,44406337.0,643570.1014492754,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Semi-Detached,2017,3,54,31856574.0,589936.5555555555,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Semi-Detached,2017,4,59,37131918.0,629354.5423728813,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Terraced,2017,1,155,63642272.0,410595.30322580645,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Terraced,2017,2,175,71528073.0,408731.84571428574,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Terraced,2017,3,188,80362992.0,427462.72340425535,completed_transaction_average
+Penang,Seberang Perai Tengah,2 - 2 1/2 Storey Terraced,2017,4,161,66890520.0,415469.06832298136,completed_transaction_average
+Penang,Seberang Perai Tengah,Cluster House,2017,1,12,1550000.0,129166.66666666667,completed_transaction_average
+Penang,Seberang Perai Tengah,Cluster House,2017,2,8,1956500.0,244562.5,completed_transaction_average
+Penang,Seberang Perai Tengah,Cluster House,2017,3,16,2177000.0,136062.5,completed_transaction_average
+Penang,Seberang Perai Tengah,Cluster House,2017,4,22,4667000.0,212136.36363636365,completed_transaction_average
+Penang,Seberang Perai Tengah,Condominium/Apartment,2017,1,55,12277570.0,223228.54545454544,completed_transaction_average
+Penang,Seberang Perai Tengah,Condominium/Apartment,2017,2,57,12130500.0,212815.7894736842,completed_transaction_average
+Penang,Seberang Perai Tengah,Condominium/Apartment,2017,3,78,16174800.0,207369.23076923078,completed_transaction_average
+Penang,Seberang Perai Tengah,Condominium/Apartment,2017,4,111,21740800.0,195863.06306306308,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,1,34,15816154.0,465181.0,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,2,33,19348888.0,586329.9393939395,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,3,38,23892250.0,628743.4210526316,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,4,36,16562400.0,460066.6666666667,completed_transaction_average
+Penang,Seberang Perai Tengah,Flat,2017,1,30,2985400.0,99513.33333333333,completed_transaction_average
+Penang,Seberang Perai Tengah,Flat,2017,2,50,4801500.0,96030.0,completed_transaction_average
+Penang,Seberang Perai Tengah,Flat,2017,3,29,2610500.0,90017.24137931035,completed_transaction_average
+Penang,Seberang Perai Tengah,Flat,2017,4,26,2521000.0,96961.53846153847,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost Flat,2017,1,210,12263300.0,58396.666666666664,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost Flat,2017,2,126,8493767.0,67410.8492063492,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost Flat,2017,3,127,8510900.0,67014.96062992126,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost Flat,2017,4,114,8204500.0,71969.29824561403,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost House,2017,1,26,4132667.0,158948.73076923078,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost House,2017,2,32,5125000.0,160156.25,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost House,2017,3,31,5647000.0,182161.29032258064,completed_transaction_average
+Penang,Seberang Perai Tengah,Low-Cost House,2017,4,34,5779800.0,169994.11764705883,completed_transaction_average
+Penang,Seberang Perai Tengah,Town House,2017,1,1,246000.0,246000.0,completed_transaction_average
+Penang,Seberang Perai Tengah,Town House,2017,2,5,1507000.0,301400.0,completed_transaction_average
+Penang,Seberang Perai Tengah,Town House,2017,4,2,515000.0,257500.0,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Semi-Detached,2017,1,4,1851800.0,462950.0,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Semi-Detached,2017,2,5,2566000.0,513200.0,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Semi-Detached,2017,3,8,3038000.0,379750.0,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Semi-Detached,2017,4,15,5604500.0,373633.3333333333,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Terraced,2017,1,120,29996130.0,249967.75,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Terraced,2017,2,78,19160980.0,245653.58974358975,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Terraced,2017,3,60,13436053.0,223934.21666666667,completed_transaction_average
+Penang,Seberang Perai Utara,1 - 1 1/2 Storey Terraced,2017,4,57,11926611.0,209238.7894736842,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Semi-Detached,2017,1,18,10649820.0,591656.6666666666,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Semi-Detached,2017,2,20,12876450.0,643822.5,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Semi-Detached,2017,3,19,12802040.0,673791.5789473684,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Semi-Detached,2017,4,22,14168200.0,644009.0909090909,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Terraced,2017,1,114,47284427.0,414775.6754385965,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Terraced,2017,2,90,36185857.0,402065.0777777778,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Terraced,2017,3,136,56073906.0,412308.1323529412,completed_transaction_average
+Penang,Seberang Perai Utara,2 - 2 1/2 Storey Terraced,2017,4,125,50657600.0,405260.8,completed_transaction_average
+Penang,Seberang Perai Utara,Cluster House,2017,1,29,2362674.0,81471.5172413793,completed_transaction_average
+Penang,Seberang Perai Utara,Cluster House,2017,2,9,961000.0,106777.77777777778,completed_transaction_average
+Penang,Seberang Perai Utara,Cluster House,2017,3,8,867500.0,108437.5,completed_transaction_average
+Penang,Seberang Perai Utara,Cluster House,2017,4,13,1467086.0,112852.76923076923,completed_transaction_average
+Penang,Seberang Perai Utara,Condominium/Apartment,2017,1,76,20236133.0,266264.90789473685,completed_transaction_average
+Penang,Seberang Perai Utara,Condominium/Apartment,2017,2,66,18081050.0,273955.30303030304,completed_transaction_average
+Penang,Seberang Perai Utara,Condominium/Apartment,2017,3,74,19098180.0,258083.51351351352,completed_transaction_average
+Penang,Seberang Perai Utara,Condominium/Apartment,2017,4,91,25364740.0,278733.4065934066,completed_transaction_average
+Penang,Seberang Perai Utara,Detached,2017,1,10,6505070.0,650507.0,completed_transaction_average
+Penang,Seberang Perai Utara,Detached,2017,2,14,9838800.0,702771.4285714285,completed_transaction_average
+Penang,Seberang Perai Utara,Detached,2017,3,11,3932810.0,357528.1818181818,completed_transaction_average
+Penang,Seberang Perai Utara,Detached,2017,4,15,11551830.0,770122.0,completed_transaction_average
+Penang,Seberang Perai Utara,Flat,2017,1,42,5211386.0,124080.61904761905,completed_transaction_average
+Penang,Seberang Perai Utara,Flat,2017,2,18,2525736.0,140318.66666666666,completed_transaction_average
+Penang,Seberang Perai Utara,Flat,2017,3,18,2001500.0,111194.44444444444,completed_transaction_average
+Penang,Seberang Perai Utara,Flat,2017,4,25,3380600.0,135224.0,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost Flat,2017,1,36,2288500.0,63569.444444444445,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost Flat,2017,2,29,1731300.0,59700.0,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost Flat,2017,3,19,1107300.0,58278.94736842105,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost Flat,2017,4,37,2151800.0,58156.75675675676,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost House,2017,1,20,1891300.0,94565.0,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost House,2017,2,23,2715500.0,118065.21739130435,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost House,2017,3,23,2222000.0,96608.69565217392,completed_transaction_average
+Penang,Seberang Perai Utara,Low-Cost House,2017,4,30,2663719.0,88790.63333333333,completed_transaction_average
+Penang,Seberang Perai Utara,Town House,2017,1,2,665000.0,332500.0,completed_transaction_average
+Penang,Seberang Perai Utara,Town House,2017,2,2,875000.0,437500.0,completed_transaction_average
+Penang,Seberang Perai Utara,Town House,2017,3,14,4784229.0,341730.64285714284,completed_transaction_average
+Penang,Seberang Perai Utara,Town House,2017,4,13,3756000.0,288923.07692307694,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Semi-Detached,2017,1,12,13125000.0,1093750.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Semi-Detached,2017,2,13,7940800.0,610830.7692307692,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Semi-Detached,2017,3,19,20532333.0,1080649.105263158,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Semi-Detached,2017,4,14,14408000.0,1029142.8571428572,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Terraced,2017,1,14,12178100.0,869864.2857142857,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Terraced,2017,2,20,16992333.0,849616.65,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Terraced,2017,3,31,19059666.0,614827.9354838709,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),1 - 1 1/2 Storey Terraced,2017,4,24,18214916.0,758954.8333333334,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Semi-Detached,2017,1,29,52109333.0,1796873.551724138,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Semi-Detached,2017,2,30,63038000.0,2101266.6666666665,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Semi-Detached,2017,3,26,47453333.0,1825128.1923076923,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Semi-Detached,2017,4,31,51914000.0,1674645.1612903227,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Terraced,2017,1,64,82148167.0,1283565.109375,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Terraced,2017,2,65,76800274.0,1181542.6769230769,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Terraced,2017,3,84,139539640.0,1661186.1904761905,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),2 - 2 1/2 Storey Terraced,2017,4,69,88672500.0,1285108.6956521738,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Cluster House,2017,1,5,1265000.0,253000.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Cluster House,2017,2,6,1422500.0,237083.33333333334,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Cluster House,2017,3,4,745000.0,186250.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Cluster House,2017,4,2,320000.0,160000.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Condominium/Apartment,2017,1,204,189800333.0,930393.7892156863,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Condominium/Apartment,2017,2,205,214948170.0,1048527.6585365854,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Condominium/Apartment,2017,3,251,263676456.0,1050503.8087649401,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Condominium/Apartment,2017,4,275,267330833.0,972112.12,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Detached,2017,1,22,49118833.0,2232674.227272727,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Detached,2017,2,27,66742099.0,2471929.592592593,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Detached,2017,3,19,88562888.0,4661204.631578947,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Detached,2017,4,46,121993800.0,2652039.1304347827,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Flat,2017,1,320,85052717.0,265789.740625,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Flat,2017,2,311,83250501.0,267686.498392283,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Flat,2017,3,422,111263599.0,263657.81753554504,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Flat,2017,4,407,103271676.0,253738.76167076168,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost Flat,2017,1,192,22158500.0,115408.85416666667,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost Flat,2017,2,208,21988133.0,105712.17788461539,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost Flat,2017,3,238,29338634.0,123271.57142857143,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost Flat,2017,4,243,27906301.0,114840.74485596707,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost House,2017,1,3,1455000.0,485000.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost House,2017,2,2,1540000.0,770000.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost House,2017,3,3,1420000.0,473333.3333333333,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Low-Cost House,2017,4,4,850000.0,212500.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Town House,2017,1,4,3803000.0,950750.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Town House,2017,2,1,1460000.0,1460000.0,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Town House,2017,3,3,2465000.0,821666.6666666666,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Town House,2017,4,3,2330000.0,776666.6666666666,completed_transaction_average

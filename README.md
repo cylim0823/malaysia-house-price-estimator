@@ -4,9 +4,9 @@
 
 Malaysia House Price Estimator is a planned machine-learning application for estimating residential property prices across Malaysia. It will combine data collection, cleaning, validation, exploratory analysis, feature engineering, regression modelling, model evaluation, and a simple web interface.
 
-The project includes a source-neutral engineering framework and a deployed first real-data prototype. The live Streamlit app uses 2,090 historical quarterly average-price observations from JPPH/NAPIC workbooks published in Malaysia's government open-data archive under Creative Commons Attribution.
+The project includes a source-neutral engineering framework and a deployed real-data prototype. The live Streamlit app uses 2,090 historical state-level average-price observations plus 212 Penang district/property-type/quarter transaction averages derived from official transaction counts and values. All selected sources are marked Creative Commons Attribution in Malaysia's government open-data archive.
 
-**Important limitation:** the official data covers aggregated state/property-type averages from 2009 Q1 through 2018 Q2. It contains no individual-property floor area, bedrooms, condition, tenure, project, or exact-location fields. The live output is therefore a historical average-price estimate, not an individual home valuation or current-market prediction.
+**Important limitation:** Penang district data covers 2017, while state averages cover 2009 Q1 through 2018 Q2. The data contains no individual-property floor area, bedrooms, condition, tenure, project, street, or coordinates. The live output is therefore a historical area benchmark, not an individual home valuation or current-market prediction.
 
 Data quality is more important than interface complexity. The first implementation will focus on residential properties for sale and will expand only when sufficient verified, legally usable data is available.
 
@@ -202,6 +202,7 @@ With Python 3.11 or newer:
 python -m pip install -e ".[ml,ui,api,charts,dev]"
 python -m unittest discover -s tests -v
 python scripts/train_official_averages.py
+python scripts/train_penang_district.py
 python -m streamlit run app/streamlit_app.py
 ```
 

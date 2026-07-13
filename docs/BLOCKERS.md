@@ -7,7 +7,7 @@ Last updated: 13 July 2026
 - Exact blocker: no property-level Malaysian residential sale dataset or listing source is approved for collection and machine-learning use.
 - Why progress cannot safely continue: collection would require a purchase, contractual/licence decision, written permission, credentials, or unsupported scraping. The owner explicitly prohibited scraping iProperty, Mudah, PropertyGuru, and EdgeProp.
 - Owner action required: obtain a NAPIC/JPPH sample schema, coverage counts, quotation, and written terms covering local model training, derived artefacts, publication, retention, and redistribution; alternatively provide a lawfully licensed property-level dataset and its field dictionary.
-- Work completed: source investigation, legal/technical classifications, canonical schema, and source-independent cleaning core.
+- Work completed: source investigation, legal/technical classifications, canonical schema, source-independent cleaning core, licensed state aggregates, and a five-district Penang benchmark. Manual copying or automated scraping of listing portals remains excluded unless the original source grants compatible collection and model-use permission.
 - Recommended next action: make an institutional/owner-authenticated NAPIC enquiry without purchasing or accepting terms until the response is reviewed.
 
 ## Phases 2 and 4 — Official geographic reference

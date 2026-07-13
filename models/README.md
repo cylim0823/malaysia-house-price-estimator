@@ -1,5 +1,24 @@
 # Included Models
 
+## Penang district transaction model
+
+`penang_district_bundle.pkl` is trained reproducibly with:
+
+```powershell
+python scripts/train_penang_district.py
+```
+
+- Source: Penang government transaction counts and values, Creative Commons Attribution
+- Observations: 212 district/property-type/quarter completed-transaction averages
+- Coverage: five Penang districts, 11 residential types, 2017 Q1-Q4
+- Training: Q1-Q3; final test: Q4 (54 observations)
+- Selected model: district/property-type median baseline
+- Test MAE: RM55,154.82
+- Log-target ridge comparison MAE: RM79,520.97
+- SHA-256: `162074FE474103D331004DE47EEE1ADB372F0C1A2C473AC2BC55EA506597E0BC`
+
+The simple baseline was selected because it outperformed ridge regression on the untouched quarter.
+
 ## Official historical-average model
 
 `official_average_bundle.pkl` is trained reproducibly with:

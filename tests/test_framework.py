@@ -141,6 +141,9 @@ class EndToEndTests(unittest.TestCase):
         from streamlit.testing.v1 import AppTest
         app=AppTest.from_file(str(Path(__file__).parents[1]/"app"/"streamlit_app.py"),default_timeout=10).run()
         self.assertFalse(app.exception)
+        app.button[-1].click().run()
+        self.assertFalse(app.exception)
+        self.assertGreaterEqual(len(app.metric), 2)
 
 
 if __name__=="__main__":unittest.main()

@@ -1,0 +1,47 @@
+{
+  "dataset_rows": 212,
+  "train_rows": 158,
+  "test_rows": 54,
+  "test_period": "2017 Q4",
+  "selected_model": "district_property_type_median",
+  "model": {
+    "mae_rm": 55154.81993094104,
+    "rmse_rm": 80515.95039628216,
+    "r2": 0.9698561579359198
+  },
+  "log_ridge": {
+    "mae_rm": 79520.97019177368,
+    "rmse_rm": 147965.44949887964,
+    "r2": 0.8981982147678365
+  },
+  "overall_median_baseline": {
+    "mae_rm": 300490.9484257691,
+    "rmse_rm": 480245.41651774297,
+    "r2": -0.07241089050285687
+  },
+  "district_property_type_median_baseline": {
+    "mae_rm": 55154.81993094104,
+    "rmse_rm": 80515.95039628216,
+    "r2": 0.9698561579359198
+  },
+  "districts": [
+    "Barat Daya (southwest island / Teluk Bahang)",
+    "Seberang Perai Selatan",
+    "Seberang Perai Tengah",
+    "Seberang Perai Utara",
+    "Timur Laut (George Town / northeast island)"
+  ],
+  "property_types": [
+    "1 - 1 1/2 Storey Semi-Detached",
+    "1 - 1 1/2 Storey Terraced",
+    "2 - 2 1/2 Storey Semi-Detached",
+    "2 - 2 1/2 Storey Terraced",
+    "Cluster House",
+    "Condominium/Apartment",
+    "Detached",
+    "Flat",
+    "Low-Cost Flat",
+    "Low-Cost House",
+    "Town House"
+  ]
+}

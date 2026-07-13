@@ -1,7 +1,7 @@
 # Data Source Investigation
 
 **Research date:** 13 July 2026  
-**Status:** Research only; no source has been collected, scraped, or approved for model training.
+**Status:** Two groups of aggregate government open data are approved and collected; no property-level listing or transaction source is approved.
 
 ## 1. Investigation objective
 
@@ -314,3 +314,20 @@ All links below were accessed on 13 July 2026.
 - [MyGeoportal policies and standards](https://www.mygeoportal.gov.my/en/policies-and-standards)
 - [MyGeomap administrative-boundary MapServer](https://mygos.mygeoportal.gov.my/gisserver/rest/services/MyGeomap/Msia_Coverage/MapServer)
 - [OpenStreetMap copyright and ODbL requirements](https://www.openstreetmap.org/copyright)
+
+## Approved aggregate additions — 13 July 2026
+
+The Malaysia government open-data catalogue explicitly marks two Penang 2017
+residential datasets Creative Commons Attribution: transaction counts and
+transaction values by quarter, property type, and five districts. They were
+downloaded directly as CSV and joined only on identical source keys. Dividing
+value by count produces 212 completed-transaction averages. This supports a
+district benchmark but not town, project, street, or individual-property
+training.
+
+- [Penang transaction counts](https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang)
+- [Penang transaction values](https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-rm-juta-di-pulau-pinang)
+
+The user later allowed collection in principle, but permission from the project
+owner does not grant rights over third-party listing content. Manual copying is
+not used to circumvent unclear automated-collection or machine-learning terms.
