@@ -20,7 +20,7 @@ Last updated: 13 July 2026
 | Evaluation and prediction ranges | Complete with protected slices and residual quantiles | Real errors/ranges pending |
 | Saved bundle and prediction service | Complete | Supported production coverage pending |
 | CLI | Complete | Real-data commands require an approved mapping |
-| Streamlit | Public historical-average MVP deployed | Individual-property model pending |
+| Streamlit | Historical explorer and disabled property-level preview complete locally | Individual-property model pending |
 | Optional FastAPI | Complete local adapter | Hosting pending |
 | GitHub publication | Public repository pushed | Complete for current prototype |
 | Streamlit deployment | Live official-average prototype | Individual-property version pending |
@@ -29,7 +29,7 @@ Last updated: 13 July 2026
 ## Verification record
 
 - Editable package installation: passed.
-- Complete suite: 51 tests passed. Aggregate coverage includes arithmetic, schema, normalization, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, and Streamlit paths.
+- Complete suite: 57 tests passed. Aggregate coverage includes arithmetic, schema, normalization, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, UI field isolation, and Streamlit paths.
 - Official model: log-target ridge regression trained on 1,980 observations and tested on the final 110 observations (2018 Q1-Q2).
 - Official holdout results: MAE RM94,268.28; RMSE RM276,407.99; R² 0.7670. State/property-type median baseline MAE RM101,457.44.
 - Penang district holdout: Q4 2017, 54 observations. The selected district/property-type median achieved MAE RM55,154.82, beating log ridge at RM79,520.97.
@@ -38,7 +38,7 @@ Last updated: 13 July 2026
 - End-to-end path: synthetic generation → preparation → deduplication/outliers → split → baseline/advanced comparison → evaluation → save → load → prediction.
 - Generated metrics and charts are labelled synthetic.
 - Deployable model artifacts, official normalized data, and the metrics report are versioned; temporary evaluation outputs remain ignored.
-- Local Git branch: `main`; official historical-average phase `ef53310`, Penang district phase `749be64`, and unpublished regional area phase `a4a242e`.
+- Local Git branch: `agent/aggregate-transaction-explorer`; the verified aggregate-data commits are `2ff810a` and `3c8e6ee`.
 
 ## Remaining limitations
 
@@ -77,3 +77,17 @@ Last updated: 13 July 2026
 - Remaining limitations: one year, one state, aggregate categories, no individual-property attributes, no current-market validation, and no advanced model justification.
 - Dependencies: two Penang government CSV releases labelled Creative Commons Attribution in the archived government catalogue.
 - Blockers: additional licensed years/states are required for multi-year forecasting and nationwide aggregate support; property-level data remains separately blocked.
+
+## Aggregate/property UI separation - 13 July 2026
+
+- Phase name: Streamlit aggregate and individual-property mode separation.
+- Start state: two aggregate sources appeared as peer explorer modes, so users could still mistake an aggregate benchmark for a specific-house estimate.
+- Completion state: one clearly labelled historical market explorer contains both aggregate sources; a separate individual-property mode displays a disabled, property-type-aware form and cannot predict.
+- Files created: `src/house_price_estimator/ui_contracts.py`, `tests/test_ui_contracts.py`, and `docs/INDIVIDUAL_PROPERTY_DATA_REQUIREMENTS.md`.
+- Files modified: `app/streamlit_app.py`, `tests/test_framework.py`, `README.md`, `ROADMAP.md`, `docs/ARCHITECTURE_AND_USAGE.md`, and this progress log.
+- Tests performed: focused UI contract and Streamlit integration tests, complete unit-test discovery, bundle checksum comparison, compile validation, local Streamlit HTTP startup, and diff validation.
+- Test results: 57/57 tests passed; both trained bundle checksums were unchanged; Streamlit returned HTTP 200 locally; compile and diff checks passed.
+- Commit identifier: pending the verified phase commit.
+- Remaining limitations: the app has no individual-property data or model, and the real aggregate sources remain historical (Penang 2017 and regional 2016–2018).
+- Dependencies: existing repository-owned aggregate model bundles and licensed aggregate datasets; no new runtime dependency.
+- Blockers: a legally usable, sufficiently representative property-level dataset is required before the second mode can predict.

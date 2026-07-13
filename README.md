@@ -8,6 +8,15 @@ The project includes a source-neutral engineering framework and two separate rea
 
 **Important limitation:** every real row is an aggregate group, not an individual property. Penang transaction data covers 2017 only; regional published averages cover 2016 Q1 through 2018 Q2. The data contains no individual-property floor area, bedrooms, condition, tenure, project, street, or coordinates. Output is a historical group benchmark, not an individual home valuation or current-market prediction.
 
+## Application modes
+
+The Streamlit application deliberately separates two different products:
+
+1. **Historical Market Explorer — functional.** Uses only fields present in the licensed aggregate datasets: location, aggregate property category, year, quarter, and an optional comparison price. It displays historical group averages, available transaction support, source, coverage, and baseline information. The Penang data is from 2017 and the regional data is from 2016–2018; neither is presented as a current 2026 valuation.
+2. **Individual Property Estimator — data pending.** Shows the planned location, physical, ownership, and condition inputs, but all submission is disabled. It cannot produce a real prediction until a licensed property-level dataset contains and validates those attributes. High-rise and landed layouts hide inputs that are not applicable instead of representing them with zero.
+
+The aggregate model accepts only state, district, property type, year, and quarter. Property size, rooms, car parks, tenure, project, and other individual fields are never passed to it. See [individual property data requirements](docs/INDIVIDUAL_PROPERTY_DATA_REQUIREMENTS.md).
+
 Data quality is more important than interface complexity. The first implementation will focus on residential properties for sale and will expand only when sufficient verified, legally usable data is available.
 
 ## Problem statement
@@ -196,6 +205,7 @@ All outputs are for educational and informational purposes only. They are not fi
 - [Aggregate transaction dataset](docs/AGGREGATE_TRANSACTION_DATASET.md)
 - [Real aggregate EDA](docs/REAL_DATA_EDA.md)
 - [Aggregate baseline evaluation](docs/REAL_MODEL_EVALUATION.md)
+- [Individual property data requirements](docs/INDIVIDUAL_PROPERTY_DATA_REQUIREMENTS.md)
 
 ## Local validation
 

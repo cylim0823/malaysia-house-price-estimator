@@ -30,6 +30,8 @@ The official aggregate path is intentionally separate: `official_averages.py` no
 
 `aggregate_transactions.py` is a separate record model for grouped completed transactions. It preserves raw values, verifies value/count arithmetic, normalizes district annotations and source property categories, flags volume support and quarter changes, generates weighted metrics, and rejects unsupported combinations. Its features are only state, district, property type, year, and quarter; total value is forbidden and count is weight/support metadata. The Streamlit app exposes this as a distinct Penang 2017 mode.
 
+`ui_contracts.py` is the boundary between the Streamlit controls and those model interfaces. It constructs an exact aggregate payload and raises an error for every missing or extra field, so property-level inputs cannot be silently ignored by an aggregate model. It also defines landed/high-rise visibility rules for the disabled future form. Streamlit presents the Penang and regional sources inside a historical market explorer; the separate individual-property mode does not call any prediction service.
+
 ## Installation and commands
 
 ```powershell

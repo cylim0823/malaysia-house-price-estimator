@@ -257,6 +257,17 @@ validation_notes
 
 **Objective:** Provide a simple, mobile-readable interface that communicates uncertainty and limitations.
 
+**Aggregate-data extension status:** complete. The deployed UI has a functional historical market explorer whose controls are restricted to licensed aggregate fields, plus a separately labelled and disabled individual-property form preview. This does not complete the property-level MVP tasks below.
+
+### Verified aggregate-data UI extension
+
+- [x] Separate historical aggregate exploration from individual-property estimation
+- [x] Restrict aggregate model calls to state, district, property type, year, and quarter
+- [x] Show historical period, source, coverage, transaction support where published, baseline, limitations, and disclaimer
+- [x] Add a disabled property-level form preview with landed/high-rise field rules
+- [x] Reject unsupported fields rather than silently dropping them
+- [x] Test that the aggregate results and trained artefacts remain unchanged
+
 ### Tasks
 
 - [ ] Add state, district, city/township, and project-name inputs
