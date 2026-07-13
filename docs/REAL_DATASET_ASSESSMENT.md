@@ -4,11 +4,14 @@ Assessment date: 13 July 2026
 
 ## Decision
 
-No candidate met every approval rule for a property-level Malaysian residential estimator. Five historic JPPH workbooks were nevertheless approved for a limited aggregate prototype because Malaysia's government open-data catalogue explicitly marks them Creative Commons Attribution. The published application now estimates historical quarterly state/property-type averages only. No restricted portal was scraped, no uploader licence was treated as permission over third-party source data, and no individual-property accuracy claim is made.
+NAPIC/JPPH's **Data Transaksi Terbuka** public Tableau feed is approved as a separate real completed-transaction source. Official launch material connects this product to the Government Public Sector Open Data initiative, and Malaysian Government Open Data Terms of Use 1.0 permit reuse with attribution. The validated July 2026 snapshot contains 416,627 residential transactions across all 16 jurisdictions and 129 districts from January 2021 through March 2026. No restricted listing portal was scraped.
+
+The licensed NAPIC open transaction feed now also powers the derived nationwide aggregate explorer. Combined with preserved licensed 2017 source history, the release has 15,216 groups representing 428,443 transactions. Current NAPIC publication workbooks remain a different legal category: all 16 Q1 2026 files were inspected but state copyright reserved and were not integrated.
 
 | Candidate | Publisher / provenance | Access and licence evidence | Price type and coverage | Decision |
 | --- | --- | --- | --- | --- |
-| NAPIC Open Sales Data | National Property Information Centre / JPPH | Public embedded application; page states copyright reserved and does not expose a reusable structured download licence, complete field dictionary, or derived-model terms | Residential, commercial, and industrial transaction data; detailed coverage not confirmed | Not approved; permission and structured export terms required |
+| NAPIC Data Transaksi Terbuka | NAPIC/JPPH official public Tableau view | Official launch aligns it with government public open data; Malaysian Government Open Data Terms of Use 1.0 permits reuse with attribution | 416,627 completed residential transactions, all 16 jurisdictions, 129 districts, 11 types, 2021-01 to 2026-03 | Approved for separate property-level training; raw snapshots remain out of Git because of size |
+| NAPIC current publication XLSX files | National Property Information Centre / JPPH | Publicly downloadable but marked copyright reserved with no model/redistribution licence | Aggregate transaction and price tables through 2026 Q1P | Not approved; written permission required |
 | Historic JPPH average-price workbooks | JPPH and Malaysia open-data archive | Government catalogue explicitly identifies five selected datasets as Creative Commons Attribution | 2,090 normalized quarterly state/property-type average observations, 2009 Q1-2018 Q2 | Approved and used for the limited historical-average prototype; unsuitable for individual-property training |
 | JPPH terraced prices by district/region | JPPH and Malaysia open-data archive | Explicitly marked Creative Commons Attribution | 460 quarterly averages, 46 selected areas in 14 states/territories, 2016 Q1-2018 Q2 | Approved for local regional terraced benchmarks; no other property types or individual records |
 | Penang residential transaction counts and values | Penang State Government and Malaysia open-data archive | Both datasets are explicitly marked Creative Commons Attribution | 212 joined 2017 quarter/property-type/district averages across all five Penang districts, representing 11,816 completed transactions | Approved for a validated aggregate explorer and provisional weighted baseline; not town/project/property-level data |
@@ -29,6 +32,6 @@ No candidate met every approval rule for a property-level Malaysian residential 
 - Kaggle/Hugging Face dataset card and stated scraped provenance: https://huggingface.co/datasets/jienweng/housing-prices-malaysia-2025/blob/main/README.md
 - Kaggle dataset mirror metadata: https://baselight.app/u/kaggle/dataset/tanshihjen_malaysia_property_for_sale
 
-## Required path to a real model
+## Current model decision
 
-The historical aggregate model is complete. To build the intended individual-property estimator, obtain written NAPIC/JPPH terms or another original-publisher licence covering property-level structured access, machine-learning training, derived model publication, public predictions, retention, and redistribution. The first authorised sample must then be reconciled against the canonical schema.
+The real property model is active only for state/district/property-type combinations with at least 30 published records. It uses areas, tenure, and unit level when available. The feed has no bedrooms, bathrooms, car parks, furnishing, age, condition, stable transaction ID, or coordinates; those remain explicit limitations. The untouched 2025 Q4-2026 Q1 test MAE is RM127,910.56 and must not be described as uniform accuracy across locations or price bands.

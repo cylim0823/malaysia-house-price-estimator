@@ -1,0 +1,36 @@
+{
+  "catalog_version": "2.0.0",
+  "datasets": [
+    {
+      "dataset_id": "napic-open-transactions-aggregate-20260713",
+      "title": "Malaysia completed-transaction annual benchmarks",
+      "source_name": "Licensed Malaysian official completed-transaction sources",
+      "source_urls": [
+        "https://napic.jpph.gov.my/ms/data-transaksi?category=36&id=241",
+        "https://www.malaysia.gov.my/my/my-initiative/data-terbuka-kerajaan/dasar-strategi-dan-tadbir-urus/terma-penggunaan-data-terbuka-kerajaan",
+        "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang",
+        "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-rm-juta-di-pulau-pinang"
+      ],
+      "source_documents": [
+        "Per-state Data Transaksi Terbuka CSV exports retrieved 13 July 2026",
+        "Preserved 2017 residential transaction count/value groups"
+      ],
+      "price_type": "completed_transaction_average",
+      "dataset_version": "napic-open-transactions-20260713-aggregate-v1",
+      "schema_version": "aggregate-2.0.0",
+      "licence_status": "Malaysian Government Open Data Terms of Use 1.0 and Creative Commons Attribution source records",
+      "redistribution_allowed": true,
+      "model_kind": "aggregate_transactions",
+      "processed_data_path": "data/processed/aggregate_transactions/malaysia_aggregate_transactions_v1.csv",
+      "coverage_catalog_path": "data/processed/aggregate_transactions/coverage_catalog.json",
+      "area_label": "District or area",
+      "observed_price_label": "Weighted annual completed-transaction average",
+      "prediction_label": "Generic aggregate baseline",
+      "limitations": [
+        "Rows are aggregate district/property-type/quarter groups derived from completed transactions.",
+        "Coverage and record support vary by state, district, property type, and year.",
+        "The 2026 result is year to date through Q1 and is not a complete annual average."
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ ROOT = Path(__file__).parents[1]
 class RegionalAreaTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        source = ROOT / "data" / "external" / "napic_open_data"
+        source = ROOT / "data" / "external" / "napic"
         cls.data = load_regional_area_prices(
             source / "terraced_by_district.xlsx",
             source / "highrise_by_district.xlsx",

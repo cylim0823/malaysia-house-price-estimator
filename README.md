@@ -1,222 +1,151 @@
 # Malaysia House Price Estimator
 
-## Project overview
+This repository contains two deliberately separate products:
 
-Malaysia House Price Estimator is a planned machine-learning application for estimating residential property prices across Malaysia. It will combine data collection, cleaning, validation, exploratory analysis, feature engineering, regression modelling, model evaluation, and a simple web interface.
+1. **Historical Market Explorer** reports transaction-weighted annual or year-to-date completed-transaction averages for a selected state, optional district, property category, and year. Its aggregate preserves licensed 2017 history and covers all 16 Malaysian jurisdictions from 2021 through 2026 Q1. It is a historical benchmark, not an individual valuation.
+2. **Individual Property Estimator** uses a separate model trained on 416,627 real NAPIC/JPPH open completed residential transactions across all 13 states and Kuala Lumpur, Putrajaya, and Labuan. Its source period is January 2021 through March 2026 (2026 Q1). Support is selected by state, district, and the property categories actually published for that district.
 
-The project includes a source-neutral engineering framework and two separate real aggregate-data paths. The Penang completed-transaction explorer validates 212 district/property-type/quarter groups representing 11,816 completed transactions in 2017. The regional historical-price dataset contains 600 JPPH quarterly averages: 460 terraced observations across all 13 states plus Kuala Lumpur and 140 high-rise observations where published. All selected sources are marked Creative Commons Attribution in Malaysia's government open-data archive.
+Neither output is an official valuation, guaranteed sale price, or financial advice.
 
-**Important limitation:** every real row is an aggregate group, not an individual property. Penang transaction data covers 2017 only; regional published averages cover 2016 Q1 through 2018 Q2. The data contains no individual-property floor area, bedrooms, condition, tenure, project, street, or coordinates. Output is a historical group benchmark, not an individual home valuation or current-market prediction.
+## Where to start
 
-Data quality is more important than interface complexity. The first implementation will focus on residential properties for sale and will expand only when sufficient verified, legally usable data is available.
+- Streamlit entrypoint: `app/streamlit_app.py`
+- Generic aggregate processing and annual benchmark service: `src/house_price_estimator/aggregate_data.py`
+- NAPIC publication workbook adapter: `src/house_price_estimator/source_adapters/napic_excel.py`
+- Generic aggregate model training: `scripts/train_aggregate_model.py`
+- Evaluation and weighted metrics: `src/house_price_estimator/data_pipeline.py`
+- Individual-property prediction service: `src/house_price_estimator/prediction.py`
+- Tests: `tests/test_aggregate_data.py`, `tests/test_ui_contracts.py`, and `tests/test_framework.py`
 
-## Problem statement
+## How official aggregate coverage works
 
-Residential prices vary greatly within every state and federal territory. A model must not assume that properties throughout Selangor, Johor, Penang, Sabah, or any other region have similar values. State alone is not sufficient for a meaningful prediction.
+The committed aggregate release is derived from the licensed NAPIC/JPPH Data Transaksi Terbuka state snapshots. Validated rows determine every state, year, district, and property-type option; the selector order is state, year, coverage/district, then property type. District input is hidden for state-level-only coverage. Users choose a year, not a publication quarter. The generated machine-readable coverage registry is `data/processed/aggregate_transactions/coverage_catalog.json`.
 
-More detailed location and property information should be used whenever available. District, city, township, development, property type, size, tenure, age, and listing or transaction date may all materially affect price. Official transaction prices and online listing asking prices represent different concepts: an asking price must not automatically be treated as market value. Rental, auction, asking-price, and completed-transaction records must remain clearly labelled and must not be mixed indiscriminately.
+Property source text, stable public codes, and readable labels are defined once in
+`data_pipeline.py`. The interface displays labels such as “1–1½-storey terrace
+house” while the immutable raw snapshots retain the publisher's original text.
 
-## Intended users
+Annual averages are calculated as `sum(transaction_value_rm) / sum(transaction_count)`. A complete year has Q1-Q4; a historical year with missing periods is labelled partial; 2026 is labelled year to date through Q1. Missing periods and any state/property-type fallback are disclosed.
 
-Potential users include:
+## Adding a state or year
 
-- Homebuyers comparing an asking price with estimated market conditions
-- Homeowners seeking general market context
-- Students and developers learning applied machine learning
-- Property researchers exploring Malaysian housing data
+1. Download the official source and retain its original values.
+2. Add source URL, title, retrieval date, checksum, coverage, and licence metadata.
+3. Run the generic importer or `scripts/process_napic_aggregate_transactions.py`.
+4. Validate count/value arithmetic and retain rejected rows with reasons.
+5. Generate the processed generic records.
+6. Run the full test suite.
+7. Refresh the generic aggregate bundle with `scripts/train_aggregate_model.py`.
+8. Verify that Streamlit coverage and year status are data-driven.
 
-The application will not replace a licensed property valuer, financial adviser, bank valuation, or legal professional.
+Do not copy or create a state-specific cleaner, model, prediction service, or UI page.
 
-## Nationwide scope
+## Real individual-property model
 
-The intended final product covers all 13 Malaysian states and all 3 federal territories:
+The model target is completed transaction price in Malaysian ringgit. The saved preprocessing/model uses:
 
-- Johor, Kedah, Kelantan, Melaka, Negeri Sembilan, Pahang, Penang, Perak, Perlis, Sabah, Sarawak, Selangor, and Terengganu
-- Kuala Lumpur, Putrajaya, and Labuan
+- state, district, and published property type;
+- built-up/main-floor area when supplied;
+- land/parcel area when supplied;
+- tenure when supplied;
+- unit/floor level when applicable and supplied; and
+- the source transaction year and month.
 
-Implementation will be incremental and may begin with several regions, selected districts, selected property types, or a small verified dataset. No single state represents the whole MVP or all of Malaysia. Support will depend on legal permission, data availability, data quality, consistent coverage, sufficient local records, and demonstrated model accuracy.
+The form also visibly accepts city/township, project, subtype, bedrooms, helper bedrooms, bathrooms, car parks, storeys, furnishing, completion year, age, renovation, condition, and an optional asking price. NAPIC does not publish those physical/condition fields, so the application lists them under **Information provided but not used** or **Missing optional information** instead of silently pretending they affected the estimate. Unknown values remain null; not-applicable values remain distinct. Training-only medians handle missing numeric model fields.
 
-The application must identify locations where data is limited, confidence is low, validation is incomplete, or predictions are unavailable. Nationwide support must not be claimed until actual validated coverage justifies it.
+The selected histogram-gradient-boosting log-price model was chosen against a hierarchical median baseline using pre-2025 training and 2025 Q1-Q3 validation. The untouched 2025 Q4-2026 Q1 test set contains 15,030 records and produced MAE RM127,910.56, median absolute error RM57,477.87, MAPE 22.31%, and R2 0.7414. Error varies substantially by location, type, and price band; Kuala Lumpur and high-value properties have materially larger absolute errors. See `reports/generated/evaluation/individual_property.json`.
 
-## Planned user inputs
+## Model used by the application
 
-- State or federal territory
-- District
-- City or township
-- Project or development name
-- Property type and subtype
-- Built-up area and, where relevant, land area
-- Bedrooms, bathrooms, and storeys
-- Tenure and furnishing
-- Property age
-- Optional asking price
+The historical application explicitly loads the **Malaysia historical aggregate
+weighted baseline** from `models/historical_aggregate/model_bundle.pkl`, selected
+and validated by `models/historical_aggregate/metadata.json`. It uses official,
+non-synthetic completed-transaction aggregates. It predicts district/property-type
+quarter-group averages; displayed annual history is calculated directly from the
+validated transaction totals and is not an individual-property valuation. Current
+coverage is the preserved Penang 2017 release plus all 16 jurisdictions from 2021
+through 2026 Q1, with uneven segment support.
 
-## Planned outputs
+The separate Individual Property Estimator loads
+`models/individual_property/model_bundle.pkl`; it is not a fallback for the
+historical mode. Synthetic models are test fixtures only.
 
-- Central estimated price
-- Reasonable estimated price range
-- Estimated price per square foot
-- Neutral assessment of whether an asking price is below, within, or above the estimated range
-- Confidence indicator and local data-coverage information
-- Important contributing factors
-- Comparable properties when suitable data is available
-- Clear coverage and model limitations
+## Data source and storage
 
-A prediction range communicates uncertainty; neither the central estimate nor the range is a guarantee.
+The individual dataset comes from NAPIC/JPPH's **Data Transaksi Terbuka** Tableau export. NAPIC introduced it as part of the Government Public Sector Open Data initiative. Reuse is recorded under Malaysian Government Open Data Terms of Use 1.0 with the attribution: “Data and information are subject to the Malaysian Government Open Data Terms of Use 1.0.” The feed contains no owner/person identifiers.
 
-## Proposed workflow
-
-```text
-Data-source investigation
-        ↓
-Legal and technical approval
-        ↓
-Raw data collection
-        ↓
-Schema validation
-        ↓
-Cleaning and deduplication
-        ↓
-Exploratory data analysis
-        ↓
-Feature engineering
-        ↓
-Geographic and time-based splitting
-        ↓
-Baseline models
-        ↓
-Advanced model comparison
-        ↓
-Model evaluation by state and district
-        ↓
-Saved prediction pipeline
-        ↓
-Streamlit web application
-        ↓
-Deployment and monitoring
-```
-
-Raw, interim, cleaned, and processed data will remain separate. Duplicate properties must be grouped before train/test splitting so copies of one property cannot cause data leakage. Time-based evaluation is preferred because housing markets change over time, and performance must be analysed by state, district, property type, price range, and data coverage.
-
-## Proposed technology stack
-
-Python is the proposed primary language. Likely early tools include Pandas, NumPy, scikit-learn, CSV or Parquet storage, and Jupyter notebooks for exploration only. Requests, BeautifulSoup, Scrapy, or other suitable import tools may be considered only after a source is approved. Official APIs and downloadable datasets are preferred.
-
-CatBoost is a candidate modelling library. Streamlit is the current choice for the first web MVP. SQLite or PostgreSQL may be introduced when structured storage becomes necessary. FastAPI with a custom HTML/CSS/JavaScript frontend and an optional C# WPF client are possible future improvements. Git and GitHub are planned for version control and collaboration.
-
-These are proposed choices, not commitments. Technologies should be adopted only when their phase begins and their need is demonstrated.
-
-## Proposed machine-learning models
-
-- National median-price baseline
-- Median price grouped by location and property type
-- Linear Regression
-- Random Forest Regressor
-- Histogram Gradient Boosting when suitable
-- CatBoost Regressor
-- K-Nearest Neighbours as an optional learning experiment
-
-Simple baselines will be implemented before advanced models, and no final model is preselected. CatBoost may suit a dataset with many categorical features, but it must earn selection through evaluation. K-Nearest Neighbours may be educational, but it needs careful feature scaling, can struggle with categorical data, may become slow on large datasets, and cannot represent geographic similarity through simple numerical distance alone. Deep learning is outside the initial modelling plan.
-
-## Evaluation metrics
-
-- Mean Absolute Error (MAE), reported in Malaysian ringgit
-- Median Absolute Error
-- Mean Absolute Percentage Error (MAPE), interpreted carefully for low-priced records
-- R² as a supporting metric
-- Error by state and district
-- Error by property type and price range
-- Error by data-coverage level
-
-A high R² alone does not prove that a model is useful. Models must use identical evaluation splits, outperform meaningful baselines, avoid leakage, and demonstrate acceptable performance in each supported area. Areas with insufficient evidence must not receive misleading predictions.
-
-## Proposed future project structure
-
-This structure has **not** been created. Folders will be added gradually only when their related implementation begins.
-
-```text
-malaysia-house-price-estimator/
-├── data/
-│   ├── raw/
-│   ├── interim/
-│   ├── processed/
-│   └── external/
-├── notebooks/
-├── src/
-│   ├── collection/
-│   ├── validation/
-│   ├── cleaning/
-│   ├── features/
-│   ├── modelling/
-│   ├── prediction/
-│   └── common/
-├── models/
-├── reports/
-├── tests/
-├── app/
-│   └── streamlit/
-├── README.md
-├── ROADMAP.md
-└── AGENTS.md
-```
-
-## Data acquisition principles
-
-Six JPPH aggregate workbooks and two Penang aggregate CSV releases are approved for this prototype under the government catalogue's Creative Commons Attribution label. No property-level source or listing scraper is approved. Any further collection must be reviewed for terms of service, robots rules, licensing, copyright, privacy, access controls, and technical restrictions. Collection must respect rate limits and must never bypass login systems, CAPTCHAs, paywalls, or anti-bot controls. Secrets and private data must never be committed to Git.
-
-## Limitations
-
-- Listing prices may differ from completed transaction prices.
-- Property records may be incomplete, inconsistent, duplicated, or outdated.
-- Some states, districts, and especially rural areas may have limited coverage.
-- Luxury properties may behave differently from ordinary homes.
-- Renovation quality and exact physical condition may be unavailable.
-- Location and property-type names may be inconsistent across sources.
-- Model performance may deteriorate as market conditions change.
-- Comparable properties may be unavailable in low-data areas.
-- Predictions are estimates, not official valuations.
-
-## Disclaimer
-
-All outputs are for educational and informational purposes only. They are not financial advice, an official property valuation, or a guaranteed sale price. Outputs must not be the sole basis for purchasing, selling, borrowing, lending, or investment decisions. Users should consult appropriately licensed professionals when making consequential decisions.
-
-## Documentation
-
-- [Project roadmap](ROADMAP.md)
-- [Instructions for future Codex tasks](AGENTS.md)
-- [Data-source investigation](docs/DATA_SOURCE_INVESTIGATION.md)
-- [Canonical data schema](docs/DATA_SCHEMA.md)
-- [Cleaning and validation rules](docs/CLEANING_AND_VALIDATION.md)
-- [Project progress](docs/PROJECT_PROGRESS.md)
-- [Current blockers](docs/BLOCKERS.md)
-- [Architecture and local usage](docs/ARCHITECTURE_AND_USAGE.md)
-- [Real-data onboarding](docs/REAL_DATA_ONBOARDING.md)
-- [Real dataset assessment](docs/REAL_DATASET_ASSESSMENT.md)
-- [Streamlit deployment](docs/STREAMLIT_DEPLOYMENT.md)
-- [Aggregate transaction dataset](docs/AGGREGATE_TRANSACTION_DATASET.md)
-- [Real aggregate EDA](docs/REAL_DATA_EDA.md)
-- [Aggregate baseline evaluation](docs/REAL_MODEL_EVALUATION.md)
-
-## Local validation
-
-With Python 3.11 or newer:
+Raw snapshots are intentionally excluded from Git because the 16 CSVs total tens of megabytes and must retain immutable provenance. The repository includes the bounded, resumable downloader, exact schema validation, training code, saved model, quality/evaluation reports, and source documentation. Recreate the local raw dataset with:
 
 ```powershell
-python -m pip install -e ".[ml,ui,api,charts,dev]"
-python -m unittest discover -s tests -v
-python scripts/train_official_averages.py
-python scripts/train_penang_district.py
-python scripts/train_regional_area.py
-python scripts/process_aggregate_transactions.py
-python -m streamlit run app/streamlit_app.py
+python scripts/download_napic_open_transactions.py `
+  --output-dir data/raw/napic_open_transactions_YYYYMMDD
 ```
 
-See [Architecture and local usage](docs/ARCHITECTURE_AND_USAGE.md) for CLI and optional API commands. Synthetic fixtures remain only for pipeline tests. The official-average test metrics describe historical aggregates and do not establish individual-home accuracy.
+The July 2026 validated snapshot contains 416,627 rows, 129 published districts, 11 property categories, and all 16 jurisdictions. Main-floor area is absent on 107,740 rows; one land-area value is absent. All required price, state, district, property-type, and month fields were present. Statistical outliers are flagged and retained. Exact duplicate grouping runs before the time split; the current full published-attribute signature found no exact duplicate rows.
 
-## Public deployment status
+The separately published NAPIC aggregate XLSX workbooks were investigated and all 16 Q1 2026 state files were downloaded locally for importer validation. They state copyright reserved and do not publish compatible model-training/redistribution terms, so the originals are Git-excluded and are not the committed benchmark source. Their URLs and checksums are recorded in `data/external/napic/publication_manifest.json`.
 
-Repository: https://github.com/cylim0823/malaysia-house-price-estimator
+## Run locally
 
-Live app: https://malaysia-house-price-estimator-nnddkdymt6prvwdtkfww5y.streamlit.app
+Use Python 3.11 or newer:
 
-The repository includes the licensed source workbooks, normalized CSV, reproducible training script, and trained historical-average model. GitHub Pages cannot run the Python model.
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -e ".[ml,ui,api,charts,dev]"
+streamlit run app/streamlit_app.py
+```
+
+Run validation:
+
+```powershell
+python -m unittest discover -s tests -v
+python -m compileall -q src app scripts tests
+```
+
+Retrain after recreating a raw snapshot:
+
+```powershell
+python scripts/train_napic_open_transactions.py `
+  --raw-dir data/raw/napic_open_transactions_YYYYMMDD `
+  --model models/individual_property/model_bundle.pkl `
+  --report reports/generated/evaluation/individual_property.json `
+  --quality-report reports/generated/data_quality/individual_property.json
+```
+
+Regenerate the multi-state aggregate data and model:
+
+```powershell
+python scripts/process_napic_aggregate_transactions.py
+python scripts/train_aggregate_model.py
+```
+
+## Repository layout
+
+```text
+app/                              Streamlit entrypoint
+data/external/                    Original licensed historical aggregate files
+data/raw/                         Ignored immutable runtime snapshots
+data/processed/                   Validated aggregate releases/catalogue
+docs/                             Sources, architecture, progress, and blockers
+models/historical_aggregate/      Explicit active aggregate bundle and manifest
+models/individual_property/       Separate property-level application bundle
+reports/generated/evaluation/     Role-labelled evaluation output
+reports/generated/data_quality/   Role-labelled quality and EDA output
+scripts/                          Reproducible collection and training commands
+src/house_price_estimator/        Core application and pipeline logic
+tests/fixtures/synthetic/         Deterministic test-only model fixture
+tests/                            Unit, integration, regression, and UI tests
+```
+
+## Current limitations
+
+- Published open transactions do not contain bedrooms, bathrooms, car parks, furnishing, completion year, condition, renovation, or a stable transaction identifier.
+- District/type support and record volume vary. Low-support segments receive an explicit warning.
+- The model does not use city, township, road, scheme/project, or coordinates, so it cannot capture every within-district difference.
+- Prediction ranges are empirical validation-residual intervals, not guarantees.
+- 2026 Q1 is recent but provisional; the source can also return transient empty Tableau exports, so collection is bounded, retried, and schema checked.
+- The 2026 aggregate is year to date through Q1, not a complete annual figure.
+- Some rare district/property-type/year combinations are partial because no transaction was published in one or more periods.
+
+See `docs/REAL_DATASET_ASSESSMENT.md`, `docs/RECENT_OFFICIAL_DATA_INVESTIGATION.md`, `docs/INDIVIDUAL_PROPERTY_DATA_REQUIREMENTS.md`, and `ROADMAP.md` for evidence and remaining work.

@@ -30,7 +30,7 @@ class PropertyCategory(StrEnum):
 
 
 class PropertyType(StrEnum):
-    CONDOMINIUM="Condominium"; APARTMENT="Apartment"; FLAT="Flat"; TERRACED="Terraced House"
+    CONDOMINIUM="Condominium"; APARTMENT="Apartment"; FLAT="Flat"; STUDIO="Studio"; TERRACED="Terraced House"
     SEMI_DETACHED="Semi-Detached House"; BUNGALOW="Bungalow"; TOWNHOUSE="Townhouse"; OTHER="Other"
 
 
@@ -133,4 +133,3 @@ class ModelReadyRecord:
     event_date: str | None
     price_type: PriceType
     dataset_version: str
-

@@ -5,8 +5,9 @@ import unittest
 
 import pandas as pd
 
-from house_price_estimator.aggregate_transactions import (
+from house_price_estimator.data_pipeline import (
     AggregateTransactionBundle,
+    aggregate_property_type,
     FORBIDDEN_MODEL_FEATURES,
     MODEL_FEATURES,
     WeightedMeanBaseline,
@@ -36,13 +37,49 @@ class AggregateValidationTests(unittest.TestCase):
         self.assertEqual(first["property_type"], "flat")
         self.assertEqual(result.quality_report["arithmetic_mismatch_rows"], 0)
         self.assertEqual(result.quality_report["sum_of_transaction_count"], 120)
+        self.assertEqual(
+            result.quality_report["earliest_period"], {"year": 2017, "quarter": 1}
+        )
+        self.assertEqual(
+            result.quality_report["latest_period"], {"year": 2017, "quarter": 4}
+        )
+        self.assertEqual(result.quality_report["missing_years"], [])
+        self.assertEqual(result.quality_report["missing_quarters"], [])
+        self.assertIn("missing_state_period_combinations", result.quality_report)
+        self.assertIn("very_low_transaction_volume_rows", result.quality_report)
+        self.assertEqual(result.quality_report["extraction_warning_count"], 0)
+
+    def test_source_metadata_is_injected_without_state_specific_core_defaults(self):
+        result = load_and_validate_aggregate_csv(
+            FIXTURE,
+            metadata={
+                "source_name": "Approved test source",
+                "source_dataset": "test-dataset",
+                "dataset_version": "test-v1",
+                "source_document": "Test document",
+            },
+        )
+        first = result.processed.iloc[0]
+        self.assertEqual(first["source_name"], "Approved test source")
+        self.assertEqual(first["source_dataset"], "test-dataset")
+        self.assertEqual(first["dataset_version"], "test-v1")
+        self.assertIn("warnings", first["validation_notes"])
 
     def test_required_columns_and_controlled_property_type(self):
         with self.assertRaisesRegex(ValueError, "missing required"):
             validate_aggregate_frame(pd.DataFrame({"state": ["Penang"]}))
         self.assertEqual(normalize_aggregate_property_type("Low-Cost Flat"), "low_cost_flat")
-        with self.assertRaises(ValueError):
-            normalize_aggregate_property_type("Made Up Type")
+        unknown = aggregate_property_type("Made Up Type")
+        self.assertFalse(unknown.known)
+        self.assertEqual(unknown.raw_value, "Made Up Type")
+        self.assertEqual(unknown.property_type_label, "Made up type")
+        self.assertEqual(normalize_aggregate_property_type("Made Up Type"), "other_made_up_type")
+
+    def test_property_type_catalog_preserves_raw_code_and_friendly_label(self):
+        definition = aggregate_property_type("1 - 1 1/2 Storey Semi-Detached")
+        self.assertEqual(definition.raw_value, "1 - 1 1/2 Storey Semi-Detached")
+        self.assertEqual(definition.property_type_code, "semi_detached_1_to_1_5_storey")
+        self.assertEqual(definition.property_type_label, "1–1½-storey semi-detached house")
 
     def test_invalid_values_duplicates_and_mismatch_are_preserved(self):
         frame = pd.read_csv(FIXTURE).iloc[:2].copy()

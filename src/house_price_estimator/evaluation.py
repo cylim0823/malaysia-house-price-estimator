@@ -5,7 +5,7 @@ from pathlib import Path
 from statistics import median
 from typing import Any,Iterable
 import numpy as np
-from .synthetic import SYNTHETIC_LABEL
+from .synthetic_data import SYNTHETIC_LABEL
 
 def regression_metrics(actual:Iterable[float],predicted:Iterable[float])->dict[str,float|None]:
     y=np.asarray(list(actual),float); p=np.asarray(list(predicted),float)

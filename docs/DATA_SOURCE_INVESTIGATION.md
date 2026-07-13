@@ -3,6 +3,8 @@
 **Research date:** 13 July 2026  
 **Status:** Two groups of aggregate government open data are approved and collected; no property-level listing or transaction source is approved.
 
+**13 July 2026 update:** NAPIC Data Transaksi Terbuka was subsequently validated under Malaysian Government Open Data Terms of Use 1.0. Its 416,627 completed transactions across all 16 jurisdictions support both the separate individual estimator and a derived aggregate release. Combined with preserved licensed 2017 source history, the aggregate release has 15,216 rows representing 428,443 transactions. All 16 Q1 2026 publication workbooks were downloaded and passed the generic Excel importer, but remain Git-excluded and unused because their copyright-reserved notices do not establish compatible redistribution or model-use rights.
+
 ## 1. Investigation objective
 
 The long-term goal is a residential property-price estimator covering all Malaysian states and federal territories. Coverage must expand only where verified data, legal permission, geographic detail, and measured model performance support it.
@@ -354,3 +356,11 @@ page states that all copyright is reserved and does not provide an explicit
 open-data or model-training licence for those publications. They were therefore
 not copied, parsed, or added to the repository. Written reuse terms would be
 required before using them as training data.
+
+## Approved NAPIC open transaction feed — 13 July 2026
+
+Further investigation distinguished the copyright-reserved publication workbooks from NAPIC/JPPH's separate **Data Transaksi Terbuka** product. NAPIC's official Q3 2023 launch material aligns this product with the Government Public Sector Open Data initiative, and the Malaysian Government Open Data Terms of Use 1.0 allow copying, adaptation, combination, publication, distribution, and commercial/non-commercial use with attribution and stated exclusions.
+
+The official Tableau CSV export was collected by explicit state filter. NAPIC source labels `Pulau Pinang`, `WP Putrajaya`, and `WP Labuan` are mapped explicitly; Kuala Lumpur is the verified default view. The July 2026 snapshot contains 416,627 completed residential transactions across all 16 jurisdictions, 129 district labels, 11 categories, and January 2021-March 2026 dates. The feed has price, district, mukim, scheme/area, road, type, land/parcel area, main-floor area, tenure, month, and unit level; it has no bedrooms, bathrooms, car parks, furnishing, condition, completion year, coordinates, personal identifiers, or stable transaction ID.
+
+The source-specific adapter preserves raw strings, validates both duplicate `Unit` headers by position, records the requested state as provenance, converts only documented square-metre areas, maps dashes to null, and flags malformed values. Raw CSV snapshots are excluded from Git because of size; the bounded resumable downloader and hashes make collection reproducible.

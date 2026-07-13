@@ -522,3 +522,9 @@ The schema will provide the contract for importers, validation, cleaning, dedupl
 - Which official code system/version will define state and district codes
 - How qualitative floor bands and source-specific property subtypes should be standardised
 - Whether lot restriction, occupancy, and other sensitive/legal characteristics should be model features
+
+## Generic aggregate transaction schema (v2)
+
+The historical benchmark uses one source-neutral row contract: `state`, `district`, `district_notes`, `property_type`, `year`, `period_type`, `period_number`, `period_start`, `period_end`, `transaction_count`, `transaction_value_rm`, `average_price_rm`, `price_type`, `source_name`, `source_dataset`, `source_file`, `source_sheet`, `source_url`, `source_document`, `source_table`, `retrieved_at`, `dataset_version`, `schema_version`, `validation_status`, `validation_errors`, and `validation_warnings`.
+
+`period_type` is currently `quarter`; `period_number` is 1-4. These are internal source-period fields. The UI selects a year and aggregates with `sum(transaction_value_rm) / sum(transaction_count)`. Missing periods remain missing and are disclosed.

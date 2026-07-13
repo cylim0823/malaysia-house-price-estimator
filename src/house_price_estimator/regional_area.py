@@ -190,17 +190,16 @@ class RegionalAreaBundle:
             raise ValueError(
                 f"Unsupported property type for {state}, {area}: {property_type}"
             )
-        if year not in {2016, 2017, 2018}:
-            raise ValueError("Regional coverage is limited to 2016-2018")
-        if quarter not in {1, 2, 3, 4} or (year == 2018 and quarter > 2):
-            raise ValueError("The regional datasets end at 2018 Q2")
+        observation_key = self._observation_key(
+            state, area, property_type, year, quarter
+        )
+        if observation_key not in self.observations:
+            raise ValueError("Unsupported period for selected state, area, and property type")
         frame = pd.DataFrame(
             [[state, area, property_type, year, quarter]], columns=FEATURES
         )
         estimate = max(0.0, float(self.model.predict(frame)[0]))
-        observed = self.observations.get(
-            self._observation_key(state, area, property_type, year, quarter)
-        )
+        observed = self.observations[observation_key]
         return {
             "model_estimate": estimate,
             "lower": max(0.0, estimate - self.residual_margin_rm),

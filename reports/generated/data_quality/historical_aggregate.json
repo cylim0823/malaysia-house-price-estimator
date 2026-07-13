@@ -1,0 +1,69 @@
+{
+  "dataset_name": "Malaysia licensed completed-transaction aggregates",
+  "dataset_version": "napic-open-transactions-20260713-aggregate-v1",
+  "synthetic": false,
+  "model_version": "aggregate-weighted-baseline-v1",
+  "generated_at": "2026-07-13T14:41:37.702912+00:00",
+  "aggregate_rows": 15216,
+  "transactions": 428443,
+  "transaction_value_rm": 213260501352.0,
+  "states": [
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Kuala Lumpur",
+    "Labuan",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Penang",
+    "Perak",
+    "Perlis",
+    "Putrajaya",
+    "Sabah",
+    "Sarawak",
+    "Selangor",
+    "Terengganu"
+  ],
+  "state_count": 16,
+  "district_count": 129,
+  "property_types": [
+    "cluster_house",
+    "condominium_apartment",
+    "detached",
+    "flat",
+    "low_cost_flat",
+    "low_cost_house",
+    "one_to_one_half_storey_semi_detached",
+    "one_to_one_half_storey_terraced",
+    "town_house",
+    "two_to_two_half_storey_semi_detached",
+    "two_to_two_half_storey_terraced"
+  ],
+  "years": [
+    2017,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "latest_period": [
+    2026,
+    1
+  ],
+  "complete_years_at_national_level": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "year_to_date_years": [
+    2026
+  ],
+  "complete_segment_years": 2797,
+  "partial_segment_years": 2337,
+  "rejected_raw_rows": 0
+}

@@ -1,63 +1,28 @@
 # Aggregate Baseline Evaluation
 
-## Prediction target and split
+## Target and split
 
-The target is average completed transaction price for a selected Penang
-district, source property category, year, and quarter. Training uses 158
-aggregate rows (8,646 transactions) from 2017 Q1-Q3. The untouched provisional
-test uses 54 Q4 rows representing 3,170 transactions.
+The aggregate target is average completed transaction price for a state, district, property type, year, and internal quarter. The user-facing historical explorer selects a year and computes the observed annual or year-to-date benchmark directly from totals.
 
-This within-year split is time ordered, but it does not validate multi-year
-forecasting, current 2026 accuracy, or a specific property's value.
+The generic baseline trains on validated 2021 Q1-2025 Q4 groups and evaluates provisionally on 2026 Q1. The selected model is the state + district + property-type transaction-weighted mean because it has the lowest weighted MAE among the registered simple baselines. Full results are in `models/historical_aggregate/evaluation_summary.json`.
 
 ## Leakage controls
 
-Features are `state`, `district`, `property_type`, `year`, and `quarter`.
-`transaction_value_rm` and `transaction_count` are explicitly forbidden as
-ordinary model features. Count is used as sample weight and support metadata.
-Preprocessing cannot derive the target from total value.
+Model features are state, district, property type, year, and internal quarter. Transaction value and transaction count are forbidden as ordinary features. Count is used only as sample weight/support. Annual observed benchmarks use transaction value solely as the numerator of the published arithmetic identity; they are not model predictions.
 
-## Baselines compared
+## Baselines
 
 - Overall transaction-weighted average
 - State weighted average
-- District weighted average
+- State/district weighted average
 - Property-type weighted average
-- State + district + property-type weighted average
-- Previous-quarter average with a training-only segment fallback
+- State/district/property-type weighted average
+- Previous-period average with a training-only segment fallback
 
-The segment weighted average achieved the lowest Q4 transaction-weighted MAE
-and was selected. No advanced model was trained because the dataset has only
-one year; complexity would not repair the missing temporal evidence.
+Advanced models were not selected by default. They remain a future comparison on identical time splits.
 
-## Provisional Q4 metrics
+## Coverage and interpretation
 
-| Metric | Result |
-| --- | ---: |
-| Unweighted MAE | RM64,764.81 |
-| Median absolute error | RM28,201.59 |
-| Unweighted RMSE | RM103,787.95 |
-| Unweighted MAPE | 17.79% |
-| R² | 0.9499 |
-| Transaction-weighted MAE | RM36,676.57 |
-| Transaction-weighted RMSE | RM69,133.96 |
-| Transaction-weighted MAPE | 8.00% |
-| Weighted R² | 0.9730 |
+The release has 15,216 aggregate rows representing 428,443 completed transactions. It preserves licensed 2017 history and covers all 16 jurisdictions from 2021 through 2026 Q1, with 129 district labels and 11 normalized categories. Results vary materially by segment support. Aggregate performance never establishes individual-property accuracy.
 
-Unweighted metrics treat every aggregate group equally. Weighted metrics give
-greater influence to groups representing more completed transactions. The
-difference is expected because many large errors occur in low-volume groups.
-Slice metrics are emitted only for groups with at least three aggregate rows
-and 20 represented transactions.
-
-## Public support policy
-
-The Streamlit explorer exposes only actual dataset combinations. It shows the
-published historical average and transaction count for all retained groups,
-but suppresses predictive support below 20 transactions. A provisional
-baseline estimate is shown only for Q4, the evaluated period. Q1-Q3 are shown
-as historical inputs to the evaluation, not retroactive predictions.
-
-The full metrics and baseline comparison are stored in
-`reports/aggregate_transaction_model_metrics.json`.
-
+The historical service reports direct transaction-weighted observations, periods included/missing, coverage status, attribution, and fallbacks. A complete year requires Q1-Q4; 2026 is year to date through Q1. No missing period is invented.

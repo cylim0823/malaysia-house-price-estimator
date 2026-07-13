@@ -3,15 +3,15 @@
   "file_size_bytes": 26404,
   "sha256": "daff6f0a4ebb08548cad6581ce1e687b6d66398cbd1ecc003dcf86020275bf47",
   "import_date": "2026-07-13",
-  "source_name": "Penang State Government residential transaction tables",
+  "source_name": "Penang State Government",
   "source_url": "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang",
   "source_urls": [
     "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang",
     "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-rm-juta-di-pulau-pinang"
   ],
-  "source_document": "Penang residential transaction counts and values by property type and district, 2017",
+  "source_document": "Residential transaction counts and values by property type and district, 2017",
   "source_page_or_table": "Quarter/property-type/district tables",
-  "licence": "Creative Commons Attribution (catalogue label)",
+  "licence": "Creative Commons Attribution",
   "price_type": "completed_transaction_average",
   "schema_version": "aggregate-1.0.0",
   "dataset_version": "penang-completed-transaction-aggregates-2017-v2",

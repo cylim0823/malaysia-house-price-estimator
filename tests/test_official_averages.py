@@ -16,7 +16,7 @@ ROOT = Path(__file__).parents[1]
 class OfficialAverageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = load_official_average_prices(ROOT / "data" / "external" / "napic_open_data")
+        cls.data = load_official_average_prices(ROOT / "data" / "external" / "napic")
         cls.bundle, cls.report = train_official_average_model(cls.data)
 
     def test_official_workbooks_are_normalized(self):

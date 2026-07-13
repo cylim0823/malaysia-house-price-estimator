@@ -1,4 +1,5 @@
-"""Streamlit explorers for licensed Malaysian aggregate property data."""
+"""Streamlit UI for annual aggregate benchmarks and individual estimates."""
+
 from pathlib import Path
 import sys
 
@@ -7,215 +8,286 @@ SOURCE_ROOT = PROJECT_ROOT / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
-try:
-    import streamlit as st
-except ImportError as exc:
-    raise RuntimeError("Install UI dependencies with: pip install -e .[ui]") from exc
+import streamlit as st
 
-from house_price_estimator.aggregate_transactions import AggregateTransactionBundle
-from house_price_estimator.regional_area import RegionalAreaBundle
-
-
-AGGREGATE_MODEL_PATH = PROJECT_ROOT / "models" / "aggregate_transaction_bundle.pkl"
-REGIONAL_MODEL_PATH = PROJECT_ROOT / "models" / "regional_area_bundle.pkl"
-AGGREGATE_DATASET_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "processed"
-    / "aggregate_transactions"
-    / "penang_aggregate_transactions_v1.csv"
+from house_price_estimator.aggregate_data import AggregateBenchmarkService
+from house_price_estimator.artifacts import (
+    HISTORICAL_DATA_PATH,
+    INDIVIDUAL_PROPERTY_MODEL_PATH,
+    ModelArtifactError,
+    load_active_historical_model,
+    load_individual_property_model,
 )
-REGIONAL_DATASET_PATH = PROJECT_ROOT / "data" / "official" / "regional_area_prices.csv"
-TERRACED_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-rumah-teres-mengikut-daerahwilayahnegeri"
-HIGHRISE_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-unit-bertingkat-tinggi-mengikut-daerah-wilayah"
-PENANG_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang"
-MODE_AGGREGATE = "Real aggregate transaction explorer"
-MODE_REGIONAL = "Published regional price averages"
+from house_price_estimator.prediction import RealPropertyService
+from house_price_estimator.data_pipeline import aggregate_property_type
+from house_price_estimator.ui_contracts import (
+    individual_field_visibility,
+    normalize_individual_submission,
+)
+
+
+AGGREGATE_DATA_PATH = HISTORICAL_DATA_PATH
+REAL_PROPERTY_MODEL_PATH = INDIVIDUAL_PROPERTY_MODEL_PATH
+OPTIONAL_HELP = "Optional — leave blank when unknown."
+APP_BUILD_ID = "generic-history-2026.07.13.1"
 
 
 @st.cache_resource
-def load_models() -> tuple[AggregateTransactionBundle, RegionalAreaBundle]:
-    """Load trusted repository-owned bundles once per app process."""
-    return (
-        AggregateTransactionBundle.load(AGGREGATE_MODEL_PATH),
-        RegionalAreaBundle.load(REGIONAL_MODEL_PATH),
+def load_aggregate_service() -> AggregateBenchmarkService:
+    active = load_active_historical_model()
+    return AggregateBenchmarkService.from_csv(
+        AGGREGATE_DATA_PATH, model_metadata=active.metadata
     )
 
 
-def assessment(asking: float, lower: float, upper: float) -> str:
-    if asking < lower:
-        return "Below estimated range"
-    if asking > upper:
-        return "Above estimated range"
-    return "Within estimated range"
+@st.cache_resource
+def load_real_property_service() -> RealPropertyService:
+    return RealPropertyService(load_individual_property_model())
 
 
 def property_type_label(value: str) -> str:
-    return value.replace("_", " ").replace("one to one half", "1 to 1½").replace(
-        "two to two half", "2 to 2½"
-    ).title()
+    return aggregate_property_type(value).property_type_label
+
+
+def optional_number(
+    label: str, *, key: str, minimum: float | int, step: float | int, integer: bool = False
+) -> float | int | None:
+    if not st.checkbox(f"I know the {label.lower()}", key=f"know-{key}"):
+        return None
+    value = st.number_input(
+        label, min_value=minimum, value=None, step=step, placeholder=OPTIONAL_HELP, key=key
+    )
+    return int(value) if integer and value is not None else value
+
+
+def render_historical_explorer(service: AggregateBenchmarkService) -> None:
+    """Render dynamic year-level official completed-transaction benchmarks."""
+    coverage = service.coverage
+    st.subheader("Official completed-transaction history")
+    st.caption(
+        f"Validated coverage: {len(coverage.states)} states and federal territories, "
+        "with available years generated from validated records. Publication periods "
+        "are handled internally."
+    )
+    state = st.selectbox(
+        "State or federal territory", coverage.states, key="history-state",
+    )
+    years = coverage.years(state)
+    year = st.selectbox(
+        "Year", years, index=0, key=f"history-year-{state}",
+    )
+    districts = coverage.districts(state, year)
+    district = (
+        st.selectbox(
+            "District or area", districts, key=f"history-district-{state}-{year}",
+        )
+        if districts else None
+    )
+    st.caption(f"Coverage: {'District-level' if districts else 'State-level'}")
+    property_types = coverage.property_types(state, year, district)
+    property_type = st.selectbox(
+        "Property type",
+        property_types,
+        format_func=property_type_label,
+        key=f"history-type-{state}-{year}-{district or 'state'}",
+    )
+    comparison = optional_number(
+        "Comparison price (RM)", key="history-comparison", minimum=1.0, step=10_000.0
+    )
+    if st.button("Show historical benchmark", type="primary", width="stretch"):
+        result = service.benchmark(
+            state=state, district=district, property_type=property_type, year=year
+        )
+        st.subheader("Historical market benchmark")
+        st.caption(
+            f"Coverage: {'District-level' if result.district_used is not None else 'State-level'}"
+        )
+        st.metric(result.display_label, f"RM {result.annual_average_price_rm:,.0f}")
+        st.metric("Transactions represented", f"{result.transaction_count:,}")
+        st.write(f"**Total transaction value:** RM {result.transaction_value_rm:,.0f}")
+        st.write(f"**Year status:** {result.year_status.replace('_', ' ')}")
+        st.write("**Periods included:** " + ", ".join(f"Q{q}" for q in result.periods_included))
+        st.write(
+            "**Missing periods:** "
+            + (", ".join(f"Q{q}" for q in result.periods_missing) or "None")
+        )
+        st.write(f"**Coverage completeness:** {result.coverage_completeness:.0%}")
+        st.write(f"**Coverage level:** {result.coverage_level.replace('_', ' ')}")
+        st.write(
+            f"**Available data period:** {result.available_period_start} to "
+            f"{result.available_period_end}"
+        )
+        if result.fallback_reason:
+            st.info(result.fallback_reason)
+        st.write(f"**Source:** {result.source_name}")
+        st.write(f"**Source document:** {result.source_document}")
+        st.write(f"**Source file:** {result.source_file}")
+        st.write(f"**Dataset version:** {result.dataset_version}")
+        st.write(
+            f"**Data age:** {result.data_age_days} days "
+            f"(retrieved {result.retrieved_at})"
+        )
+        if comparison is not None:
+            difference = comparison - result.annual_average_price_rm
+            direction = "above" if difference >= 0 else "below"
+            percent = abs(difference) / result.annual_average_price_rm * 100
+            st.info(
+                f"The comparison price is RM {abs(difference):,.0f} ({percent:.1f}%) "
+                f"{direction} this historical average."
+            )
+        st.error(
+            "Historical aggregate benchmark only; not an exact property value or official valuation."
+        )
+    with st.expander("Data source and limitations"):
+        st.write("Publisher: **National Property Information Centre (NAPIC), JPPH**")
+        st.markdown(
+            "[Official open transaction source]"
+            "(https://napic.jpph.gov.my/ms/data-transaksi?category=36&id=241)"
+        )
+        st.write("Licensed under Malaysian Government Open Data Terms of Use 1.0.")
+        st.write(
+            "Annual values equal total transaction value divided by total transaction count; "
+            "quarterly averages are never averaged without weights."
+        )
+
+
+def render_disclosure(title: str, values: tuple[str, ...], empty: str = "None.") -> None:
+    st.markdown(f"#### {title}")
+    if values:
+        for value in values:
+            st.write(f"- {value}")
+    else:
+        st.write(empty)
+
+
+def render_individual_estimator(service: RealPropertyService) -> None:
+    """Render optional property details separately from aggregate benchmarks."""
+    st.subheader("Individual Property Estimator")
+    st.success(
+        "Uses official NAPIC/JPPH completed residential transactions through 2026 Q1. "
+        "This is an estimate, not an official valuation."
+    )
+    state = st.selectbox(
+        "State or federal territory", service.bundle.states, index=None, key="property-state"
+    )
+    district = st.selectbox(
+        "District", service.bundle.districts(state) if state else (), index=None,
+        key="property-district",
+    )
+    property_type = st.selectbox(
+        "Property type",
+        service.bundle.property_types(state, district) if state and district else (),
+        index=None,
+        key="property-type",
+    )
+    visibility = individual_field_visibility(property_type) if property_type else None
+    city = st.text_input("City or township", help=OPTIONAL_HELP)
+    project = st.text_input("Development or project name", help=OPTIONAL_HELP)
+    subtype = st.selectbox(
+        "Property subtype", ["Unknown", "Intermediate", "Corner", "End lot", "Duplex", "Penthouse"]
+    )
+    built_up = optional_number("Built-up area (sq ft)", key="built-up", minimum=1.0, step=50.0)
+    land_area = (
+        optional_number("Land area (sq ft)", key="land-area", minimum=1.0, step=50.0)
+        if visibility and visibility["land_area_sqft"] else "Not applicable" if visibility else None
+    )
+    if visibility and not visibility["land_area_sqft"]:
+        st.info("Land area: Not applicable to an individual high-rise unit.")
+    bedrooms = optional_number("Bedrooms", key="bedrooms", minimum=0, step=1, integer=True)
+    additional_bedrooms = optional_number(
+        "Additional/helper bedrooms", key="additional-bedrooms", minimum=0, step=1, integer=True
+    )
+    bathrooms = optional_number("Bathrooms", key="bathrooms", minimum=1, step=1, integer=True)
+    car_parks = optional_number("Car parks", key="car-parks", minimum=0, step=1, integer=True)
+    storeys = (
+        optional_number("Storeys", key="storeys", minimum=0.5, step=0.5)
+        if visibility and visibility["storeys"] else "Not applicable" if visibility else None
+    )
+    if visibility and not visibility["storeys"]:
+        st.info("Storeys: Not applicable to an individual high-rise unit.")
+    floor_level = (
+        optional_number("Floor level", key="floor-level", minimum=0, step=1, integer=True)
+        if visibility and visibility["floor_level"] else "Not applicable" if visibility else None
+    )
+    if visibility and not visibility["floor_level"]:
+        st.info("Floor level: Not applicable to landed property.")
+    tenure = st.selectbox("Tenure", ["Unknown", "Freehold", "Leasehold"])
+    furnishing = st.selectbox("Furnishing", ["Unknown", "Unfurnished", "Partly Furnished", "Fully Furnished"])
+    completion_year = optional_number(
+        "Completion year", key="completion-year", minimum=1800, step=1, integer=True
+    )
+    property_age = optional_number(
+        "Property age (years)", key="property-age", minimum=0, step=1, integer=True
+    )
+    renovation = st.selectbox(
+        "Renovation status", ["Unknown", "Not renovated", "Partly renovated", "Fully renovated"]
+    )
+    condition = st.selectbox("Property condition", ["Unknown", "Needs repair", "Average", "Good", "Excellent"])
+    asking_price = optional_number(
+        "Asking price (RM)", key="asking-price", minimum=1.0, step=10_000.0
+    )
+    if st.button("Estimate completed transaction price", type="primary", width="stretch"):
+        raw = {
+            "state": state, "district": district, "city": city, "township": city,
+            "project_name": project, "property_type": property_type,
+            "property_subtype": subtype, "built_up_sqft": built_up,
+            "land_area_sqft": land_area, "bedrooms": bedrooms,
+            "additional_bedrooms": additional_bedrooms, "bathrooms": bathrooms,
+            "car_parks": car_parks, "storeys": storeys, "floor_level": floor_level,
+            "tenure": tenure, "furnishing": furnishing,
+            "completion_year": completion_year, "property_age_years": property_age,
+            "renovation_status": renovation, "property_condition": condition,
+            "asking_price": asking_price,
+        }
+        try:
+            result = service.predict(normalize_individual_submission(raw))
+        except ValueError as exc:
+            st.error(str(exc))
+        else:
+            st.metric("Estimated completed transaction price", f"RM {result.estimate:,.0f}")
+            st.write(f"Estimated range: **RM {result.lower:,.0f} – RM {result.upper:,.0f}**")
+            if result.price_per_sqft is not None:
+                st.write(f"Estimated price per sq ft: **RM {result.price_per_sqft:,.0f}**")
+            if result.asking_price_assessment:
+                st.info(result.asking_price_assessment)
+            st.write(f"Transactions in selected segment: **{result.support_count:,}**")
+            render_disclosure("Information used", result.disclosure.used)
+            render_disclosure("Information provided but not used", result.disclosure.provided_but_not_used)
+            render_disclosure("Missing optional information", result.disclosure.missing_optional)
+            render_disclosure("Not applicable", result.disclosure.not_applicable)
+            st.error("Educational estimate only; not financial advice or an official valuation.")
 
 
 st.set_page_config(page_title="Malaysia House Price Explorer", layout="centered")
 st.title("Malaysia House Price Explorer")
-st.warning(
-    "Historical aggregate explorer—not a specific-house estimator and not a current 2026 "
-    "market valuation. The data has no property size, address, bedrooms, tenure, condition, "
-    "project, or renovation features."
-)
-
-if not AGGREGATE_MODEL_PATH.is_file() or not REGIONAL_MODEL_PATH.is_file():
-    st.error("A required trained aggregate model bundle is missing from this deployment.")
+if not AGGREGATE_DATA_PATH.is_file() or not REAL_PROPERTY_MODEL_PATH.is_file():
+    st.error("A required processed dataset or model artefact is missing.")
     st.stop()
 
-aggregate_bundle, regional_bundle = load_models()
-mode = st.radio("Explorer mode", [MODE_AGGREGATE, MODE_REGIONAL])
+try:
+    aggregate_service = load_aggregate_service()
+    real_property_service = load_real_property_service()
+except ModelArtifactError as exc:
+    st.error(str(exc))
+    st.stop()
 
-if mode == MODE_AGGREGATE:
-    st.header("Real aggregate completed transactions")
-    st.info(
-        "Each row represents multiple completed transactions grouped by state, district, "
-        "property type, year, and quarter. The data covers Penang in 2017 only."
-    )
-    state = st.selectbox("State", aggregate_bundle.states)
-    district = st.selectbox("District", aggregate_bundle.districts(state))
-    property_type = st.selectbox(
-        "Property type",
-        aggregate_bundle.property_types(state, district),
-        format_func=property_type_label,
-    )
-    periods = aggregate_bundle.periods(state, district, property_type)
-    years = sorted({year for year, _ in periods})
-    year = st.selectbox("Year", years)
-    quarters = [quarter for candidate_year, quarter in periods if candidate_year == year]
-    quarter = st.selectbox("Quarter", quarters)
+history_tab, property_tab = st.tabs(["Historical Market Explorer", "Individual Property Estimator"])
+with history_tab:
+    st.warning("This mode does not estimate the exact value of a specific property.")
+    render_historical_explorer(aggregate_service)
+with property_tab:
+    render_individual_estimator(real_property_service)
 
-    if st.button("Show aggregate result", type="primary", width="stretch"):
-        result = aggregate_bundle.predict(
-            state=state,
-            district=district,
-            property_type=property_type,
-            year=year,
-            quarter=quarter,
-        )
-        st.subheader("Completed-transaction group result")
-        st.metric(
-            "Published average completed transaction price",
-            f"RM {result['observed_average_price_rm']:,.0f}",
-        )
-        st.metric("Transactions represented", f"{result['transaction_count']:,}")
-        st.write(f"Volume support: **{result['volume_support'].replace('_', ' ')}**")
-        if not result["public_prediction_supported"]:
-            st.warning(
-                "This group has fewer than 20 transactions. It remains visible for historical "
-                "transparency, but is excluded from public predictive support."
-            )
-        elif result["estimated_average_price_rm"] is not None:
-            st.metric(
-                "Provisional weighted-baseline estimate",
-                f"RM {result['estimated_average_price_rm']:,.0f}",
-            )
-            st.caption(
-                "Evaluated only by training on 2017 Q1–Q3 and testing on Q4. This is not "
-                "multi-year or current-market validation."
-            )
-        else:
-            st.info(
-                "No predictive estimate is shown for Q1–Q3. These periods are the historical "
-                "training portion of the provisional Q4 baseline evaluation."
-            )
-        nearby = [
-            {
-                "period": f"{item['year']} Q{item['quarter']}",
-                "average_price_rm": item["average_price_rm"],
-                "transactions": item["transaction_count"],
-                "volume_support": item["volume_support"],
-            }
-            for item in result["nearby_historical_quarters"]
-        ]
-        st.write("Nearby historical quarters")
-        st.dataframe(nearby, width="stretch", hide_index=True)
-        st.error(
-            "This estimate represents an average for a district-property-type-period group. "
-            "It is not an estimate of a specific property's value."
-        )
-        st.caption(
-            f"Dataset: {result['dataset_version']} · Baseline: {result['baseline_used']} · "
-            f"Available range: {result['available_date_range']}"
-        )
-
-    with st.expander("Aggregate source, download, and evaluation"):
-        st.markdown(
-            f"Source: [Penang residential transaction counts]({PENANG_SOURCE_URL}) and the "
-            "matching government transaction-value table. The archive catalogue marks both "
-            "Creative Commons Attribution."
-        )
-        if AGGREGATE_DATASET_PATH.is_file():
-            st.download_button(
-                "Download validated aggregate CSV",
-                AGGREGATE_DATASET_PATH.read_bytes(),
-                file_name="penang_aggregate_transactions_v1.csv",
-                mime="text/csv",
-            )
-        metrics = aggregate_bundle.test_metrics
-        st.write(
-            f"Provisional Q4 unweighted MAE: RM {metrics['mae_rm']:,.0f}; "
-            f"transaction-weighted MAE: RM {metrics['weighted_mae_rm']:,.0f}."
-        )
-
-else:
-    st.header("Published regional historical averages")
-    st.info(
-        "Terraced averages cover all 13 states plus Kuala Lumpur from 2016 Q1 to "
-        "2018 Q2. High-rise coverage is partial. Putrajaya and Labuan are unsupported."
+with st.expander("Technical details"):
+    st.write(f"Application build: **{APP_BUILD_ID}**")
+    st.write(
+        "Historical model version: **"
+        f"{aggregate_service.model_metadata.get('model_version', 'unavailable')}**"
     )
-    state = st.selectbox("State or federal territory", regional_bundle.states)
-    area = st.selectbox("District / region", regional_bundle.areas_by_state[state])
-    property_type = st.selectbox(
-        "Property type", regional_bundle.property_types(state, area)
+    st.write(
+        "Historical dataset version: **"
+        f"{aggregate_service.model_metadata.get('dataset_version', 'unavailable')}**"
     )
-    year = st.selectbox("Year", [2016, 2017, 2018], index=2)
-    quarter_options = [1, 2] if year == 2018 else [1, 2, 3, 4]
-    quarter = st.selectbox("Quarter", quarter_options)
-    asking = st.number_input(
-        "Optional comparison price (RM; 0 means omitted)",
-        0.0,
-        value=0.0,
-        step=10000.0,
-    )
-    if st.button("Show regional benchmark", type="primary", width="stretch"):
-        result = regional_bundle.predict(
-            state=state,
-            area=area,
-            property_type=property_type,
-            year=year,
-            quarter=quarter,
-        )
-        st.subheader("Area-average result")
-        st.metric("Published historical average", f"RM {result['observed_average']:,.0f}")
-        st.metric("Historical model benchmark", f"RM {result['model_estimate']:,.0f}")
-        st.write(
-            f"Indicative historical range: **RM {result['lower']:,.0f} – "
-            f"RM {result['upper']:,.0f}**"
-        )
-        if asking:
-            st.info(f"Comparison: {assessment(asking, result['lower'], result['upper'])}")
-
-    with st.expander("Regional sources and CSV download"):
-        st.markdown(
-            f"Sources: [JPPH terraced prices]({TERRACED_SOURCE_URL}) and "
-            f"[JPPH high-rise prices]({HIGHRISE_SOURCE_URL})."
-        )
-        if REGIONAL_DATASET_PATH.is_file():
-            st.download_button(
-                "Download normalized regional area-price CSV",
-                REGIONAL_DATASET_PATH.read_bytes(),
-                file_name="regional_area_prices.csv",
-                mime="text/csv",
-            )
 
 st.divider()
-st.caption(
-    "Educational and informational use only. Not financial advice, an official valuation, "
-    "a guaranteed market price, or an estimate of a specific property."
-)
+st.caption("Educational and informational use only. Not financial advice or an official valuation.")
