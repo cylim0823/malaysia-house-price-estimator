@@ -32,7 +32,7 @@ Last updated: 13 July 2026
 - End-to-end path: synthetic generation → preparation → deduplication/outliers → split → baseline/advanced comparison → evaluation → save → load → prediction.
 - Generated metrics and charts are labelled synthetic.
 - Deployable model artifacts, official normalized data, and the metrics report are versioned; temporary evaluation outputs remain ignored.
-- Local Git branch: `main`; initial commit `a5f36e1` plus final deployment/CI metadata commit.
+- Local Git branch: `main`; official historical-average dataset/model/app phase committed as `ef53310`.
 
 ## Remaining limitations
 
