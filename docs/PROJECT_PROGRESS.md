@@ -2,6 +2,17 @@
 
 Last updated: 13 July 2026
 
+## Nationwide annual aggregate explorer — 13 July 2026
+
+- **Status:** implemented and locally verified for licensed open-feed coverage.
+- **Data:** 15,216 quarter groups representing 428,443 completed transactions; preserved 2017 history plus all 16 jurisdictions from 2021 through 2026 Q1; 129 district labels; 11 categories.
+- **Architecture:** one generic processor, one configurable NAPIC Excel importer, one benchmark service, one aggregate model, and one Streamlit entrypoint. The obsolete state-specific module, test, script, model, and report were removed.
+- **UI:** state, district, property type, and year options are generated from validated data. There is no visible period selector. State-level coverage is neutral and data-driven.
+- **Calculation:** annual/YTD price is total transaction value divided by total transactions. Complete, partial, and year-to-date status, included/missing periods, support, attribution, and fallbacks are disclosed.
+- **Publications:** all 16 Q1 2026 state XLSX files were downloaded and passed the shared importer (2,749 technical rows, zero layout rejections), but remain Git-excluded and unused because compatible reuse rights were not found.
+- **Verification:** pre-change 77 tests passed; post-change 76 tests passed after replacing obsolete state-specific tests with broader multi-state/year tests.
+- **Limitations:** 2026 contains Q1 only; rare segments may be partial; publication workbook data cannot be redistributed or modelled without clearer permission.
+
 ## Real NAPIC property-level model and two-mode UI — 13 July 2026
 
 - **Status:** completed for the published fields and supported segments; finer attributes remain blocked.
@@ -25,8 +36,8 @@ Last updated: 13 July 2026
 | Duplicate and outlier review | Complete as deterministic initial methods | Threshold calibration pending |
 | Synthetic demonstration generator | Complete | Not market evidence |
 | Licensed JPPH historical averages | 2,090 rows normalized and versioned | Aggregated 2009 Q1-2018 Q2 only |
-| Penang district transactions | 212 district/property-type/quarter averages | Aggregated 2017 completed transactions only |
-| Aggregate transaction pipeline | Generic metadata-backed validation; 212 rows validated; 11,816 transactions represented | Current completed-transaction coverage is Penang 2017 only; forecasting remains provisional |
+| Historical source records | Older state-specific source files retained only for provenance | Not used by current runtime |
+| Aggregate transaction pipeline | 15,216 generic groups; 428,443 transactions represented | Preserved 2017 history plus all 16 jurisdictions, 2021-2026 Q1; support varies by segment |
 | Regional area prices | 600 quarterly averages across 53 state-area combinations and 14 states/territories | Terraced and partial high-rise coverage, 2016 Q1-2018 Q2 |
 | EDA | Reusable summaries complete | Real conclusions pending |
 | Features and splitting | Complete; training-only fitting and duplicate-group safety tested | Real time-field reliability pending |
@@ -34,7 +45,7 @@ Last updated: 13 July 2026
 | Evaluation and prediction ranges | Complete with protected slices and residual quantiles | Real errors/ranges pending |
 | Saved bundle and prediction service | Complete | Supported production coverage pending |
 | CLI | Complete | Real-data commands require an approved mapping |
-| Streamlit | One metadata-driven historical form and disabled property-level preview complete locally | Individual-property model pending |
+| Streamlit | Year-only historical explorer and separate optional individual-property form complete locally | Public deployment refresh pending |
 | Optional FastAPI | Complete local adapter | Hosting pending |
 | GitHub publication | Public repository pushed | Complete for current prototype |
 | Streamlit deployment | Live official-average prototype | Individual-property version pending |
@@ -44,10 +55,9 @@ Last updated: 13 July 2026
 ## Verification record
 
 - Editable package installation: passed.
-- Complete suite: 63 tests passed. Aggregate coverage includes arithmetic, schema, source metadata, all 16 canonical locations, generic new-state onboarding, dynamic combinations, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, UI field isolation, artifact integrity, and Streamlit paths.
+- Complete suite: 76 tests passed. Coverage includes arithmetic, schema, source metadata, all 16 canonical locations, shared Excel importing, dynamic selectors, annual weighting, partial/YTD labels, fallbacks, malformed inputs, leakage exclusion, persistence, UI field isolation, and Streamlit startup.
 - Official model: log-target ridge regression trained on 1,980 observations and tested on the final 110 observations (2018 Q1-Q2).
 - Official holdout results: MAE RM94,268.28; RMSE RM276,407.99; R² 0.7670. State/property-type median baseline MAE RM101,457.44.
-- Penang district holdout: Q4 2017, 54 observations. The selected district/property-type median achieved MAE RM55,154.82, beating log ridge at RM79,520.97.
 - Regional terraced holdout: 2018 Q1-Q2, 92 observations. Selected log ridge MAE RM15,126.49 versus area-median baseline MAE RM22,236.17.
 - Combined regional holdout: 2018 Q1-Q2, 120 observations. The selected location/property median achieved MAE RM19,397.46, RMSE RM29,576.51, and RÂ² 0.9782; log ridge MAE was RM20,507.33.
 - End-to-end path: synthetic generation → preparation → deduplication/outliers → split → baseline/advanced comparison → evaluation → save → load → prediction.
@@ -57,11 +67,11 @@ Last updated: 13 July 2026
 
 ## Remaining limitations
 
-- No approved individual-property data or nationwide official district-code reference. Penang has validated source district labels only.
+- No nationwide official district-code reconciliation has been completed; source district labels are preserved.
 - No genuine Malaysian market accuracy, range calibration, or supported geographic coverage.
 - Near-duplicate and outlier thresholds require source-specific review.
 - Pickle bundles are trusted-local artifacts and must never be loaded from untrusted users.
-- The local app provides Penang district benchmarks and regional terraced/partial high-rise benchmarks across 14 state/territory markets; neither is an individual-property valuation. Putrajaya and Labuan remain unsupported.
+- The local aggregate app covers all 16 jurisdictions, including Putrajaya and Labuan, but support varies and no aggregate result is an individual-property valuation.
 - No property-level real dataset was selected after the 13 July 2026 licence/provenance review; see `REAL_DATASET_ASSESSMENT.md`.
 
 ## Regional multi-property expansion - 13 July 2026
@@ -69,7 +79,7 @@ Last updated: 13 July 2026
 - Phase name: regional area-data expansion and model retraining.
 - Start state: 460 terraced observations covered 46 areas; high-rise data had not been imported and most app locations exposed one property type.
 - Completion state: 600 licensed quarterly observations cover 53 state-area combinations. Terraced houses span all 13 states plus Kuala Lumpur; 140 high-rise rows were added for the seven state markets published by JPPH.
-- Current locations of the principal files created by that phase are `data/external/napic/highrise_by_district.xlsx`, `data/processed/historical_prices/regional_area_prices.csv`, `src/house_price_estimator/regional_area.py`, `scripts/train_regional_area.py`, `models/real/regional_area_bundle.pkl`, `reports/generated/real/regional_area_model_metrics.json`, and `tests/test_regional_area.py`.
+- Current locations of the principal files created by that phase are `data/external/napic/highrise_by_district.xlsx`, `data/processed/historical_prices/regional_area_prices.csv`, `src/house_price_estimator/regional_area.py`, `scripts/train_regional_area.py`, and `tests/test_regional_area.py`. Its reproducible comparison bundle is no longer committed.
 - Files modified: `README.md`, `ROADMAP.md`, `app/streamlit_app.py`, the NAPIC source README, architecture/source/blocker documentation, and this progress log.
 - Tests performed: focused `unittest` module, full `unittest` discovery, Python byte-code compilation, deterministic retraining, source checksum, and `git diff --check`.
 - Test results: 41/41 tests passed. The 2018 Q1-Q2 holdout contains 120 rows; selected location/property median MAE is RM19,397.46, RMSE RM29,576.51, and RÂ² 0.9782. Log ridge MAE is RM20,507.33.
@@ -111,8 +121,8 @@ Last updated: 13 July 2026
 
 - Phase name: behavior-preserving structural maintenance.
 - Start state: publisher folders had long `_open_data` suffixes; normalized datasets were in an ambiguous `data/official` layer; synthetic and real models shared one folder; generated reports were split between `reports/` and `models/evaluation/`; and an ignored nested Git clone duplicated repository metadata.
-- Completion state: one package and one Streamlit entrypoint remain; data is grouped by external/raw/processed stage; models and reports are separated into demo/real categories; all paths are repository-relative and platform-neutral.
-- Files moved: `data/external/napic_open_data` to `data/external/napic`; `data/external/penang_open_data` to `data/external/penang`; `data/official` to `data/processed/historical_prices`; six bundles to `models/demo` or `models/real`; seven JSON reports to `reports/generated/real`; local synthetic evaluation outputs to `reports/generated/demo/evaluation`.
+- Completion state at that time: one package and one Streamlit entrypoint remained; data was grouped by external/raw/processed stage and paths were repository-relative. The temporary demo/real model grouping was replaced by the later role-based artefact consolidation.
+- Files moved in that phase included publisher folders, processed data, model bundles, and reports. See `models/README.md` for the current authoritative migration table.
 - Files merged or renamed internally: none; algorithms and Python module paths were deliberately retained for clarity and pickle compatibility.
 - Files deleted: the untracked `malaysia-house-price-estimator/` nested clone, after confirming its only working-tree file duplicated the root `.gitattributes` and its initial commit already existed in the outer object database. The Codex runtime may recreate an empty untracked `.agents/` directory, so it is ignored rather than treated as project structure.
 - Files modified: path-bearing app/API/scripts/tests, `.gitignore`, CI compilation scope, README, roadmap, model guide, aggregate/EDA/evaluation/architecture documentation, and this progress log.

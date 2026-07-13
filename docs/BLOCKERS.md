@@ -48,27 +48,23 @@ not treated as permission to transcribe or train on those tables.
 
 ## Phases 5–11 — Real-data validation dependency
 
-- Exact blocker: no approved, cleaned, deduplicated individual-property dataset exists. Licensed aggregate datasets are available but cannot support individual-home features or accuracy claims.
-- Why progress cannot safely continue: engineering can be exercised synthetically, but real EDA conclusions, accuracy, ranges, model selection, supported coverage, and nationwide expansion cannot be validated with fabricated market data.
-- Owner action required: resolve the approved-source blocker and provide the authorised data locally with licence metadata.
-- Work completed: the source-neutral framework plus a licensed JPPH historical aggregate model and public Streamlit app. This does not resolve the property-level dependency.
-- Recommended next action: ingest a small authorised sample, reconcile its schema, then add source-specific validation before EDA.
+- Resolved data blocker: the approved NAPIC open transaction snapshot contains 416,627 cleaned completed transactions across all 16 jurisdictions.
+- Remaining limitation: source fields omit bedrooms, bathrooms, parking, furnishing, condition, renovation, and stable transaction identifiers.
+- Recommended next action: seek an authorised richer official sample and compare it without mixing incompatible targets.
 
 ## Phase 10 — Individual-property public deployment
 
-- Exact blocker: the published historical-average prototype cannot become an individual-property estimator without licensed property-level records.
-- Why progress cannot safely continue: aggregate state averages do not contain the required property attributes or transaction-level target.
-- Owner action required: provide or authorize a clearly licensed property-level dataset.
-- Work completed: public GitHub repository and Streamlit historical-average prototype are live.
-- Recommended next action: onboard a licensed transaction-level sample and keep the aggregate prototype clearly separated.
+- Resolved data blocker: the licensed NAPIC open transaction feed supports a separate individual-property estimator across all 16 jurisdictions.
+- Remaining blocker: the public deployment has not been refreshed and optional physical/condition attributes remain unavailable from the source.
+- Recommended next action: refresh deployment after regression verification, then monitor source and model drift.
 
-## Aggregate forecasting and nationwide aggregate coverage
+## Aggregate forecasting and publication-workbook reuse
 
-- Exact blocker: the completed-transaction aggregate dataset covers only Penang in 2017.
-- Why progress cannot safely continue: four quarters per segment cannot validate multi-year forecasting, current 2026 estimates, advanced model selection, or nationwide transaction coverage.
-- Owner action required: provide additional compatible licensed years and states, retaining counts, values, district, type, year, quarter, source, and reuse metadata.
-- Work completed: the source-neutral catalog, adapters, aggregate record, validation, modelling, prediction, and UI architecture is ready for any state. The current 212 Penang rows representing 11,816 transactions were validated; weighted baselines were provisionally evaluated from Q1-Q3 to Q4; the UI restricts itself to actual combinations.
-- Recommended next action: obtain at least two later licensed years before adding validation/test years and advanced aggregate models.
+- Resolved coverage issue: the derived licensed aggregate dataset now contains 15,216 groups representing 428,443 transactions, including all 16 jurisdictions from 2021 through 2026 Q1.
+- Remaining modelling limitation: nationwide engineering coverage does not establish equal district/type support or future-price accuracy. Rare segments can be partial.
+- Remaining legal blocker: NAPIC publication XLSX files are publicly downloadable but state copyright reserved; compatible redistribution/model-use permission was not found.
+- Work completed: all 16 Q1 2026 files were downloaded locally, hashed, and validated through one importer, while remaining Git-excluded and unused by the model.
+- Recommended next action: compare stronger time-aware models on the licensed open feed and request written permission before integrating publication workbook values.
 
 ## Resolved — GitHub publication
 

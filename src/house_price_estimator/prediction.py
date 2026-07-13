@@ -84,12 +84,12 @@ class SyntheticPropertyDemoResult:
     model_features: tuple[str, ...]
 
 
-class SyntheticPropertyDemoService:
+class SyntheticFixturePropertyService:
     """Run the fictional property bundle with optional, nullable form values."""
 
     def __init__(self, bundle: PredictionBundle) -> None:
         if not bundle.is_synthetic:
-            raise ValueError("synthetic property demo requires a synthetic bundle")
+            raise ValueError("synthetic fixture service requires a synthetic bundle")
         self.bundle = bundle
 
     def _segment(self, state: str, property_type: str) -> tuple[str, int]:
@@ -100,7 +100,7 @@ class SyntheticPropertyDemoService:
                 candidates.append((district, int(count)))
         if not candidates:
             raise ValueError(
-                "The synthetic demo has no fictional segment for this state and property type"
+                "The synthetic fixture has no fictional segment for this state and property type"
             )
         return max(candidates, key=lambda item: (item[1], item[0]))
 

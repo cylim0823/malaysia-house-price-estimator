@@ -39,19 +39,65 @@ SOURCE_DOCUMENT = "Unspecified aggregate source document"
 SOURCE_TABLE = "Unspecified source table"
 COLLECTED_AT = ""
 
+@dataclass(frozen=True)
+class AggregatePropertyType:
+    """Preserve source text while separating stable public codes and labels."""
+
+    raw_value: str
+    property_type_code: str
+    property_type_label: str
+    storage_code: str
+    known: bool = True
+
+
+AGGREGATE_PROPERTY_TYPES = (
+    AggregatePropertyType(
+        "1 - 1 1/2 Storey Semi-Detached", "semi_detached_1_to_1_5_storey",
+        "1–1½-storey semi-detached house", "one_to_one_half_storey_semi_detached",
+    ),
+    AggregatePropertyType(
+        "1 - 1 1/2 Storey Terraced", "terrace_1_to_1_5_storey",
+        "1–1½-storey terrace house", "one_to_one_half_storey_terraced",
+    ),
+    AggregatePropertyType(
+        "2 - 2 1/2 Storey Semi-Detached", "semi_detached_2_to_2_5_storey",
+        "2–2½-storey semi-detached house", "two_to_two_half_storey_semi_detached",
+    ),
+    AggregatePropertyType(
+        "2 - 2 1/2 Storey Terraced", "terrace_2_to_2_5_storey",
+        "2–2½-storey terrace house", "two_to_two_half_storey_terraced",
+    ),
+    AggregatePropertyType("Condominium/Apartment", "condominium_apartment", "Condominium / apartment", "condominium_apartment"),
+    AggregatePropertyType("Detached", "detached_house", "Detached house", "detached"),
+    AggregatePropertyType("Flat", "flat", "Flat", "flat"),
+    AggregatePropertyType("Low-Cost Flat", "low_cost_flat", "Low-cost flat", "low_cost_flat"),
+    AggregatePropertyType("Low-Cost House", "low_cost_house", "Low-cost house", "low_cost_house"),
+    AggregatePropertyType("Town House", "townhouse", "Townhouse", "town_house"),
+    AggregatePropertyType("Cluster House", "cluster_house", "Cluster house", "cluster_house"),
+)
 PROPERTY_TYPE_MAP = {
-    "1 - 1 1/2 Storey Semi-Detached": "one_to_one_half_storey_semi_detached",
-    "1 - 1 1/2 Storey Terraced": "one_to_one_half_storey_terraced",
-    "2 - 2 1/2 Storey Semi-Detached": "two_to_two_half_storey_semi_detached",
-    "2 - 2 1/2 Storey Terraced": "two_to_two_half_storey_terraced",
-    "Cluster House": "cluster_house",
-    "Condominium/Apartment": "condominium_apartment",
-    "Detached": "detached",
-    "Flat": "flat",
-    "Low-Cost Flat": "low_cost_flat",
-    "Low-Cost House": "low_cost_house",
-    "Town House": "town_house",
+    item.raw_value: item.storage_code for item in AGGREGATE_PROPERTY_TYPES
 }
+_PROPERTY_TYPES_BY_STORAGE_CODE = {
+    item.storage_code: item for item in AGGREGATE_PROPERTY_TYPES
+}
+_PROPERTY_TYPES_BY_PUBLIC_CODE = {
+    item.property_type_code: item for item in AGGREGATE_PROPERTY_TYPES
+}
+
+
+def aggregate_property_type(value: object) -> AggregatePropertyType:
+    """Return a known definition or a safe readable definition for unknown source text."""
+    raw = str(value).strip()
+    if raw in PROPERTY_TYPE_MAP:
+        return _PROPERTY_TYPES_BY_STORAGE_CODE[PROPERTY_TYPE_MAP[raw]]
+    if raw in _PROPERTY_TYPES_BY_STORAGE_CODE:
+        return _PROPERTY_TYPES_BY_STORAGE_CODE[raw]
+    if raw in _PROPERTY_TYPES_BY_PUBLIC_CODE:
+        return _PROPERTY_TYPES_BY_PUBLIC_CODE[raw]
+    safe_code = re.sub(r"[^a-z0-9]+", "_", raw.lower()).strip("_") or "unknown"
+    label = re.sub(r"[_\s]+", " ", raw).strip().capitalize() or "Unknown property type"
+    return AggregatePropertyType(raw, f"other_{safe_code}", label, f"other_{safe_code}", False)
 
 
 def volume_support(count: int) -> str:
@@ -76,10 +122,7 @@ def normalize_district(value: object) -> tuple[str, str | None]:
 
 
 def normalize_aggregate_property_type(value: object) -> str:
-    raw = str(value).strip()
-    if raw not in PROPERTY_TYPE_MAP:
-        raise ValueError(f"unknown aggregate property type: {raw!r}")
-    return PROPERTY_TYPE_MAP[raw]
+    return aggregate_property_type(value).storage_code
 
 
 def _number(value: object) -> float | None:
@@ -134,11 +177,14 @@ def validate_aggregate_frame(
         district, district_notes = normalize_district(district_raw)
         if not district_raw:
             errors.append("MISSING_DISTRICT")
-        try:
-            property_type = normalize_aggregate_property_type(type_raw)
-        except ValueError:
+        if not type_raw:
             property_type = ""
-            errors.append("MISSING_PROPERTY_TYPE" if not type_raw else "UNKNOWN_PROPERTY_TYPE")
+            errors.append("MISSING_PROPERTY_TYPE")
+        else:
+            property_definition = aggregate_property_type(type_raw)
+            property_type = property_definition.storage_code
+            if not property_definition.known:
+                warnings.append("UNKNOWN_PROPERTY_TYPE")
 
         year = _integer(raw["year"])
         quarter = _integer(raw["quarter"])

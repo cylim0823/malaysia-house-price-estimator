@@ -1,104 +1,49 @@
-# Aggregate Completed-Transaction Dataset
+# Aggregate Transaction Dataset
 
-## 2026 recency investigation
+## Current release
 
-NAPIC aggregate publication workbooks were inspected through 2026 Q1P. State transaction XLSX files contain compatible count/value sheets, but the current files state copyright reserved and publish no compatible reuse/model licence. They were not integrated, and no quarter was inferred from half-year or annual totals. The aggregate explorer therefore still ends at 2018 Q2 (regional averages) and 2017 Q4 (Penang count/value groups). See `RECENT_OFFICIAL_DATA_INVESTIGATION.md`.
+`data/processed/aggregate_transactions/malaysia_aggregate_transactions_v1.csv` contains 15,216 validated quarter groups representing 428,443 completed residential transactions. It combines preserved licensed 2017 history with NAPIC open data covering all 13 states and Kuala Lumpur, Putrajaya, and Labuan from January 2021 through March 2026. It contains 129 published district labels and 11 normalized residential categories.
 
-The separately licensed Data Transaksi Terbuka feed is individual transaction data and is intentionally handled by a different pipeline/model.
+The source is NAPIC/JPPH Data Transaksi Terbuka under Malaysian Government Open Data Terms of Use 1.0. The 16 original state CSV snapshots remain immutable and Git-ignored because of size. Their URLs, hashes, retrieval times, row counts, and coverage are in the local raw manifest. The processed aggregate release contains no personal data.
 
-## Meaning and scope
+## Generic schema
 
-**Each dataset row is an aggregate statistic, not one property transaction.**
+Every compatible source maps to:
 
-One row represents a `state + district + property_type + year + quarter` group.
-`transaction_count` is the number of completed transfers represented by the
-row, `transaction_value_rm` is their combined value, and `average_price_rm` is
-their arithmetic average. The dataset cannot describe or estimate a specific
-house because it has no size, address, project, rooms, tenure, furnishing,
-condition, floor, land size, or renovation fields.
+`state`, `district`, `district_notes`, `property_type`, `year`, `period_type`, `period_number`, `period_start`, `period_end`, `transaction_count`, `transaction_value_rm`, `average_price_rm`, `price_type`, `source_name`, `source_dataset`, `source_file`, `source_sheet`, `source_url`, `source_document`, `source_table`, `retrieved_at`, `dataset_version`, `schema_version`, `validation_status`, `validation_errors`, and `validation_warnings`.
 
-## Source and preservation
+One row is a state + district + property type + quarter group. It is not an individual sale. `average_price_rm` must reconcile to `transaction_value_rm / transaction_count`.
 
-- Imported CSV: `data/processed/historical_prices/penang_district_transactions_2017.csv`
-- Immutable raw copy: `data/raw/aggregate_transactions/penang_district_transactions_2017.csv`
-- Original source files: the transaction-count and transaction-value CSVs in `data/external/penang/`
-- Publisher: Penang State Government through Malaysia's archived government open-data catalogue
-- Source documents: 2017 residential transaction counts and values by property type, quarter, and district
-- Source table: quarter/property-type/district tables
-- Accessed: 13 July 2026
-- Licence: Creative Commons Attribution, as labelled by the catalogue for both source datasets
-- Counts source: https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang
-- Values source: https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-rm-juta-di-pulau-pinang
-- Raw file size: 26,404 bytes
-- Raw SHA-256: `DAFF6F0A4EBB08548CAD6581CE1E687B6D66398CBD1ECC003DCF86020275BF47`
-- Dataset version: `penang-completed-transaction-aggregates-2017-v2`
-- Aggregate schema version: `aggregate-1.0.0`
-- Price type: `completed_transaction_average`
+## Annual and year-to-date calculation
 
-Machine-readable provenance is stored in
-`data/raw/aggregate_transactions/metadata.json`. The raw copy is compared byte
-for byte with the imported CSV before processing and is never modified in
-place.
+The UI groups validated rows for the selected year and calculates:
 
-## Verified coverage
+```text
+annual_average_price_rm = sum(transaction_value_rm) / sum(transaction_count)
+```
 
-- Aggregate rows: 212
-- Underlying completed transactions: 11,816
-- Total transaction value represented: RM5,171,921,352
-- State: Penang only
-- Districts: Barat Daya, Timur Laut, Seberang Perai Utara, Seberang Perai Tengah, and Seberang Perai Selatan
-- Years: 2017 only
-- Quarters: Q1, Q2, Q3, and Q4
-- Earliest/latest year: 2017/2017
-- Controlled property types: 11
-- Duplicate aggregate combinations: 0
-- Arithmetic mismatches: 0
-- Rejected rows: 0
-- Missing combinations in the observed state × district × type × year × quarter grid: 8
+It never takes a simple mean of quarterly averages. A segment containing Q1-Q4 is `complete_year`; a historical segment missing a period is `partial_year`; 2026 is `year_to_date` through Q1. Included periods, missing periods, total transactions, total value, and completeness are returned.
 
-The missing combinations are four condominium/apartment quarters in Seberang
-Perai Selatan, Q1-Q3 flat rows in Seberang Perai Selatan, and the Q3 town-house
-row in Seberang Perai Tengah. A missing group is not interpreted as zero
-transactions unless the source explicitly says so.
+## Dynamic coverage and fallback
 
-## Normalisation
+Selectors are derived from validated data. The benchmark hierarchy is exact state + district + type + year, then state + type + year, then state + all residential + year. Any fallback is disclosed. An unsupported state/year returns no result.
 
-Raw fields are preserved alongside controlled fields. Parenthetical district
-context is separated without guessing:
+## Official publication workbooks
 
-- `Timur Laut (George Town / northeast island)` becomes district `Timur Laut`
-  and note `George Town / northeast island`.
-- `Barat Daya (southwest island / Teluk Bahang)` becomes district `Barat Daya`
-  and note `southwest island / Teluk Bahang`.
+All 16 NAPIC Q1 2026 state publication XLSX files were downloaded locally and processed by `NapicExcelImporter`. The importer found compatible residential count/value sheets and extracted 2,749 technically valid comparison rows with no rejected rows. These publication workbooks remain Git-excluded and are not used in the committed model because the portal and files state copyright reserved and no compatible redistribution/model-use licence was found. The reproducible URL/checksum list is `data/external/napic/publication_manifest.json`.
 
-The source category `Condominium/Apartment` remains the single controlled value
-`condominium_apartment`; the pipeline does not pretend that its condominium and
-apartment components are independently known. Flat and low-cost flat remain
-separate. Detached is not renamed bungalow.
+No Q2 or Q4 value was invented or derived from a cumulative report.
 
-## Validation and support rules
+## Reproduction
 
-For every row, the pipeline verifies
-`average_price_rm ≈ transaction_value_rm / transaction_count`, with a one-cent
-or tighter proportional tolerance. Counts must be positive integers; prices and
-values must be positive; year and quarter must be valid; locations and types
-must be present and controlled; and the price type must map to completed-
-transaction average.
+```powershell
+python scripts/download_napic_open_transactions.py --output-dir data/raw/napic_open_transactions_YYYYMMDD
+python scripts/process_napic_aggregate_transactions.py --raw-dir data/raw/napic_open_transactions_YYYYMMDD
+python scripts/train_aggregate_model.py
+```
 
-Volume support is provisional:
+For local publication inspection only:
 
-- `very_low_volume`: 1-4 transactions
-- `low_volume`: 5-19
-- `medium_volume`: 20-99
-- `high_volume`: 100 or more
-
-Low-volume rows are retained and flagged. Rows below 20 transactions are shown
-for historical transparency but excluded from public predictive support.
-
-## Leakage protection
-
-The target is `average_price_rm`. Model features are limited to state,
-district, property type, year, and quarter. `transaction_value_rm` is forbidden
-because it algebraically determines the target when divided by count.
-`transaction_count` is not a prediction feature; it is used only as a training
-and evaluation weight and as support metadata.
+```powershell
+python scripts/download_napic_publication_tables.py
+```

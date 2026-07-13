@@ -40,7 +40,7 @@ can materially move an aggregate mean. The raw value, transaction count, and
 change percentage remain in the processed data and quality report.
 
 The complete machine-readable report is
-`reports/generated/real/aggregate_transaction_quality.json`; its suspicious-row list provides
+`reports/generated/data_quality/historical_aggregate.json`; its suspicious-row list provides
 source row, location, category, period, count, average, and change percentage.
 No flagged row is silently corrected or deleted.
 

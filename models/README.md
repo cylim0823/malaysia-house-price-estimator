@@ -1,101 +1,62 @@
-# Included Models
+# Application model artefacts
 
-## Aggregate completed-transaction baseline
+## Active historical aggregate model
 
-`real/aggregate_transaction_bundle.pkl` is built reproducibly with:
+The authoritative manifest is `historical_aggregate/metadata.json`; it explicitly
+selects `historical_aggregate/model_bundle.pkl`. Application code loads it through
+`load_active_historical_model()`, validates its checksum, schema, model version,
+dataset version, feature list, coverage, and non-synthetic status, and never scans
+the directory for the first pickle file.
 
-```powershell
-python scripts/process_aggregate_transactions.py
-```
+The bundle predicts an average completed transaction price for a
+district/property-type/quarter aggregate group. Its target and evaluation are
+aggregate, not individual-property valuation accuracy. The Streamlit historical
+result remains the direct transaction-weighted observed annual benchmark; the
+active bundle is loaded to make the historical model selection and compatibility
+explicit.
 
-- Source: Penang government transaction counts and values, Creative Commons Attribution
-- Aggregate rows: 212, representing 11,816 completed transactions
-- Coverage: five Penang districts, 11 source categories, 2017 Q1-Q4
-- Training: Q1-Q3; provisional test: Q4 (54 rows / 3,170 transactions)
-- Selected baseline: transaction-weighted district/property-type average
-- Unweighted test MAE: RM64,764.81
-- Transaction-weighted test MAE: RM36,676.57
-- Transaction-weighted RMSE: RM69,133.96
-- SHA-256: `3620E5B736812D625FE397F2238CAB06AC66F892BF76E7ADD047638DCC700A0C`
+- Data: licensed NAPIC/JPPH completed transactions plus preserved licensed 2017 groups
+- Dataset version: `napic-open-transactions-20260713-aggregate-v1`
+- Coverage: 16 jurisdictions, 129 published district labels, 11 categories, 2017 and 2021–2026 Q1
+- Model: transaction-weighted district/property-type mean baseline
+- Price type: completed-transaction aggregate average
+- Evaluation: `historical_aggregate/evaluation_summary.json`
+- Regeneration: `python scripts/process_napic_aggregate_transactions.py`, then `python scripts/train_aggregate_model.py`
 
-Only one year is available, so this is a provisional aggregate baseline—not a
-current forecast, advanced model, or individual-property estimator.
+## Separate individual-property application model
 
-## Regional terraced-house model
+`individual_property/model_bundle.pkl` is genuinely distinct. It powers only the
+Individual Property Estimator and targets a completed transaction price using the
+published property-level NAPIC fields. It is not the historical aggregate model
+and is therefore kept in its own role-named directory.
 
-`real/regional_terraced_bundle.pkl` is trained reproducibly with:
+## Synthetic test fixture
 
-```powershell
-python scripts/train_regional_terraced.py
-```
-
-- Source: JPPH terraced-house prices by district/region, Creative Commons Attribution
-- Observations: 460 quarterly averages
-- Coverage: 46 selected areas across 14 states/territories, 2016 Q1-2018 Q2
-- Property type: terraced house only
-- Training: 2016-2017; final test: 2018 Q1-Q2 (92 observations)
-- Selected model: log-target ridge regression
-- Test MAE: RM15,126.49
-- Area-median baseline MAE: RM22,236.17
-- Test RMSE: RM20,207.57
-- Test R²: 0.9914
-- SHA-256: `C3683CBF55C5AF897B6D62B10D95E9495E788380786E85A946A07E898F57D7EC`
-
-These metrics describe published regional averages, not individual-property accuracy.
-
-## Legacy Penang district transaction model
-
-`real/penang_district_bundle.pkl` is trained reproducibly with:
+The deterministic synthetic bundle is stored at
+`tests/fixtures/synthetic/model_bundle.pkl`. Production loaders do not know this
+path and reject synthetic historical metadata. Regenerate a temporary fixture with:
 
 ```powershell
-python scripts/train_penang_district.py
+python -m house_price_estimator train-synthetic-fixture --output-dir <temporary-directory> --count 240 --seed 42
 ```
 
-- Source: Penang government transaction counts and values, Creative Commons Attribution
-- Observations: 212 district/property-type/quarter completed-transaction averages
-- Coverage: five Penang districts, 11 residential types, 2017 Q1-Q4
-- Training: Q1-Q3; final test: Q4 (54 observations)
-- Selected model: district/property-type median baseline
-- Test MAE: RM55,154.82
-- Log-target ridge comparison MAE: RM79,520.97
-- SHA-256: `162074FE474103D331004DE47EEE1ADB372F0C1A2C473AC2BC55EA506597E0BC`
+## Experimental comparison models
 
-The simple baseline was selected because it outperformed ridge regression on the untouched quarter. It remains reproducible for historical comparison and pickle compatibility, but the application and new dataset onboarding use the generic aggregate bundle instead.
+The official-average, regional-area, and regional-terraced candidates remain
+reproducible through their focused training scripts and tests. Their committed
+pickle bundles were removed because no application loader used them. When those
+scripts run, transient bundles go to ignored `build/experimental_models/` and
+reports go to `reports/generated/evaluation/`.
 
-## Official historical-average model
+## Migration decisions
 
-`real/official_average_bundle.pkl` is trained reproducibly with:
+| Old path | Purpose | Referenced by | Decision | New path |
+|---|---|---|---|---|
+| `models/real/aggregate_transaction_bundle.pkl` | Aggregate weighted baseline | Dataset catalog, trainer; now application startup | Moved; active | `models/historical_aggregate/model_bundle.pkl` |
+| `models/real/napic_property_bundle.pkl` | Property-level completed-transaction estimator | Streamlit individual tab and tests | Moved; retained | `models/individual_property/model_bundle.pkl` |
+| `models/demo/demo_bundle.pkl` | Deterministic synthetic engineering fixture | Synthetic service tests | Moved out of production models | `tests/fixtures/synthetic/model_bundle.pkl` |
+| `models/real/official_average_bundle.pkl` | 2009–2018 state/type comparison | Training script only | Removed; reproducible experiment | Transient `build/experimental_models/official_average_bundle.pkl` |
+| `models/real/regional_area_bundle.pkl` | 2016–2018 regional area comparison | Training script only | Removed; reproducible experiment | Transient `build/experimental_models/regional_area_bundle.pkl` |
+| `models/real/regional_terraced_bundle.pkl` | 2016–2018 terraced comparison | Training script only | Removed; reproducible experiment | Transient `build/experimental_models/regional_terraced_bundle.pkl` |
 
-```powershell
-python scripts/train_official_averages.py
-```
-
-- Source: JPPH/NAPIC government open-data workbooks, Creative Commons Attribution
-- Observations: 2,090 quarterly state/property-type averages
-- Coverage: 2009 Q1 through 2018 Q2
-- Final holdout: 2018 Q1-Q2, 110 observations
-- Test MAE: RM94,268.28
-- Test RMSE: RM276,407.99
-- Test R²: 0.7670
-- State/property-type median baseline MAE: RM101,457.44
-- SHA-256: `3ABBFC906FF546AE3364F24695D6A203043C85D0836CA20A9FF247F6EA1522B3`
-
-These metrics describe aggregated historical averages, not individual-property accuracy.
-
-## Synthetic engineering model
-
-`demo/demo_bundle.pkl` is a small deterministic synthetic demonstration artifact generated with:
-
-```powershell
-python -m house_price_estimator train-demo --output-dir models/demo --count 240 --seed 42
-```
-
-- Dataset: synthetic, 240 generated input records
-- Selected model: linear ridge regression
-- Validation MAE: RM84,717.44 on the synthetic validation split
-- SHA-256: `E67DF7FD53DA6FD42199E9130457D0A6DE6CCCEFC8E08C6C18FA01E6831C1739`
-
-These metrics are not Malaysian property-market accuracy. The bundle exists for
-the synthetic CLI/API engineering demonstration and tests; the Streamlit
-historical explorer loads only bundles under `models/real/`. Python pickle files
-must be loaded only from trusted repository artifacts.
+Pickle files must be loaded only from trusted repository artefacts.

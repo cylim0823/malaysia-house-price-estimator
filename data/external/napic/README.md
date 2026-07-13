@@ -32,3 +32,9 @@ F11676CE57B97B5434691B19055EC3F881F69EEBB28B2BD5DF91BE1E3991F24B  terraced_by_di
 
 Attribution: Jabatan Penilaian dan Perkhidmatan Harta (JPPH), Malaysia.
 No endorsement by JPPH or NAPIC is implied.
+
+## Current NAPIC publication tables
+
+`scripts/download_napic_publication_tables.py` downloads the 16 Q1 2026 state and federal-territory transaction workbooks to `data/external/napic/2026/`. That directory is Git-ignored. The tracked `publication_manifest.json` records title, state, period, URL, retrieval time, file size, checksum, and licence decision for every workbook.
+
+The portal and workbooks state copyright reserved and no compatible redistribution or model-use licence was found. They are retained for local technical validation only and are not the source of the committed aggregate dataset or model. The generic Excel importer successfully maps their residential count/value layouts without state-specific code.

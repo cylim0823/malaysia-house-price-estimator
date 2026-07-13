@@ -3,9 +3,8 @@ from datetime import date
 from pathlib import Path
 
 from house_price_estimator.bundle import PredictionBundle
-from house_price_estimator.data_pipeline import AggregateTransactionBundle
 from house_price_estimator.prediction import (
-    SyntheticPropertyDemoService,
+    SyntheticFixturePropertyService,
     limited_recency_message,
 )
 from house_price_estimator.ui_contracts import (
@@ -28,7 +27,6 @@ class AggregateUiContractTests(unittest.TestCase):
             "district": "Barat Daya",
             "property_type": "detached",
             "year": 2017,
-            "quarter": 1,
         }
         payload = aggregate_prediction_payload(values)
         self.assertEqual(set(payload), AGGREGATE_PREDICTION_FIELDS)
@@ -41,41 +39,20 @@ class AggregateUiContractTests(unittest.TestCase):
             "district": "Barat Daya",
             "property_type": "detached",
             "year": 2017,
-            "quarter": 1,
             "built_up_sqft": 1200,
         }
         with self.assertRaisesRegex(ValueError, "Unsupported aggregate fields: built_up_sqft"):
             aggregate_prediction_payload(values)
 
     def test_missing_aggregate_field_is_rejected(self):
-        with self.assertRaisesRegex(ValueError, "Missing aggregate fields: quarter"):
+        with self.assertRaisesRegex(ValueError, "Missing aggregate fields: year"):
             aggregate_prediction_payload(
                 {
                     "state": "Penang",
                     "district": "Barat Daya",
                     "property_type": "detached",
-                    "year": 2017,
                 }
             )
-
-    def test_existing_aggregate_result_is_unchanged(self):
-        bundle = AggregateTransactionBundle.load(
-            ROOT / "models" / "real" / "aggregate_transaction_bundle.pkl"
-        )
-        result = bundle.predict(
-            **aggregate_prediction_payload(
-                {
-                    "state": "Penang",
-                    "district": "Barat Daya",
-                    "property_type": "one_to_one_half_storey_semi_detached",
-                    "year": 2017,
-                    "quarter": 1,
-                }
-            )
-        )
-        self.assertEqual(result["observed_average_price_rm"], 730000.0)
-        self.assertEqual(result["transaction_count"], 1)
-        self.assertIsNone(result["estimated_average_price_rm"])
 
     def test_property_specific_visibility_never_uses_zero_for_not_applicable(self):
         high_rise = individual_field_visibility("Condominium")
@@ -146,9 +123,9 @@ class AggregateUiContractTests(unittest.TestCase):
 
     def test_synthetic_demo_accepts_missing_optionals_and_discloses_true_features(self):
         bundle = PredictionBundle.load(
-            ROOT / "models" / "demo" / "demo_bundle.pkl", trusted=True
+            ROOT / "tests" / "fixtures" / "synthetic" / "model_bundle.pkl", trusted=True
         )
-        service = SyntheticPropertyDemoService(bundle)
+        service = SyntheticFixturePropertyService(bundle)
         submission = normalize_individual_submission(
             {"state": "Penang", "property_type": "Condominium", "city": "George Town"}
         )

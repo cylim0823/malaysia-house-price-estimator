@@ -1,54 +1,35 @@
 {
-  "catalog_version": "1.0.0",
+  "catalog_version": "2.0.0",
   "datasets": [
     {
-      "dataset_id": "penang-completed-transactions-2017",
-      "title": "Completed-transaction district groups",
-      "source_name": "Penang State Government",
+      "dataset_id": "napic-open-transactions-aggregate-20260713",
+      "title": "Malaysia completed-transaction annual benchmarks",
+      "source_name": "Licensed Malaysian official completed-transaction sources",
       "source_urls": [
+        "https://napic.jpph.gov.my/ms/data-transaksi?category=36&id=241",
+        "https://www.malaysia.gov.my/my/my-initiative/data-terbuka-kerajaan/dasar-strategi-dan-tadbir-urus/terma-penggunaan-data-terbuka-kerajaan",
         "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang",
         "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-rm-juta-di-pulau-pinang"
       ],
-      "source_documents": ["Residential transaction counts and values by property type and district, 2017"],
+      "source_documents": [
+        "Per-state Data Transaksi Terbuka CSV exports retrieved 13 July 2026",
+        "Preserved 2017 residential transaction count/value groups"
+      ],
       "price_type": "completed_transaction_average",
-      "dataset_version": "penang-completed-transaction-aggregates-2017-v2",
-      "schema_version": "aggregate-1.0.0",
-      "licence_status": "Creative Commons Attribution",
+      "dataset_version": "napic-open-transactions-20260713-aggregate-v1",
+      "schema_version": "aggregate-2.0.0",
+      "licence_status": "Malaysian Government Open Data Terms of Use 1.0 and Creative Commons Attribution source records",
       "redistribution_allowed": true,
       "model_kind": "aggregate_transactions",
-      "model_path": "models/real/aggregate_transaction_bundle.pkl",
-      "processed_data_path": "data/processed/aggregate_transactions/penang_aggregate_transactions_v1.csv",
-      "area_label": "District",
-      "observed_price_label": "Recorded quarterly average completed transaction price",
-      "prediction_label": "Provisional evaluated-period aggregate baseline",
+      "processed_data_path": "data/processed/aggregate_transactions/malaysia_aggregate_transactions_v1.csv",
+      "coverage_catalog_path": "data/processed/aggregate_transactions/coverage_catalog.json",
+      "area_label": "District or area",
+      "observed_price_label": "Weighted annual completed-transaction average",
+      "prediction_label": "Generic aggregate baseline",
       "limitations": [
-        "Rows are aggregate district/property-type/quarter groups, not individual sales.",
-        "Coverage is historical and does not establish current-market accuracy."
-      ]
-    },
-    {
-      "dataset_id": "jpph-regional-averages-2016-2018q2",
-      "title": "Published regional historical averages",
-      "source_name": "JPPH / NAPIC",
-      "source_urls": [
-        "https://archive.data.gov.my/data/en_US/dataset/harga-rumah-teres-mengikut-daerahwilayahnegeri",
-        "https://archive.data.gov.my/data/en_US/dataset/harga-unit-bertingkat-tinggi-mengikut-daerah-wilayah"
-      ],
-      "source_documents": ["Terraced prices by district/region/state", "High-rise prices by district/region"],
-      "price_type": "published_average",
-      "dataset_version": "jpph-regional-area-2016-2018q2-v1",
-      "schema_version": "aggregate-1.0.0",
-      "licence_status": "Creative Commons Attribution",
-      "redistribution_allowed": true,
-      "model_kind": "published_averages",
-      "model_path": "models/real/regional_area_bundle.pkl",
-      "processed_data_path": "data/processed/historical_prices/regional_area_prices.csv",
-      "area_label": "District / published region",
-      "observed_price_label": "Published historical quarterly average",
-      "prediction_label": "Historical aggregate baseline",
-      "limitations": [
-        "Rows are published area averages and do not include transaction counts.",
-        "Coverage is historical and does not establish current-market accuracy."
+        "Rows are aggregate district/property-type/quarter groups derived from completed transactions.",
+        "Coverage and record support vary by state, district, property type, and year.",
+        "The 2026 result is year to date through Q1 and is not a complete annual average."
       ]
     }
   ]

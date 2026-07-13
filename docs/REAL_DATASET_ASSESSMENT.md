@@ -6,7 +6,7 @@ Assessment date: 13 July 2026
 
 NAPIC/JPPH's **Data Transaksi Terbuka** public Tableau feed is approved as a separate real completed-transaction source. Official launch material connects this product to the Government Public Sector Open Data initiative, and Malaysian Government Open Data Terms of Use 1.0 permit reuse with attribution. The validated July 2026 snapshot contains 416,627 residential transactions across all 16 jurisdictions and 129 districts from January 2021 through March 2026. No restricted listing portal was scraped.
 
-Current NAPIC publication workbooks remain a different legal category: they state copyright reserved and were not integrated. Historic CC-attributed JPPH/Penang workbooks remain approved for the separate aggregate explorer.
+The licensed NAPIC open transaction feed now also powers the derived nationwide aggregate explorer. Combined with preserved licensed 2017 source history, the release has 15,216 groups representing 428,443 transactions. Current NAPIC publication workbooks remain a different legal category: all 16 Q1 2026 files were inspected but state copyright reserved and were not integrated.
 
 | Candidate | Publisher / provenance | Access and licence evidence | Price type and coverage | Decision |
 | --- | --- | --- | --- | --- |

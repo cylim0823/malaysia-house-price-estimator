@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 
@@ -25,6 +26,15 @@ def main() -> None:
     bundle, evaluation = train_real_property_model(
         prepared, dataset_version=args.dataset_version
     )
+    report_metadata = {
+        "dataset_name": "NAPIC/JPPH Data Transaksi Terbuka property records",
+        "dataset_version": args.dataset_version,
+        "synthetic": False,
+        "model_version": bundle.model_version,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    evaluation = {**report_metadata, **evaluation}
+    quality = {**report_metadata, **quality}
     bundle.save(args.model)
     for path, payload in ((args.report, evaluation), (args.quality_report, quality)):
         path.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,44 @@
+{
+  "dataset_name": "Malaysia licensed completed-transaction aggregates",
+  "dataset_version": "napic-open-transactions-20260713-aggregate-v1",
+  "synthetic": false,
+  "model_version": "aggregate-weighted-baseline-v1",
+  "generated_at": "2026-07-13T14:41:37.702912+00:00",
+  "rows_by_state": {
+    "Johor": 1605,
+    "Kedah": 1258,
+    "Kelantan": 879,
+    "Kuala Lumpur": 225,
+    "Labuan": 123,
+    "Melaka": 569,
+    "Negeri Sembilan": 875,
+    "Pahang": 1231,
+    "Penang": 1275,
+    "Perak": 1771,
+    "Perlis": 139,
+    "Putrajaya": 99,
+    "Sabah": 1209,
+    "Sarawak": 1208,
+    "Selangor": 1853,
+    "Terengganu": 897
+  },
+  "transactions_by_year": {
+    "2017": 11816,
+    "2021": 49363,
+    "2022": 118574,
+    "2023": 118181,
+    "2024": 89682,
+    "2025": 35159,
+    "2026": 5668
+  },
+  "average_price_rm_distribution": {
+    "count": 15216.0,
+    "mean": 428883.3604823954,
+    "std": 419401.7982265671,
+    "min": 12000.0,
+    "25%": 213000.0,
+    "50%": 336885.48387096776,
+    "75%": 490000.0,
+    "max": 7320200.0
+  }
+}

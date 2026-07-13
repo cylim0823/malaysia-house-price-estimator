@@ -31,7 +31,7 @@ class RealTransactionPreparationTests(unittest.TestCase):
 
     def test_repository_real_bundle_predicts_only_supported_segments(self):
         bundle = RealPropertyBundle.load(
-            Path(__file__).parents[1] / "models" / "real" / "napic_property_bundle.pkl"
+            Path(__file__).parents[1] / "models" / "individual_property" / "model_bundle.pkl"
         )
         self.assertEqual(len(bundle.states), 16)
         district = bundle.districts("Penang")[0]

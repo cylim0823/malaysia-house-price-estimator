@@ -10,13 +10,16 @@ from .bundle import PredictionBundle
 from .prediction import PredictionService
 app=FastAPI(title="Malaysia House Price Estimator",version="0.1.0")
 PROJECT_ROOT=Path(__file__).resolve().parents[2]
-DEFAULT_MODEL_PATH=PROJECT_ROOT/"models"/"demo"/"demo_bundle.pkl"
+DEFAULT_MODEL_PATH:Path|None=None
 def _service():
     configured=os.environ.get("HOUSE_PRICE_MODEL")
-    path=Path(configured) if configured else DEFAULT_MODEL_PATH
+    if not configured:raise HTTPException(503,"no API model is configured")
+    path=Path(configured)
     if not path.is_absolute():path=PROJECT_ROOT/path
     if not path.is_file():raise HTTPException(503,"model bundle is not available")
-    return PredictionService(PredictionBundle.load(path,trusted=True))
+    bundle=PredictionBundle.load(path,trusted=True)
+    if bundle.is_synthetic:raise HTTPException(503,"synthetic fixture models are not available in production mode")
+    return PredictionService(bundle)
 @app.get("/health")
 def health():return {"status":"ok"}
 @app.get("/model-info")

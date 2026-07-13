@@ -3,6 +3,8 @@
 **Research date:** 13 July 2026  
 **Status:** Two groups of aggregate government open data are approved and collected; no property-level listing or transaction source is approved.
 
+**13 July 2026 update:** NAPIC Data Transaksi Terbuka was subsequently validated under Malaysian Government Open Data Terms of Use 1.0. Its 416,627 completed transactions across all 16 jurisdictions support both the separate individual estimator and a derived aggregate release. Combined with preserved licensed 2017 source history, the aggregate release has 15,216 rows representing 428,443 transactions. All 16 Q1 2026 publication workbooks were downloaded and passed the generic Excel importer, but remain Git-excluded and unused because their copyright-reserved notices do not establish compatible redistribution or model-use rights.
+
 ## 1. Investigation objective
 
 The long-term goal is a residential property-price estimator covering all Malaysian states and federal territories. Coverage must expand only where verified data, legal permission, geographic detail, and measured model performance support it.

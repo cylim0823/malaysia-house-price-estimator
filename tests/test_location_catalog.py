@@ -1,23 +1,20 @@
 """Tests for nationwide location readiness and metadata-driven coverage."""
 
 from pathlib import Path
+import json
 import tempfile
 import unittest
 
 import pandas as pd
 
-from house_price_estimator.data_sources import (
-    CsvAggregateAdapter,
-    load_dataset_metadata,
-    load_historical_bundle,
-)
+from house_price_estimator.aggregate_data import AggregateBenchmarkService
+from house_price_estimator.data_sources import CsvAggregateAdapter, load_dataset_metadata
 from house_price_estimator.data_pipeline import validate_aggregate_frame
 from house_price_estimator.location_catalog import (
     CoverageCatalog,
     MALAYSIAN_STATES,
     normalize_state,
 )
-from house_price_estimator.prediction import HistoricalExplorer
 
 
 ROOT = Path(__file__).parents[1]
@@ -45,18 +42,41 @@ class LocationCatalogTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             coverage.quarters("Johor", "Muar", "terraced_house", 2024)
 
-    def test_repository_catalog_and_legacy_bundles_share_generic_contract(self):
-        metadata = load_dataset_metadata(ROOT / "data" / "processed" / "dataset_catalog.json")
-        self.assertEqual(len(metadata), 2)
-        explorers = [
-            HistoricalExplorer(item, load_historical_bundle(item, ROOT)) for item in metadata
-        ]
-        self.assertEqual(explorers[0].coverage.states, ("Penang",))
-        self.assertIn("Selangor", explorers[1].coverage.states)
-        self.assertNotIn("Putrajaya", explorers[1].coverage.states)
-        for explorer in explorers:
-            self.assertTrue(explorer.metadata.licence_status)
-            self.assertTrue(explorer.metadata.redistribution_allowed)
+    def test_repository_aggregate_coverage_is_nationwide_and_dynamic(self):
+        service = AggregateBenchmarkService.from_csv(
+            ROOT / "data" / "processed" / "aggregate_transactions"
+            / "malaysia_aggregate_transactions_v1.csv"
+        )
+        self.assertEqual(set(service.coverage.states), set(MALAYSIAN_STATES))
+        self.assertIn("Kota Kinabalu", service.coverage.districts("Sabah", 2026))
+        self.assertEqual(service.coverage.years("Kuala Lumpur")[0], 2026)
+        self.assertEqual(service.coverage.districts("Kuala Lumpur", 2026), ())
+
+    def test_generated_coverage_catalog_matches_active_manifest(self):
+        coverage = json.loads(
+            (ROOT / "data" / "processed" / "aggregate_transactions" / "coverage_catalog.json")
+            .read_text(encoding="utf-8")
+        )
+        metadata = json.loads(
+            (ROOT / "models" / "historical_aggregate" / "metadata.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual(coverage["states"], metadata["supported_states"])
+        self.assertEqual(coverage["latest_period"], {"year": 2026, "period": 1})
+        self.assertEqual(
+            sorted({row["year"] for row in coverage["combinations"]}),
+            metadata["supported_years"],
+        )
+        self.assertEqual(
+            len({row["district"] for row in coverage["combinations"] if row["district"]}),
+            125,
+        )
+        self.assertTrue(
+            all(row["coverage_level"] == "district" for row in coverage["combinations"] if row["state"] == "Penang")
+        )
+        self.assertTrue(
+            all(row["coverage_level"] == "state" for row in coverage["combinations"] if row["state"] == "Putrajaya")
+        )
 
     def test_new_state_csv_uses_generic_adapter_and_pipeline(self):
         metadata = load_dataset_metadata(

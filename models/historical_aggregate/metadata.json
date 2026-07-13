@@ -1,0 +1,55 @@
+{
+  "model_name": "Malaysia historical aggregate weighted baseline",
+  "model_version": "aggregate-weighted-baseline-v1",
+  "model_type": "WeightedMeanBaseline",
+  "target": "average completed transaction price for a district/property-type/quarter group",
+  "feature_names": [
+    "state",
+    "district",
+    "property_type",
+    "year",
+    "quarter"
+  ],
+  "dataset_name": "Malaysia licensed completed-transaction aggregates",
+  "dataset_version": "napic-open-transactions-20260713-aggregate-v1",
+  "price_type": "completed_transaction_average",
+  "training_timestamp": "2026-07-13T12:33:15.0525423Z",
+  "schema_version": "aggregate-2.0.0",
+  "artifact_path": "models/historical_aggregate/model_bundle.pkl",
+  "artifact_sha256": "b4d6e8a8c915aa8ace3488b6148a48dc2edce4c76d3fcf9acb3095e2899a591f",
+  "evaluation_path": "models/historical_aggregate/evaluation_summary.json",
+  "supported_states": [
+    "Johor", "Kedah", "Kelantan", "Kuala Lumpur", "Labuan", "Melaka",
+    "Negeri Sembilan", "Pahang", "Penang", "Perak", "Perlis", "Putrajaya",
+    "Sabah", "Sarawak", "Selangor", "Terengganu"
+  ],
+  "supported_districts": {
+    "count": 129,
+    "authoritative_source": "model_bundle.pkl observations"
+  },
+  "supported_property_types": [
+    "cluster_house", "condominium_apartment", "detached", "flat",
+    "low_cost_flat", "low_cost_house", "one_to_one_half_storey_semi_detached",
+    "one_to_one_half_storey_terraced", "town_house",
+    "two_to_two_half_storey_semi_detached", "two_to_two_half_storey_terraced"
+  ],
+  "supported_years": [2017, 2021, 2022, 2023, 2024, 2025, 2026],
+  "coverage_counts": {
+    "states": 16,
+    "districts": 129,
+    "property_types": 11,
+    "years": 7
+  },
+  "evaluation_summary": {
+    "test_period": "2026 Q1",
+    "mae_rm": 106316.36478379807,
+    "weighted_mae_rm": 64914.78763321564,
+    "rmse_rm": 241671.31060879157,
+    "weighted_rmse_rm": 140973.33266128978,
+    "r2": 0.7504208988607038,
+    "weighted_r2": 0.8987737808214706
+  },
+  "website_usage": "Loaded and validated at application startup; displayed historical benchmarks remain direct transaction-weighted observations.",
+  "synthetic": false,
+  "active": true
+}

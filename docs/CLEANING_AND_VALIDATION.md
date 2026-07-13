@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-The repository contains a source-independent individual-property cleaning core tested with synthetic fixtures and a generic real aggregate validation pipeline. The current completed-transaction input happens to cover Penang, but source facts are supplied through metadata and the core record/pipeline is state-neutral. Aggregate rows must not be treated as individual-property cleaning or training.
+The repository contains a source-independent individual-property cleaning core and a generic real aggregate validation pipeline. The current completed-transaction inputs cover all 16 jurisdictions; source facts are supplied through metadata and the core record/pipeline is state-neutral. Aggregate rows must not be treated as individual records.
 
 The core implementation lives under `src/house_price_estimator/cleaning/` and does not modify caller-owned records. Source-neutral ingestion, duplicate grouping, outlier review, EDA, and modelling are documented in `ARCHITECTURE_AND_USAGE.md`.
 

@@ -6,14 +6,14 @@ Investigation date: 13 July 2026
 
 The newest official period found is **2026 Q1P**. NAPIC publishes Q1 2026 transaction workbooks for Malaysia and every state/federal territory, a Q1 2026 residential-price workbook, and MHPI Q1 2026P. Direct transaction tables are published in Q1 and Q3; Q2 and Q4 must be taken from half-year and annual reports. No half-year or annual total was divided into artificial quarters.
 
-The newer aggregate workbooks were **not integrated**. Their files and portal state copyright reserved and do not provide terms covering model training, derived models, redistribution, or public predictions. Technically, the state XLSX count/value sheets could map to the existing aggregate schema, and the MHPI workbook contains a 2019 Q1-2026 Q1P quarterly series, but technical availability is not permission.
+All 16 Q1 2026 state/federal-territory workbooks were downloaded locally, hashed, and validated with the same configurable Excel importer. The importer mapped 2,749 residential count/value comparison rows with no layout rejections. The workbooks were **not integrated into the committed model**: their files and portal state copyright reserved and do not provide terms covering model training, derived models, redistribution, or public predictions. Technical availability is not permission.
 
 Therefore:
 
 - newest aggregate period officially investigated: 2026 Q1P;
-- newest aggregate period legally integrated: 2018 Q2 published regional averages;
-- newest count/value aggregate period legally integrated: Penang 2017 Q4;
-- states/districts with newer aggregate values integrated: none; and
+- newest aggregate period legally integrated: 2026 Q1 from the separately licensed open transaction feed;
+- licensed aggregate coverage: all 16 jurisdictions, 129 published district labels, 2021-2026 Q1;
+- publication-workbook rows integrated: none; and
 - unsupported quarters fabricated: none.
 
 ## Separate open individual transaction feed

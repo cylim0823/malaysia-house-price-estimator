@@ -8,7 +8,7 @@ from typing import Any
 
 
 AGGREGATE_PREDICTION_FIELDS = frozenset(
-    {"state", "district", "property_type", "year", "quarter"}
+    {"state", "district", "property_type", "year"}
 )
 
 INDIVIDUAL_PROPERTY_FIELDS = (

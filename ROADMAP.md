@@ -5,14 +5,14 @@ The long-term goal is a validated residential sale-price estimator covering all 
 ## Status dimensions
 
 - **Engineering complete:** the source-neutral component is implemented, tested with synthetic fixtures, documented, and locally runnable.
-- **Limited real-data prototype complete:** licensed JPPH/NAPIC data now provides 600 terraced/high-rise area-quarter averages, spanning all 13 states plus Kuala Lumpur for terraced houses, and richer five-district Penang transaction aggregates. The regional expansion is local and not yet published.
-- **Real aggregate transaction pipeline complete:** 212 Penang 2017 group rows representing 11,816 completed transactions are preserved, validated, normalized, reported, weighted, and exposed in a separate historical explorer.
-- **Aggregate baseline provisionally evaluated:** Q1-Q3 train and Q4 test is time ordered, but one year is insufficient for future-price or current-market validation; advanced aggregate models are deferred.
+- **Nationwide aggregate explorer implemented:** 15,216 generic quarter groups representing 428,443 licensed completed transactions combine preserved 2017 source history with NAPIC open coverage for all 16 jurisdictions from 2021 through 2026 Q1.
+- **Annual benchmark pipeline complete:** selectors are generated from validated rows; annual values use transaction-value totals divided by transaction counts; partial and year-to-date coverage is disclosed.
+- **Generic aggregate baseline provisionally evaluated:** 2021 Q1-2025 Q4 train and 2026 Q1 test is time ordered. This does not establish individual-property accuracy or guarantee future-market performance.
 - **Real property-level prototype complete:** 416,627 NAPIC open completed transactions across all 16 jurisdictions support a time-tested district/type estimator for segments with at least 30 records. Published fields and error limitations are disclosed.
 - **GitHub publication complete:** the public repository is available under `cylim0823/malaysia-house-price-estimator`.
 - **Public deployment complete:** the historical-average Streamlit prototype is live on Streamlit Community Cloud.
 
-Current data decision: the JPPH district/region and Penang aggregate files remain approved under their government-catalogue Creative Commons records. NAPIC Data Transaksi Terbuka is separately approved under Malaysian Government Open Data Terms of Use 1.0 and powers the individual estimator. Current NAPIC publication XLSX files through 2026 Q1P remain blocked because they state copyright reserved without compatible model/redistribution terms.
+Current data decision: NAPIC Data Transaksi Terbuka is approved under Malaysian Government Open Data Terms of Use 1.0 and powers both the individual estimator and the derived aggregate explorer. All 16 Q1 2026 NAPIC publication XLSX files were downloaded locally and validated through one importer, but remain Git-excluded and are not used for modelling because they state copyright reserved without compatible redistribution/model-use terms.
 
 ## Verified real property-level implementation — 13 July 2026
 
@@ -26,17 +26,17 @@ Current data decision: the JPPH district/region and Penang aggregate files remai
 - [x] Activate a separate real Individual Property Estimator with all requested optional fields and mandatory use/unused/missing disclosure
 - [x] Restrict selectable segments to at least 30 published transactions and warn below 100
 
-Remaining roadmap work concerns richer attributes, stronger model comparisons/tuning, official district codes, refreshed public deployment, and monitoring.
+Remaining roadmap work concerns richer attributes, stronger model comparisons/tuning, official district codes, and monitoring.
 
 ## Verified state-generalization refactor — 13 July 2026
 
 - [x] Define all 13 states and three federal territories in one location catalog
 - [x] Isolate source mappings in source adapters and source/legal facts in metadata
 - [x] Map aggregate validation into one source-neutral record structure
-- [x] Generate state, area, property-type, year, and quarter selectors from actual combinations
+- [x] Generate state, district, property-type, and year selectors from actual validated combinations
 - [x] Remove Penang-specific rendering and fixed historical selectors from Streamlit
 - [x] Derive aggregate holdout and supported period from validated data
-- [x] Preserve existing predictions, historical values, metrics, coverage, and legacy bundle loading
+- [x] Preserve source provenance while removing the obsolete state-specific runtime and bundle
 - [x] Add regression tests for nationwide canonical names, metadata, dynamic coverage, and unsupported combinations
 
 This completes reusable engineering for onboarding additional approved aggregate
@@ -58,17 +58,19 @@ property-level, nationwide-data, modelling, deployment, or monitoring phase.
 
 ## Aggregate completed-transaction track
 
-- [x] Preserve the imported Penang aggregate CSV and machine-readable provenance
-- [x] Validate row arithmetic, fields, quarter/state/type controls, and duplicate keys
+- [x] Preserve original state snapshots and machine-readable provenance
+- [x] Validate row arithmetic, fields, period/state/type controls, and duplicate keys
 - [x] Preserve raw district and property-type text while creating controlled values
 - [x] Flag transaction-volume support and suspicious quarter changes without deletion
 - [x] Generate aggregate quality and EDA reports
 - [x] Exclude transaction value and count from model features; use count as weight/support
-- [x] Compare weighted aggregate baselines on a Q1-Q3 to Q4 split
+- [x] Compare weighted aggregate baselines on a multi-year time split
 - [x] Add a separate Streamlit aggregate explorer with dynamic actual coverage
 - [x] Test the aggregate workflow end to end
-- [ ] Add multiple later years before validating forecasting or advanced aggregate models
-- [ ] Expand aggregate transaction coverage beyond Penang
+- [x] Add multiple later years for every available jurisdiction
+- [x] Expand aggregate transaction coverage to all 16 states and federal territories
+- [ ] Compare stronger time-aware models without exposing later holdouts
+- [ ] Reconfirm performance and source coverage whenever NAPIC refreshes the open feed
 
 This track does not complete the individual-property roadmap phases below.
 
@@ -299,14 +301,14 @@ validation_notes
 
 **Objective:** Provide a simple, mobile-readable interface that communicates uncertainty and limitations.
 
-**Local MVP status:** complete for the supported real-data prototype. The UI has separate historical and individual tabs. The individual tab uses the real NAPIC open-transaction model and visibly distinguishes used, unused, missing, and not-applicable inputs. The previously deployed public site has not been refreshed in this phase.
+**MVP status:** complete for the supported real-data prototype. The UI has separate historical and individual tabs. The individual tab uses the real NAPIC open-transaction model and visibly distinguishes used, unused, missing, and not-applicable inputs. Deployment still requires verification whenever the tracked branch changes.
 
 ### Verified aggregate-data UI extension
 
 - [x] Separate historical aggregate exploration from individual-property estimation
-- [x] Restrict aggregate model calls to state, district, property type, year, and quarter
-- [x] Show historical period, source, coverage, transaction support where published, baseline, limitations, and disclaimer
-- [x] Add a disabled property-level form preview with landed/high-rise field rules
+- [x] Restrict aggregate benchmark calls to state, optional district, property type, and year; handle quarters internally
+- [x] Show historical periods, status, source, version, data age, coverage, transaction support, fallback, limitations, and disclaimer
+- [x] Add an active property-level estimator with landed/high-rise field rules
 - [x] Reject unsupported fields rather than silently dropping them
 - [x] Test that the aggregate results and trained artefacts remain unchanged
 

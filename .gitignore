@@ -13,6 +13,7 @@ dist/
 build/
 *.egg-info/
 data/raw/*
+data/external/napic/20[0-9][0-9]/*
 data/interim/*
 data/processed/*
 !data/raw/aggregate_transactions/
@@ -24,10 +25,12 @@ data/processed/*
 !data/processed/dataset_catalog.json
 models/*
 !models/README.md
-!models/demo/
-!models/demo/demo_bundle.pkl
-!models/real/
-!models/real/*.pkl
+!models/historical_aggregate/
+!models/historical_aggregate/**
+!models/individual_property/
+!models/individual_property/model_bundle.pkl
 reports/generated/*
-!reports/generated/real/
-!reports/generated/real/*.json
+!reports/generated/evaluation/
+!reports/generated/evaluation/*.json
+!reports/generated/data_quality/
+!reports/generated/data_quality/*.json

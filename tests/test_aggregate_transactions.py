@@ -7,6 +7,7 @@ import pandas as pd
 
 from house_price_estimator.data_pipeline import (
     AggregateTransactionBundle,
+    aggregate_property_type,
     FORBIDDEN_MODEL_FEATURES,
     MODEL_FEATURES,
     WeightedMeanBaseline,
@@ -68,8 +69,17 @@ class AggregateValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing required"):
             validate_aggregate_frame(pd.DataFrame({"state": ["Penang"]}))
         self.assertEqual(normalize_aggregate_property_type("Low-Cost Flat"), "low_cost_flat")
-        with self.assertRaises(ValueError):
-            normalize_aggregate_property_type("Made Up Type")
+        unknown = aggregate_property_type("Made Up Type")
+        self.assertFalse(unknown.known)
+        self.assertEqual(unknown.raw_value, "Made Up Type")
+        self.assertEqual(unknown.property_type_label, "Made up type")
+        self.assertEqual(normalize_aggregate_property_type("Made Up Type"), "other_made_up_type")
+
+    def test_property_type_catalog_preserves_raw_code_and_friendly_label(self):
+        definition = aggregate_property_type("1 - 1 1/2 Storey Semi-Detached")
+        self.assertEqual(definition.raw_value, "1 - 1 1/2 Storey Semi-Detached")
+        self.assertEqual(definition.property_type_code, "semi_detached_1_to_1_5_storey")
+        self.assertEqual(definition.property_type_label, "1–1½-storey semi-detached house")
 
     def test_invalid_values_duplicates_and_mismatch_are_preserved(self):
         frame = pd.read_csv(FIXTURE).iloc[:2].copy()

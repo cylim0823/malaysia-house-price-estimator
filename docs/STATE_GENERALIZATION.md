@@ -49,16 +49,17 @@ shows only states and combinations present in a selected validated dataset.
 - Replaced regional fixed-year prediction checks with exact observed-combination
   validation.
 
-`aggregate_transactions.py` and `synthetic.py` are small import shims for old
-pickle/import compatibility; new code uses `data_pipeline.py` and
-`synthetic_data.py`. `penang_district.py` is a deprecated legacy benchmark kept
-loadable because a repository model artifact records that module path. It is
-not used by the application, generic importer, or current aggregate trainer.
+Obsolete aggregate and synthetic import shims were removed; current code uses
+`aggregate_data.py`, `data_pipeline.py`, and `synthetic_data.py`. The former
+state-specific benchmark module and artefact were also removed.
 
 ## Primary runtime modules
 
 - `data_pipeline.py`: generic aggregate validation, quality reporting, temporal
   split, weighted baselines, and bundle contract.
+- `aggregate_data.py`: licensed snapshot aggregation, dynamic coverage, annual
+  weighting, year status, and fallback disclosure.
+- `source_adapters/napic_excel.py`: configurable NAPIC publication importer.
 - `data_sources.py`: dataset metadata and source adapters.
 - `location_catalog.py`: the 16 canonical locations and dynamic coverage.
 - `modelling.py`: reusable individual-record model candidates.

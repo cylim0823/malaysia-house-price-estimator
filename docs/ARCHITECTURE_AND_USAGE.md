@@ -2,113 +2,92 @@
 
 ## Engineering status
 
-The repository has one installable Python package at
-`src/house_price_estimator/`, one Streamlit entrypoint at
-`app/streamlit_app.py`, and separate folders for external/raw/processed data,
-demo/real models, and demo/real generated reports.
+The repository has one installable package at `src/house_price_estimator/` and
+one Streamlit entrypoint at `app/streamlit_app.py`. Data is separated by
+external/raw/processed stage, application models use role-based names, synthetic
+artefacts are test-only, and generated reports are grouped by purpose.
 
-The real datasets are historical aggregates. They do not establish
-individual-property accuracy, current coverage, or an official valuation.
-Synthetic records remain limited to engineering tests and demonstrations.
+## Runtime path
 
-## Package responsibilities
+The Streamlit historical path is:
 
-Seven primary modules define the reusable runtime:
+```text
+app/streamlit_app.py
+  -> artifacts.load_active_historical_model()
+  -> models/historical_aggregate/metadata.json
+  -> models/historical_aggregate/model_bundle.pkl
+  -> AggregateBenchmarkService over the validated aggregate CSV
+```
 
-1. `data_pipeline.py` validates the generic aggregate schema, preserves rejected
-   rows, reports quality, derives the temporal holdout, trains weighted
-   baselines, and saves the aggregate bundle.
-2. `data_sources.py` loads dataset metadata and isolates source-column adapters.
-3. `location_catalog.py` owns the 16 canonical Malaysian locations and builds
-   exact selector coverage from validated observation combinations.
-4. `modelling.py` contains reusable individual-record candidate models.
-5. `evaluation.py` contains reusable regression metrics and report writers.
-6. `prediction.py` provides source-neutral historical and future property
-   prediction contracts outside Streamlit.
-7. `synthetic_data.py` generates clearly labelled test/demo records only.
+The bundle is explicitly selected and validated; the annual benchmark displayed
+to users remains direct observed transaction value divided by transaction count.
+The Individual Property Estimator has its own incompatible bundle and service.
 
-Focused schema, ingestion, cleaning, duplicate/outlier review, persistence,
-CLI/API, and UI-contract modules remain separate because they express distinct
-contracts. `aggregate_transactions.py` and `synthetic.py` are tiny compatibility
-imports for existing bundles and callers. Older licensed benchmark modules are
-kept loadable because repository pickle artifacts record their module paths;
-new source onboarding does not copy those modules.
+Primary responsibilities:
 
-The Streamlit file contains presentation only. It iterates over
-`data/processed/dataset_catalog.json`, loads a `HistoricalExplorer`, and renders
-the same form for every dataset. There is no state-specific page or state
-conditional in the active application.
+1. `artifacts.py` centralises repository-relative production paths and validates active artefacts.
+2. `aggregate_data.py` provides generic annual historical benchmarks.
+3. `data_pipeline.py` validates aggregate data, evaluates baselines, and persists the aggregate bundle.
+4. `data_sources.py` isolates source adapters and legal/coverage metadata.
+5. `location_catalog.py` owns canonical Malaysian locations.
+6. `real_transactions.py` trains and persists the distinct property-level bundle.
+7. `prediction.py` provides UI-independent prediction contracts.
 
-## Data, model, and report layout
+## Data, model, fixture, and report layout
 
 ```text
 data/
-├── external/napic/                 original JPPH/NAPIC workbooks
-├── external/penang/                original Penang count/value CSVs
-├── raw/aggregate_transactions/     immutable imported aggregate snapshot
-└── processed/
-    ├── aggregate_transactions/     validated and rejected aggregate rows
-    └── historical_prices/          normalized historical datasets
+  external/                         original licensed source files
+  raw/                              immutable imported snapshots
+  processed/                        validated datasets and catalog
 
 models/
-├── demo/                           synthetic engineering bundle
-└── real/                           licensed aggregate bundles
+  historical_aggregate/             active bundle, manifest, evaluation summary
+  individual_property/              separate property-level application bundle
+
+tests/fixtures/synthetic/           deterministic test-only model bundle
 
 reports/generated/
-├── demo/                           synthetic evaluation output
-└── real/                           real aggregate quality/model reports
+  evaluation/                       model evaluation reports
+  data_quality/                     data-quality and EDA reports
 ```
 
-Raw and external file contents are never modified by training scripts. Every
-entrypoint resolves the repository root with `pathlib.Path`; it does not embed
-a developer's absolute path.
+Experimental comparison training writes transient bundles to ignored
+`build/experimental_models/`; these are never selected by application runtime.
 
 ## Installation and commands
 
 ```powershell
 python -m pip install -e ".[ml,ui,api,charts,dev]"
 python -m house_price_estimator --help
-python -m unittest discover -s tests -v
+python -m pytest -q
 streamlit run app/streamlit_app.py
 ```
 
-Rebuild the active real aggregate datasets, models, and reports:
+Rebuild the active aggregate artefact and its manifest:
 
 ```powershell
-python scripts/train_regional_area.py
-python scripts/process_aggregate_transactions.py
+python scripts/process_napic_aggregate_transactions.py
+python scripts/train_aggregate_model.py
 ```
 
-The other training scripts reproduce legacy comparison artifacts and are not
-templates for adding a state. New sources use an adapter, catalog metadata, and
-the generic aggregate pipeline.
-
-Exercise the source-neutral synthetic workflow:
+Exercise the synthetic fixture workflow only in a temporary directory:
 
 ```powershell
-python -m house_price_estimator generate-demo-data --output reports/generated/demo/records.json --count 240
-python -m house_price_estimator clean --input reports/generated/demo/records.json --output reports/generated/demo/cleaned.json
-python -m house_price_estimator eda --input reports/generated/demo/records.json --output reports/generated/demo/eda.json
-python -m house_price_estimator train-demo --output-dir models/demo --count 240
-python -m house_price_estimator evaluate --model models/demo/demo_bundle.pkl
-python -m house_price_estimator model-info --model models/demo/demo_bundle.pkl
-python -m house_price_estimator predict --model models/demo/demo_bundle.pkl --input <input.json>
+python -m house_price_estimator generate-synthetic-data --output <temporary-directory>/records.json --count 240
+python -m house_price_estimator train-synthetic-fixture --output-dir <temporary-directory>/model --count 240
+python -m house_price_estimator evaluate --model <temporary-directory>/model/model_bundle.pkl
+python -m house_price_estimator model-info --model <temporary-directory>/model/model_bundle.pkl
+python -m house_price_estimator predict --model <temporary-directory>/model/model_bundle.pkl --input <input.json>
 ```
 
-Optional API:
+The optional API has no default model. `HOUSE_PRICE_MODEL` must explicitly name
+a compatible non-synthetic `PredictionBundle`; synthetic fixtures are rejected
+in production mode.
 
-```powershell
-$env:HOUSE_PRICE_MODEL = "models/demo/demo_bundle.pkl"
-python -m uvicorn house_price_estimator.api:app --reload
-```
+## Security
 
-Endpoints are `GET /health`, `GET /model-info`, and `POST /predict`. GitHub
-Pages cannot execute this Python API or model.
-
-## Security and troubleshooting
-
-Bundles use pickle for trusted repository artefacts. Pickle can execute code,
-so never load an uploaded or otherwise untrusted model file. Use Python 3.11+
-and install the relevant optional dependency group. Parquet requires `pyarrow`.
-An unsupported coverage error means the requested combination was absent from
-the applicable training dataset.
+Bundles use pickle for trusted repository artefacts. Pickle can execute code, so
+never load an uploaded or otherwise untrusted model file. Missing, incompatible,
+synthetic, or checksum-mismatched active historical artefacts fail clearly rather
+than falling back to a test fixture.
