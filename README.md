@@ -17,6 +17,72 @@ The Streamlit application deliberately separates two different products:
 
 The aggregate model accepts only state, district, property type, year, and quarter. Property size, rooms, car parks, tenure, project, and other individual fields are never passed to it. See [individual property data requirements](docs/INDIVIDUAL_PROPERTY_DATA_REQUIREMENTS.md).
 
+## Where to Start
+
+Install Python 3.11 or newer and the project dependencies first:
+
+```powershell
+python -m pip install -e ".[ml,ui,api,charts,dev]"
+```
+
+### Run the website
+
+```powershell
+streamlit run app/streamlit_app.py
+```
+
+### Run all tests
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+### Prepare or validate data
+
+```powershell
+python scripts/process_aggregate_transactions.py
+```
+
+This preserves the immutable aggregate input, validates every row, writes the
+processed/rejected datasets, regenerates the real-data reports, and rebuilds
+the aggregate baseline.
+
+### Train the models
+
+```powershell
+python scripts/train_regional_area.py
+python -m house_price_estimator train-demo --output-dir models/demo --count 240
+```
+
+The first command trains the licensed historical regional model. The second
+creates a clearly labelled synthetic engineering demonstration.
+
+### Evaluate a model
+
+```powershell
+python -m house_price_estimator evaluate --model models/demo/demo_bundle.pkl
+```
+
+Real aggregate evaluation is performed by the corresponding training script
+and stored under `reports/generated/real/`.
+
+### Run a prediction
+
+```powershell
+python -m house_price_estimator predict --model models/demo/demo_bundle.pkl --input <input.json>
+```
+
+### Main files
+
+- `app/streamlit_app.py` is the only Streamlit entrypoint.
+- `src/house_price_estimator/aggregate_transactions.py` validates and models grouped completed transactions.
+- `src/house_price_estimator/regional_area.py` builds the licensed regional historical benchmark.
+- `src/house_price_estimator/modelling.py` and `evaluation.py` contain reusable model and metric logic.
+- `src/house_price_estimator/prediction.py` validates prediction inputs and output contracts.
+- `src/house_price_estimator/cli.py` provides the supported command-line interface.
+- `scripts/` contains reproducible real-data processing and training entrypoints.
+- `tests/` contains unit, regression, model-loading, and Streamlit integration coverage.
+
 Data quality is more important than interface complexity. The first implementation will focus on residential properties for sale and will expand only when sufficient verified, legally usable data is available.
 
 ## Problem statement
@@ -139,31 +205,28 @@ Simple baselines will be implemented before advanced models, and no final model 
 
 A high R² alone does not prove that a model is useful. Models must use identical evaluation splits, outperform meaningful baselines, avoid leakage, and demonstrate acceptable performance in each supported area. Areas with insufficient evidence must not receive misleading predictions.
 
-## Proposed future project structure
+## Repository structure
 
-This structure has **not** been created. Folders will be added gradually only when their related implementation begins.
+Only the important navigation points are shown here:
 
 ```text
 malaysia-house-price-estimator/
+├── app/streamlit_app.py
+├── src/house_price_estimator/     # one installable Python package
 ├── data/
-│   ├── raw/
-│   ├── interim/
-│   ├── processed/
-│   └── external/
-├── notebooks/
-├── src/
-│   ├── collection/
-│   ├── validation/
-│   ├── cleaning/
-│   ├── features/
-│   ├── modelling/
-│   ├── prediction/
-│   └── common/
+│   ├── external/napic/            # original JPPH/NAPIC workbooks
+│   ├── external/penang/           # original Penang source CSVs
+│   ├── raw/                       # immutable imported snapshots
+│   └── processed/                 # normalized and validated datasets
 ├── models/
-├── reports/
-├── tests/
-├── app/
-│   └── streamlit/
+│   ├── demo/                      # synthetic engineering artefact
+│   └── real/                      # licensed aggregate model artefacts
+├── reports/generated/
+│   ├── demo/                      # synthetic evaluation outputs
+│   └── real/                      # aggregate quality/model reports
+├── scripts/                       # reproducible processing/training commands
+├── tests/                         # tests and synthetic fixtures
+├── docs/
 ├── README.md
 ├── ROADMAP.md
 └── AGENTS.md
@@ -207,7 +270,7 @@ All outputs are for educational and informational purposes only. They are not fi
 - [Aggregate baseline evaluation](docs/REAL_MODEL_EVALUATION.md)
 - [Individual property data requirements](docs/INDIVIDUAL_PROPERTY_DATA_REQUIREMENTS.md)
 
-## Local validation
+## Full local validation
 
 With Python 3.11 or newer:
 
@@ -218,7 +281,7 @@ python scripts/train_official_averages.py
 python scripts/train_penang_district.py
 python scripts/train_regional_area.py
 python scripts/process_aggregate_transactions.py
-python -m streamlit run app/streamlit_app.py
+streamlit run app/streamlit_app.py
 ```
 
 See [Architecture and local usage](docs/ARCHITECTURE_AND_USAGE.md) for CLI and optional API commands. Synthetic fixtures remain only for pipeline tests. The official-average test metrics describe historical aggregates and do not establish individual-home accuracy.

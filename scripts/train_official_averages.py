@@ -15,10 +15,12 @@ from house_price_estimator.official_averages import (  # noqa: E402
 
 
 def main() -> None:
-    source = ROOT / "data" / "external" / "napic_open_data"
-    processed = ROOT / "data" / "official" / "jpph_historical_average_prices.csv"
-    model_path = ROOT / "models" / "official_average_bundle.pkl"
-    report_path = ROOT / "reports" / "official_average_model_metrics.json"
+    source = ROOT / "data" / "external" / "napic"
+    processed = (
+        ROOT / "data" / "processed" / "historical_prices" / "jpph_historical_average_prices.csv"
+    )
+    model_path = ROOT / "models" / "real" / "official_average_bundle.pkl"
+    report_path = ROOT / "reports" / "generated" / "real" / "official_average_model_metrics.json"
     data = load_official_average_prices(source)
     processed.parent.mkdir(parents=True, exist_ok=True)
     data.drop(columns=["period"]).to_csv(processed, index=False)

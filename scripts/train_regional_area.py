@@ -15,10 +15,12 @@ from house_price_estimator.regional_area import (  # noqa: E402
 
 
 def main() -> None:
-    source_dir = ROOT / "data" / "external" / "napic_open_data"
-    processed = ROOT / "data" / "official" / "regional_area_prices.csv"
-    model_path = ROOT / "models" / "regional_area_bundle.pkl"
-    report_path = ROOT / "reports" / "regional_area_model_metrics.json"
+    source_dir = ROOT / "data" / "external" / "napic"
+    processed = (
+        ROOT / "data" / "processed" / "historical_prices" / "regional_area_prices.csv"
+    )
+    model_path = ROOT / "models" / "real" / "regional_area_bundle.pkl"
+    report_path = ROOT / "reports" / "generated" / "real" / "regional_area_model_metrics.json"
     data = load_regional_area_prices(
         source_dir / "terraced_by_district.xlsx",
         source_dir / "highrise_by_district.xlsx",

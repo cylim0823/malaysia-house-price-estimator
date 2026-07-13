@@ -15,10 +15,12 @@ from house_price_estimator.regional_terraced import (  # noqa: E402
 
 
 def main() -> None:
-    source = ROOT / "data" / "external" / "napic_open_data" / "terraced_by_district.xlsx"
-    processed = ROOT / "data" / "official" / "regional_terraced_area_prices.csv"
-    model_path = ROOT / "models" / "regional_terraced_bundle.pkl"
-    report_path = ROOT / "reports" / "regional_terraced_model_metrics.json"
+    source = ROOT / "data" / "external" / "napic" / "terraced_by_district.xlsx"
+    processed = (
+        ROOT / "data" / "processed" / "historical_prices" / "regional_terraced_area_prices.csv"
+    )
+    model_path = ROOT / "models" / "real" / "regional_terraced_bundle.pkl"
+    report_path = ROOT / "reports" / "generated" / "real" / "regional_terraced_model_metrics.json"
     data = load_regional_terraced_prices(source)
     data.drop(columns=["period"]).to_csv(processed, index=False)
     bundle, report = train_regional_terraced_model(data)

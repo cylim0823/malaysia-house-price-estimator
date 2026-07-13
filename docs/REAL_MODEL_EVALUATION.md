@@ -59,5 +59,4 @@ baseline estimate is shown only for Q4, the evaluated period. Q1-Q3 are shown
 as historical inputs to the evaluation, not retroactive predictions.
 
 The full metrics and baseline comparison are stored in
-`reports/aggregate_transaction_model_metrics.json`.
-
+`reports/generated/real/aggregate_transaction_model_metrics.json`.

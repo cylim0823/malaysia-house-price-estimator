@@ -13,9 +13,9 @@ condition, floor, land size, or renovation fields.
 
 ## Source and preservation
 
-- Imported CSV: `data/official/penang_district_transactions_2017.csv`
+- Imported CSV: `data/processed/historical_prices/penang_district_transactions_2017.csv`
 - Immutable raw copy: `data/raw/aggregate_transactions/penang_district_transactions_2017.csv`
-- Original source files: the transaction-count and transaction-value CSVs in `data/external/penang_open_data/`
+- Original source files: the transaction-count and transaction-value CSVs in `data/external/penang/`
 - Publisher: Penang State Government through Malaysia's archived government open-data catalogue
 - Source documents: 2017 residential transaction counts and values by property type, quarter, and district
 - Source table: quarter/property-type/district tables
@@ -96,4 +96,3 @@ district, property type, year, and quarter. `transaction_value_rm` is forbidden
 because it algebraically determines the target when divided by count.
 `transaction_count` is not a prediction feature; it is used only as a training
 and evaluation weight and as support metadata.
-

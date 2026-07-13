@@ -25,11 +25,12 @@ Last updated: 13 July 2026
 | GitHub publication | Public repository pushed | Complete for current prototype |
 | Streamlit deployment | Live official-average prototype | Individual-property version pending |
 | Public monitoring | Initial live boot verified | Ongoing monitoring not configured |
+| Repository organization | Simplified and behavior-preserving | No data/model meaning changed |
 
 ## Verification record
 
 - Editable package installation: passed.
-- Complete suite: 57 tests passed. Aggregate coverage includes arithmetic, schema, normalization, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, UI field isolation, and Streamlit paths.
+- Complete suite: 58 tests passed. Aggregate coverage includes arithmetic, schema, normalization, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, UI field isolation, artifact integrity, and Streamlit paths.
 - Official model: log-target ridge regression trained on 1,980 observations and tested on the final 110 observations (2018 Q1-Q2).
 - Official holdout results: MAE RM94,268.28; RMSE RM276,407.99; R² 0.7670. State/property-type median baseline MAE RM101,457.44.
 - Penang district holdout: Q4 2017, 54 observations. The selected district/property-type median achieved MAE RM55,154.82, beating log ridge at RM79,520.97.
@@ -54,7 +55,7 @@ Last updated: 13 July 2026
 - Phase name: regional area-data expansion and model retraining.
 - Start state: 460 terraced observations covered 46 areas; high-rise data had not been imported and most app locations exposed one property type.
 - Completion state: 600 licensed quarterly observations cover 53 state-area combinations. Terraced houses span all 13 states plus Kuala Lumpur; 140 high-rise rows were added for the seven state markets published by JPPH.
-- Files created: `data/external/napic_open_data/highrise_by_district.xlsx`, `data/official/regional_area_prices.csv`, `src/house_price_estimator/regional_area.py`, `scripts/train_regional_area.py`, `models/regional_area_bundle.pkl`, `reports/regional_area_model_metrics.json`, and `tests/test_regional_area.py`.
+- Current locations of the principal files created by that phase are `data/external/napic/highrise_by_district.xlsx`, `data/processed/historical_prices/regional_area_prices.csv`, `src/house_price_estimator/regional_area.py`, `scripts/train_regional_area.py`, `models/real/regional_area_bundle.pkl`, `reports/generated/real/regional_area_model_metrics.json`, and `tests/test_regional_area.py`.
 - Files modified: `README.md`, `ROADMAP.md`, `app/streamlit_app.py`, the NAPIC source README, architecture/source/blocker documentation, and this progress log.
 - Tests performed: focused `unittest` module, full `unittest` discovery, Python byte-code compilation, deterministic retraining, source checksum, and `git diff --check`.
 - Test results: 41/41 tests passed. The 2018 Q1-Q2 holdout contains 120 rows; selected location/property median MAE is RM19,397.46, RMSE RM29,576.51, and RÂ² 0.9782. Log ridge MAE is RM20,507.33.
@@ -91,3 +92,18 @@ Last updated: 13 July 2026
 - Remaining limitations: the app has no individual-property data or model, and the real aggregate sources remain historical (Penang 2017 and regional 2016–2018).
 - Dependencies: existing repository-owned aggregate model bundles and licensed aggregate datasets; no new runtime dependency.
 - Blockers: a legally usable, sufficiently representative property-level dataset is required before the second mode can predict.
+
+## Repository structure cleanup - 13 July 2026
+
+- Phase name: behavior-preserving structural maintenance.
+- Start state: publisher folders had long `_open_data` suffixes; normalized datasets were in an ambiguous `data/official` layer; synthetic and real models shared one folder; generated reports were split between `reports/` and `models/evaluation/`; and an ignored nested Git clone duplicated repository metadata.
+- Completion state: one package and one Streamlit entrypoint remain; data is grouped by external/raw/processed stage; models and reports are separated into demo/real categories; all paths are repository-relative and platform-neutral.
+- Files moved: `data/external/napic_open_data` to `data/external/napic`; `data/external/penang_open_data` to `data/external/penang`; `data/official` to `data/processed/historical_prices`; six bundles to `models/demo` or `models/real`; seven JSON reports to `reports/generated/real`; local synthetic evaluation outputs to `reports/generated/demo/evaluation`.
+- Files merged or renamed internally: none; algorithms and Python module paths were deliberately retained for clarity and pickle compatibility.
+- Files deleted: the untracked `malaysia-house-price-estimator/` nested clone, after confirming its only working-tree file duplicated the root `.gitattributes` and its initial commit already existed in the outer object database. The Codex runtime may recreate an empty untracked `.agents/` directory, so it is ignored rather than treated as project structure.
+- Files modified: path-bearing app/API/scripts/tests, `.gitignore`, CI compilation scope, README, roadmap, model guide, aggregate/EDA/evaluation/architecture documentation, and this progress log.
+- Tests performed: pre/post full suites, compilation, package import, CLI help, five real-data rebuild scripts, fixed aggregate prediction, model loading, artifact checksums, Streamlit AppTest and HTTP startup, obsolete/absolute path scans, and Git diff validation.
+- Test results: 57/57 tests passed before refactoring; 58/58 pass after adding the artifact-layout regression. All source, processed-data, and model checksums match their pre-move values. The fixed historical prediction and published metrics are unchanged.
+- Commit identifier: pending verified maintenance commit.
+- Remaining limitations: the package retains focused helper and source-specific modules rather than collapsing them into a monolith; this preserves independent testing and existing pickle import paths. The local Codex runtime may show an ignored empty `.agents/` directory. Individual-property data/model blockers are unchanged.
+- Dependencies and blockers: no dependency changed and no new blocker was introduced.

@@ -33,7 +33,13 @@ def _sha256(path: Path) -> str:
 
 
 def main() -> None:
-    imported = ROOT / "data" / "official" / "penang_district_transactions_2017.csv"
+    imported = (
+        ROOT
+        / "data"
+        / "processed"
+        / "historical_prices"
+        / "penang_district_transactions_2017.csv"
+    )
     raw_dir = ROOT / "data" / "raw" / "aggregate_transactions"
     raw_path = raw_dir / imported.name
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -70,8 +76,8 @@ def main() -> None:
     result.processed.to_csv(processed_path, index=False)
     result.rejected.to_csv(rejected_path, index=False)
 
-    reports = ROOT / "reports"
-    reports.mkdir(exist_ok=True)
+    reports = ROOT / "reports" / "generated" / "real"
+    reports.mkdir(parents=True, exist_ok=True)
     (reports / "aggregate_transaction_quality.json").write_text(
         json.dumps(result.quality_report, indent=2), encoding="utf-8"
     )
@@ -99,7 +105,7 @@ def main() -> None:
     )
 
     bundle, model_report = train_aggregate_baselines(result.processed)
-    bundle.save(ROOT / "models" / "aggregate_transaction_bundle.pkl")
+    bundle.save(ROOT / "models" / "real" / "aggregate_transaction_bundle.pkl")
     (reports / "aggregate_transaction_model_metrics.json").write_text(
         json.dumps(model_report, indent=2), encoding="utf-8"
     )

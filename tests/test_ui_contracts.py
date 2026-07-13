@@ -51,7 +51,9 @@ class AggregateUiContractTests(unittest.TestCase):
             )
 
     def test_existing_aggregate_result_is_unchanged(self):
-        bundle = AggregateTransactionBundle.load(ROOT / "models" / "aggregate_transaction_bundle.pkl")
+        bundle = AggregateTransactionBundle.load(
+            ROOT / "models" / "real" / "aggregate_transaction_bundle.pkl"
+        )
         result = bundle.predict(
             **aggregate_prediction_payload(
                 {

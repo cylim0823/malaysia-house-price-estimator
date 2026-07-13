@@ -15,10 +15,12 @@ from house_price_estimator.penang_district import (  # noqa: E402
 
 
 def main() -> None:
-    data = load_penang_district_transactions(ROOT / "data" / "external" / "penang_open_data")
-    processed = ROOT / "data" / "official" / "penang_district_transactions_2017.csv"
-    model_path = ROOT / "models" / "penang_district_bundle.pkl"
-    report_path = ROOT / "reports" / "penang_district_model_metrics.json"
+    data = load_penang_district_transactions(ROOT / "data" / "external" / "penang")
+    processed = (
+        ROOT / "data" / "processed" / "historical_prices" / "penang_district_transactions_2017.csv"
+    )
+    model_path = ROOT / "models" / "real" / "penang_district_bundle.pkl"
+    report_path = ROOT / "reports" / "generated" / "real" / "penang_district_model_metrics.json"
     processed.parent.mkdir(parents=True, exist_ok=True)
     data.to_csv(processed, index=False)
     bundle, report = train_penang_district_model(data)

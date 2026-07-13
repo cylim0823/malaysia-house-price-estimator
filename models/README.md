@@ -2,7 +2,7 @@
 
 ## Aggregate completed-transaction baseline
 
-`aggregate_transaction_bundle.pkl` is built reproducibly with:
+`real/aggregate_transaction_bundle.pkl` is built reproducibly with:
 
 ```powershell
 python scripts/process_aggregate_transactions.py
@@ -23,7 +23,7 @@ current forecast, advanced model, or individual-property estimator.
 
 ## Regional terraced-house model
 
-`regional_terraced_bundle.pkl` is trained reproducibly with:
+`real/regional_terraced_bundle.pkl` is trained reproducibly with:
 
 ```powershell
 python scripts/train_regional_terraced.py
@@ -45,7 +45,7 @@ These metrics describe published regional averages, not individual-property accu
 
 ## Penang district transaction model
 
-`penang_district_bundle.pkl` is trained reproducibly with:
+`real/penang_district_bundle.pkl` is trained reproducibly with:
 
 ```powershell
 python scripts/train_penang_district.py
@@ -64,7 +64,7 @@ The simple baseline was selected because it outperformed ridge regression on the
 
 ## Official historical-average model
 
-`official_average_bundle.pkl` is trained reproducibly with:
+`real/official_average_bundle.pkl` is trained reproducibly with:
 
 ```powershell
 python scripts/train_official_averages.py
@@ -84,10 +84,10 @@ These metrics describe aggregated historical averages, not individual-property a
 
 ## Synthetic engineering model
 
-`demo_bundle.pkl` is a small deterministic synthetic demonstration artifact generated with:
+`demo/demo_bundle.pkl` is a small deterministic synthetic demonstration artifact generated with:
 
 ```powershell
-python -m house_price_estimator train-demo --output-dir models --count 240 --seed 42
+python -m house_price_estimator train-demo --output-dir models/demo --count 240 --seed 42
 ```
 
 - Dataset: synthetic, 240 generated input records
@@ -95,4 +95,7 @@ python -m house_price_estimator train-demo --output-dir models --count 240 --see
 - Validation MAE: RM84,717.44 on the synthetic validation split
 - SHA-256: `E67DF7FD53DA6FD42199E9130457D0A6DE6CCCEFC8E08C6C18FA01E6831C1739`
 
-These metrics are not Malaysian property-market accuracy. The bundle exists only so the public Streamlit demonstration can run without external data or credentials. Python pickle files must be loaded only from trusted repository artifacts.
+These metrics are not Malaysian property-market accuracy. The bundle exists for
+the synthetic CLI/API engineering demonstration and tests; the Streamlit
+historical explorer loads only bundles under `models/real/`. Python pickle files
+must be loaded only from trusted repository artifacts.

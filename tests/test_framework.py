@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -133,9 +134,26 @@ class EndToEndTests(unittest.TestCase):
             self.assertTrue((out/"evaluation"/"actual_vs_predicted.png").is_file())
 
     def test_optional_api_health_import(self):
-        from house_price_estimator.api import app,health
+        from house_price_estimator.api import DEFAULT_MODEL_PATH,app,health
         self.assertEqual(health(),{"status":"ok"})
         self.assertEqual(app.title,"Malaysia House Price Estimator")
+        self.assertTrue(DEFAULT_MODEL_PATH.is_file())
+
+    def test_repository_artifact_layout_and_integrity(self):
+        root=Path(__file__).parents[1]
+        expected={
+            "data/external/napic/all_houses_by_state.xlsx":"4f492c97174ef4d437b9785ede7b290a9020fe55d51292c0a3b3aede69e1f371",
+            "data/external/penang/residential_transaction_counts_2017.csv":"be4dcbe8d39e6e9d2b1f49b4023765033fe81036bb52e14d01172f289f22a05f",
+            "models/demo/demo_bundle.pkl":"e67df7fd53da6fd42199e9130457d0a6de6cccefc8e08c6c18fa01e6831c1739",
+            "models/real/aggregate_transaction_bundle.pkl":"7ec8ce8af4a50b726b0a5543c28f45655ca3ca195426cb1b9df22a74036fb453",
+            "models/real/regional_area_bundle.pkl":"bb697ab6e46aa94590411dc50765ec0a5b95c0f6804509a8267726ad384ad87d",
+        }
+        for relative,checksum in expected.items():
+            path=root/relative
+            self.assertTrue(path.is_file(),relative)
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),checksum)
+        self.assertFalse((root/"data"/"official").exists())
+        self.assertFalse((root/"malaysia-house-price-estimator").exists())
 
     def test_streamlit_app_smoke(self):
         from streamlit.testing.v1 import AppTest

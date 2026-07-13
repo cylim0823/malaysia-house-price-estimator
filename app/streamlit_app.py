@@ -22,8 +22,10 @@ from house_price_estimator.ui_contracts import (
 )
 
 
-AGGREGATE_MODEL_PATH = PROJECT_ROOT / "models" / "aggregate_transaction_bundle.pkl"
-REGIONAL_MODEL_PATH = PROJECT_ROOT / "models" / "regional_area_bundle.pkl"
+AGGREGATE_MODEL_PATH = (
+    PROJECT_ROOT / "models" / "real" / "aggregate_transaction_bundle.pkl"
+)
+REGIONAL_MODEL_PATH = PROJECT_ROOT / "models" / "real" / "regional_area_bundle.pkl"
 AGGREGATE_DATASET_PATH = (
     PROJECT_ROOT
     / "data"
@@ -31,7 +33,13 @@ AGGREGATE_DATASET_PATH = (
     / "aggregate_transactions"
     / "penang_aggregate_transactions_v1.csv"
 )
-REGIONAL_DATASET_PATH = PROJECT_ROOT / "data" / "official" / "regional_area_prices.csv"
+REGIONAL_DATASET_PATH = (
+    PROJECT_ROOT
+    / "data"
+    / "processed"
+    / "historical_prices"
+    / "regional_area_prices.csv"
+)
 TERRACED_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-rumah-teres-mengikut-daerahwilayahnegeri"
 HIGHRISE_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-unit-bertingkat-tinggi-mengikut-daerah-wilayah"
 PENANG_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang"

@@ -17,7 +17,7 @@ class RegionalTerracedTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.data = load_regional_terraced_prices(
-            ROOT / "data" / "external" / "napic_open_data" / "terraced_by_district.xlsx"
+            ROOT / "data" / "external" / "napic" / "terraced_by_district.xlsx"
         )
         cls.bundle, cls.report = train_regional_terraced_model(cls.data)
 

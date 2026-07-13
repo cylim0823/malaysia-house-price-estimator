@@ -17,7 +17,7 @@ class PenangDistrictTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.data = load_penang_district_transactions(
-            ROOT / "data" / "external" / "penang_open_data"
+            ROOT / "data" / "external" / "penang"
         )
         cls.bundle, cls.report = train_penang_district_model(cls.data)
 

@@ -14,6 +14,20 @@ The long-term goal is a validated residential sale-price estimator covering all 
 
 Current data decision: the JPPH district/region terraced and high-rise workbooks, four state-average workbooks, and two Penang district transaction datasets were approved because the government catalogue marks them Creative Commons Attribution. No clearly licensed property-level candidate passed provenance and reuse review; see `docs/REAL_DATASET_ASSESSMENT.md`.
 
+## Verified structural maintenance — 13 July 2026
+
+This maintenance work changes organization only and does not complete any
+property-level, nationwide-data, modelling, deployment, or monitoring phase.
+
+- [x] Keep one installable package and one documented Streamlit entrypoint
+- [x] Separate original external data, immutable raw data, and processed data
+- [x] Separate synthetic and licensed aggregate model artefacts
+- [x] Separate synthetic and real generated reports
+- [x] Update every runtime, training, test, workflow, and documentation path
+- [x] Remove the verified accidental nested Git clone and empty agent directory
+- [x] Preserve dataset/model checksums, prediction output, evaluation metrics, and supported coverage
+- [x] Pass the complete regression suite and application startup checks
+
 ## Aggregate completed-transaction track
 
 - [x] Preserve the imported Penang aggregate CSV and machine-readable provenance
