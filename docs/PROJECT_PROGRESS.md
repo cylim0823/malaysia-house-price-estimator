@@ -136,7 +136,7 @@ Last updated: 13 July 2026
   arithmetic mismatches, MAE RM64,764.81, and weighted MAE RM36,676.57. The
   fixed RM730,000 historical result is unchanged. Rebuilt bundle SHA-256 is
   `3620E5B736812D625FE397F2238CAB06AC66F892BF76E7ADD047638DCC700A0C`.
-- Commit identifier: pending verified commit.
+- Commit identifier: `48ae072` (`refactor: generalize aggregate workflow nationwide`).
 - Remaining limitations: reusable code recognizes all 16 locations, but actual
   completed-transaction coverage remains Penang 2017 and regional published
   averages omit Putrajaya and Labuan. This is not nationwide price validation.
