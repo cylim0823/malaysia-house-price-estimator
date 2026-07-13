@@ -1,5 +1,11 @@
 # Individual Property Dataset Requirements
 
+## Implemented real-data status — 13 July 2026
+
+The NAPIC/JPPH Data Transaksi Terbuka feed now supplies a real completed-transaction target plus state, district, mukim, scheme/area, road, property type, land/parcel area, main-floor area, tenure, transaction month, and unit level. The trained v1 model uses state, district, published property type, built-up area, land area, tenure, unit level, year, and month. It supports only district/type segments with at least 30 records.
+
+The source does **not** supply bedrooms, bathrooms, car parks, furnishing, completion year, age, renovation, condition, or a stable transaction identifier. The UI keeps these optional and discloses that they are unused. They remain requirements for a future richer model, not claims about the current model.
+
 ## Why the estimator is data-pending
 
 The current real datasets contain quarterly averages grouped by location and

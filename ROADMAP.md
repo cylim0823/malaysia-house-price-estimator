@@ -8,11 +8,25 @@ The long-term goal is a validated residential sale-price estimator covering all 
 - **Limited real-data prototype complete:** licensed JPPH/NAPIC data now provides 600 terraced/high-rise area-quarter averages, spanning all 13 states plus Kuala Lumpur for terraced houses, and richer five-district Penang transaction aggregates. The regional expansion is local and not yet published.
 - **Real aggregate transaction pipeline complete:** 212 Penang 2017 group rows representing 11,816 completed transactions are preserved, validated, normalized, reported, weighted, and exposed in a separate historical explorer.
 - **Aggregate baseline provisionally evaluated:** Q1-Q3 train and Q4 test is time ordered, but one year is insufficient for future-price or current-market validation; advanced aggregate models are deferred.
-- **Property-level validation pending:** individual-home conclusions and current estimates still require an approved property-level dataset.
+- **Real property-level prototype complete:** 416,627 NAPIC open completed transactions across all 16 jurisdictions support a time-tested district/type estimator for segments with at least 30 records. Published fields and error limitations are disclosed.
 - **GitHub publication complete:** the public repository is available under `cylim0823/malaysia-house-price-estimator`.
 - **Public deployment complete:** the historical-average Streamlit prototype is live on Streamlit Community Cloud.
 
-Current data decision: the JPPH district/region terraced and high-rise workbooks, four state-average workbooks, and two Penang district transaction datasets were approved because the government catalogue marks them Creative Commons Attribution. No clearly licensed property-level candidate passed provenance and reuse review; see `docs/REAL_DATASET_ASSESSMENT.md`.
+Current data decision: the JPPH district/region and Penang aggregate files remain approved under their government-catalogue Creative Commons records. NAPIC Data Transaksi Terbuka is separately approved under Malaysian Government Open Data Terms of Use 1.0 and powers the individual estimator. Current NAPIC publication XLSX files through 2026 Q1P remain blocked because they state copyright reserved without compatible model/redistribution terms.
+
+## Verified real property-level implementation — 13 July 2026
+
+- [x] Collect all 16 state/federal-territory exports with bounded retries, exact header validation, hashes, and immutable raw snapshots
+- [x] Preserve raw values, explicit source state, licence, dates, and completed-transaction price semantics
+- [x] Group exact duplicates before the time split and retain possible statistical outliers
+- [x] Compare a hierarchical median baseline with histogram gradient boosting on an identical time split
+- [x] Keep 2025 Q4-2026 Q1 untouched until final evaluation
+- [x] Evaluate nationally and by state, district, property type, and price band
+- [x] Save preprocessing/model together and reject unsupported district/type combinations
+- [x] Activate a separate real Individual Property Estimator with all requested optional fields and mandatory use/unused/missing disclosure
+- [x] Restrict selectable segments to at least 30 published transactions and warn below 100
+
+Remaining roadmap work concerns richer attributes, stronger model comparisons/tuning, official district codes, refreshed public deployment, and monitoring.
 
 ## Verified state-generalization refactor — 13 July 2026
 
@@ -117,7 +131,7 @@ The local engineering framework spans schema, structured-file ingestion, cleanin
 - [x] Define missing-value and data-type rules
 - [x] Define raw, interim, and processed data-layer responsibilities
 - [x] Define outlier, duplicate-grouping, and model-eligibility metadata
-- [ ] Reconcile the canonical schema against the first approved source's actual field dictionary
+- [x] Reconcile the canonical schema against the first approved source's actual field dictionary
 - [ ] Select and version an approved official district/code reference
 
 Suggested fields:
@@ -168,19 +182,19 @@ validation_notes
 
 ### Tasks
 
-- [ ] Prefer approved APIs and downloadable files; implement one source at a time
-- [ ] Add conservative throttling, timeouts, bounded retries, and exponential backoff
-- [ ] Add logging, collection timestamps, source identifiers, and permitted source URLs
-- [ ] Add explicit record/page limits, stop conditions, and resumable collection
-- [ ] Prevent uncontrolled crawling
-- [ ] Save raw data without modification
-- [ ] Track coverage by state and district
+- [x] Prefer approved APIs and downloadable files; implement one source at a time
+- [x] Add conservative throttling, timeouts, bounded retries, and exponential backoff
+- [x] Add collection timestamps, source identifiers, permitted source URLs, hashes, and failure output
+- [x] Add explicit byte/state limits, stop conditions, and resumable collection
+- [x] Prevent uncontrolled crawling
+- [x] Save raw data without modification
+- [x] Track coverage by state and district
 
 ### Completion criteria
 
-- [ ] Collection respects the approved source policy
-- [ ] Raw records are reproducible and failures are logged
-- [ ] Collection can be stopped and resumed safely
+- [x] Collection respects the approved source policy
+- [x] Raw records are reproducible and failures are reported
+- [x] Collection can be stopped and resumed safely
 
 ## Phase 4 — Data cleaning and validation
 
@@ -197,7 +211,7 @@ validation_notes
 - [x] Detect and group duplicate listings
 - [x] Preserve rejected rows with documented reasons
 - [x] Produce quality and coverage reports by state and district
-- [ ] Version cleaned datasets (version metadata implemented; persistent releases require an approved source and storage policy)
+- [x] Version cleaned datasets and derived model reports while keeping large raw snapshots out of Git
 
 ### Completion criteria
 
@@ -230,19 +244,19 @@ validation_notes
 
 ### Tasks
 
-- [ ] Create national, state-level, and district/property-type median baselines
+- [x] Create national, state-level, and district/property-type median baselines
 - [ ] Implement Linear Regression with reproducible preprocessing
-- [ ] Use time-based splitting where possible
-- [ ] Group duplicate properties before splitting
-- [ ] Keep a final test set untouched
-- [ ] Evaluate nationally and by state and district
-- [ ] Produce a baseline report
+- [x] Use time-based splitting where possible
+- [x] Group duplicate properties before splitting
+- [x] Keep a final test set untouched
+- [x] Evaluate nationally and by state and district
+- [x] Produce a baseline report
 
 ### Completion criteria
 
-- [ ] Every model is compared against a simple baseline
-- [ ] No known duplicate or preprocessing leakage exists
-- [ ] Metrics are consistent and weakly covered locations are identified
+- [x] Every implemented real model is compared against a simple baseline
+- [x] No known duplicate or preprocessing leakage exists
+- [x] Metrics are consistent and weakly covered locations are identified
 
 ## Phase 7 — Advanced modelling
 
@@ -255,13 +269,13 @@ validation_notes
 - [ ] Engineer location-frequency, coordinate, property-age, and market-period features
 - [ ] Tune hyperparameters without exposing the final test set
 - [ ] Analyse feature importance and residuals
-- [ ] Analyse error by state, district, property type, price band, and rare location
+- [x] Analyse error by state, district, property type, price band, and rare location
 
 ### Completion criteria
 
-- [ ] Models use identical evaluation splits
-- [ ] Selection uses several metrics and considers geographic coverage
-- [ ] The selected model clearly outperforms relevant baselines
+- [x] Implemented models use identical evaluation splits
+- [x] Selection reports several metrics and considers geographic coverage
+- [x] The selected model clearly outperforms the hierarchical median baseline
 
 ## Phase 8 — Prediction pipeline
 
@@ -269,23 +283,23 @@ validation_notes
 
 ### Tasks
 
-- [ ] Save preprocessing and model together
-- [ ] Validate and standardise user and location inputs
-- [ ] Handle unknown categories and reject unsupported property types or areas
-- [ ] Return central estimate, estimated range, price per square foot, and neutral asking-price assessment
-- [ ] Return confidence, important factors, model version, and data-coverage information
+- [x] Save preprocessing and model together
+- [x] Validate and standardise user and location inputs
+- [x] Handle unknown categories and reject unsupported property types or areas
+- [x] Return central estimate, estimated range, price per square foot, and neutral asking-price assessment
+- [x] Return support, actual input fields, model version, and data-coverage information
 
 ### Completion criteria
 
-- [ ] Training and prediction use identical preprocessing
-- [ ] Unsupported inputs are handled safely
-- [ ] Prediction metadata is complete and results are reproducible
+- [x] Training and prediction use identical preprocessing
+- [x] Unsupported inputs are handled safely
+- [x] Prediction metadata is complete and results are reproducible
 
 ## Phase 9 — Streamlit web MVP
 
 **Objective:** Provide a simple, mobile-readable interface that communicates uncertainty and limitations.
 
-**Aggregate-data extension status:** complete. The deployed UI has a functional historical market explorer whose controls are restricted to licensed aggregate fields, plus a separately labelled and disabled individual-property form preview. This does not complete the property-level MVP tasks below.
+**Local MVP status:** complete for the supported real-data prototype. The UI has separate historical and individual tabs. The individual tab uses the real NAPIC open-transaction model and visibly distinguishes used, unused, missing, and not-applicable inputs. The previously deployed public site has not been refreshed in this phase.
 
 ### Verified aggregate-data UI extension
 
@@ -298,18 +312,18 @@ validation_notes
 
 ### Tasks
 
-- [ ] Add state, district, city/township, and project-name inputs
-- [ ] Add property type, built-up area, land area, bedroom, bathroom, storey, tenure, furnishing, and property-age inputs
-- [ ] Add optional asking-price input
-- [ ] Display estimated price, range, price per square foot, asking-price assessment, confidence, and coverage warning
-- [ ] Display model limitations and disclaimer
-- [ ] Add friendly validation and a mobile-readable layout
+- [x] Add state, district, city/township, and project-name inputs
+- [x] Add property type, built-up area, land area, bedroom, bathroom, storey, tenure, furnishing, and property-age inputs
+- [x] Add optional asking-price input
+- [x] Display estimated price, range, price per square foot, asking-price assessment, support, and coverage warning
+- [x] Display model limitations and disclaimer
+- [x] Add friendly validation and a mobile-readable layout
 
 ### Completion criteria
 
-- [ ] Users can enter supported details and invalid inputs are explained
-- [ ] Unsupported locations receive no misleading prediction
-- [ ] The required disclaimer is visible
+- [x] Users can enter supported details and invalid inputs are explained
+- [x] Unsupported locations receive no misleading prediction
+- [x] The required disclaimer is visible
 
 ## Phase 10 — Testing and deployment
 
@@ -317,8 +331,8 @@ validation_notes
 
 ### Tasks
 
-- [ ] Add unit, data-validation, cleaning, duplicate-detection, model-loading, and prediction tests
-- [ ] Add smoke, regression, unknown-location, unknown-category, and Streamlit integration tests
+- [x] Add unit, data-validation, cleaning, duplicate-detection, model-loading, and prediction tests
+- [x] Add smoke, regression, unknown-location, unknown-category, and Streamlit integration tests
 - [ ] Lock dependencies and document deployment
 - [ ] Prepare the GitHub repository and public demo
 - [ ] Add dependency monitoring and basic application logging

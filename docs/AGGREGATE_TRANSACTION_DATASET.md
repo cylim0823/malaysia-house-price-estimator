@@ -1,5 +1,11 @@
 # Aggregate Completed-Transaction Dataset
 
+## 2026 recency investigation
+
+NAPIC aggregate publication workbooks were inspected through 2026 Q1P. State transaction XLSX files contain compatible count/value sheets, but the current files state copyright reserved and publish no compatible reuse/model licence. They were not integrated, and no quarter was inferred from half-year or annual totals. The aggregate explorer therefore still ends at 2018 Q2 (regional averages) and 2017 Q4 (Penang count/value groups). See `RECENT_OFFICIAL_DATA_INVESTIGATION.md`.
+
+The separately licensed Data Transaksi Terbuka feed is individual transaction data and is intentionally handled by a different pipeline/model.
+
 ## Meaning and scope
 
 **Each dataset row is an aggregate statistic, not one property transaction.**

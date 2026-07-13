@@ -36,6 +36,17 @@ class AggregateValidationTests(unittest.TestCase):
         self.assertEqual(first["property_type"], "flat")
         self.assertEqual(result.quality_report["arithmetic_mismatch_rows"], 0)
         self.assertEqual(result.quality_report["sum_of_transaction_count"], 120)
+        self.assertEqual(
+            result.quality_report["earliest_period"], {"year": 2017, "quarter": 1}
+        )
+        self.assertEqual(
+            result.quality_report["latest_period"], {"year": 2017, "quarter": 4}
+        )
+        self.assertEqual(result.quality_report["missing_years"], [])
+        self.assertEqual(result.quality_report["missing_quarters"], [])
+        self.assertIn("missing_state_period_combinations", result.quality_report)
+        self.assertIn("very_low_transaction_volume_rows", result.quality_report)
+        self.assertEqual(result.quality_report["extraction_warning_count"], 0)
 
     def test_source_metadata_is_injected_without_state_specific_core_defaults(self):
         result = load_and_validate_aggregate_csv(

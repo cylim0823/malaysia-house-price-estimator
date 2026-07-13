@@ -2,6 +2,20 @@
 
 Last updated: 13 July 2026
 
+## Real NAPIC property-level model and two-mode UI — 13 July 2026
+
+- **Status:** completed for the published fields and supported segments; finer attributes remain blocked.
+- **Start state:** only synthetic individual-property data existed, and the Streamlit individual mode was disabled/data-pending. Aggregate data ended in 2018 Q2/2017 Q4.
+- **Completion state:** source-specific bounded/resumable NAPIC collection, exact positional schema validation, immutable raw snapshots, reproducible cleaning, duplicate grouping before split, outlier retention, time-safe baseline/advanced comparison, saved preprocessing/model, detailed optional UI, input-use disclosure, and real/synthetic separation are implemented.
+- **Data:** 416,627 official completed residential transactions; 16 jurisdictions; 129 districts; 11 types; January 2021-March 2026. Raw snapshots are local and ignored due size; downloader and source metadata are committed.
+- **Model:** histogram gradient boosting on log price selected over hierarchical median using 2025 Q1-Q3 validation. Untouched 2025 Q4-2026 Q1 test: MAE RM127,910.56, median absolute error RM57,477.87, RMSE RM395,714.36, MAPE 22.31%, R2 0.7414. Segments below 30 records are not selectable.
+- **Files created:** `src/house_price_estimator/real_transactions.py`, `scripts/download_napic_open_transactions.py`, `scripts/train_napic_open_transactions.py`, `tests/test_napic_open_transactions.py`, `tests/test_real_transactions.py`, `docs/RECENT_OFFICIAL_DATA_INVESTIGATION.md`, real model and reports.
+- **Files modified:** Streamlit app, prediction/UI contracts, source adapters, aggregate quality reporting, schema normalization, tests, README, ROADMAP, and source/blocker documentation.
+- **Tests performed:** focused importer, cleaning, prediction, UI-contract, aggregate-regression, Streamlit AppTest, full suite, compileall, and live Streamlit startup.
+- **Commit identifiers:** `d7da8e0` (official data/model pipeline) and `d496a17` (real individual-property UI); documentation is recorded in the following focused commit.
+- **Remaining limitations:** missing fine-grained physical/condition fields; no official district code reference; error is materially higher in Kuala Lumpur and high-price bands; public deployment has not been refreshed in this phase.
+- **Dependencies/blockers:** written permission is still required for the separate copyright-reserved 2019-2026 aggregate publication workbooks.
+
 | Area | Engineering status | Real-data status |
 | --- | --- | --- |
 | Planning and source investigation | Complete | Source approval pending |

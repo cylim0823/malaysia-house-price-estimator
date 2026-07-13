@@ -354,3 +354,11 @@ page states that all copyright is reserved and does not provide an explicit
 open-data or model-training licence for those publications. They were therefore
 not copied, parsed, or added to the repository. Written reuse terms would be
 required before using them as training data.
+
+## Approved NAPIC open transaction feed — 13 July 2026
+
+Further investigation distinguished the copyright-reserved publication workbooks from NAPIC/JPPH's separate **Data Transaksi Terbuka** product. NAPIC's official Q3 2023 launch material aligns this product with the Government Public Sector Open Data initiative, and the Malaysian Government Open Data Terms of Use 1.0 allow copying, adaptation, combination, publication, distribution, and commercial/non-commercial use with attribution and stated exclusions.
+
+The official Tableau CSV export was collected by explicit state filter. NAPIC source labels `Pulau Pinang`, `WP Putrajaya`, and `WP Labuan` are mapped explicitly; Kuala Lumpur is the verified default view. The July 2026 snapshot contains 416,627 completed residential transactions across all 16 jurisdictions, 129 district labels, 11 categories, and January 2021-March 2026 dates. The feed has price, district, mukim, scheme/area, road, type, land/parcel area, main-floor area, tenure, month, and unit level; it has no bedrooms, bathrooms, car parks, furnishing, condition, completion year, coordinates, personal identifiers, or stable transaction ID.
+
+The source-specific adapter preserves raw strings, validates both duplicate `Unit` headers by position, records the requested state as provenance, converts only documented square-metre areas, maps dashes to null, and flags malformed values. Raw CSV snapshots are excluded from Git because of size; the bounded resumable downloader and hashes make collection reproducible.

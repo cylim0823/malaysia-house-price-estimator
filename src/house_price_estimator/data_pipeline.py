@@ -307,6 +307,35 @@ def aggregate_quality_report(frame: pd.DataFrame) -> dict[str, Any]:
     }
     expected_keys = set(itertools.product(*dimensions)) if all(dimensions) else set()
     missing = sorted(expected_keys - actual_keys)
+    actual_periods = {
+        (int(row.year), int(row.quarter)) for row in valid.itertuples()
+    }
+    if actual_periods:
+        first_period = min(actual_periods)
+        last_period = max(actual_periods)
+        complete_periods = [
+            (year, quarter)
+            for year in range(first_period[0], last_period[0] + 1)
+            for quarter in range(1, 5)
+            if first_period <= (year, quarter) <= last_period
+        ]
+    else:
+        first_period = last_period = None
+        complete_periods = []
+    missing_periods = [period for period in complete_periods if period not in actual_periods]
+    actual_state_periods = {
+        (str(row.state), int(row.year), int(row.quarter)) for row in valid.itertuples()
+    }
+    missing_state_periods = [
+        (state, year, quarter)
+        for state in sorted(valid["state"].dropna().unique().tolist())
+        for year, quarter in complete_periods
+        if (state, year, quarter) not in actual_state_periods
+    ]
+    years = sorted(int(value) for value in valid["year"].unique())
+    missing_years = (
+        sorted(set(range(years[0], years[-1] + 1)) - set(years)) if years else []
+    )
     return {
         "dataset_version": (
             str(valid["dataset_version"].iloc[0]) if len(valid) else DATASET_VERSION
@@ -318,6 +347,9 @@ def aggregate_quality_report(frame: pd.DataFrame) -> dict[str, Any]:
         "duplicate_combination_rows": int(errors.count("DUPLICATE_AGGREGATE_ROW")),
         "arithmetic_mismatch_rows": int(errors.count("AVERAGE_CALCULATION_MISMATCH")),
         "suspicious_quarter_change_rows": int(warnings.count("SUSPICIOUS_QUARTER_CHANGE")),
+        "extraction_warning_count": sum(
+            1 for warning in warnings if str(warning).startswith("EXTRACTION_")
+        ),
         "suspicious_quarter_changes": [
             {
                 "source_row": int(row.source_row),
@@ -344,10 +376,30 @@ def aggregate_quality_report(frame: pd.DataFrame) -> dict[str, Any]:
         "states": sorted(valid["state"].unique().tolist()),
         "districts": sorted(valid["district"].unique().tolist()),
         "property_types": sorted(valid["property_type"].unique().tolist()),
-        "years": sorted(int(value) for value in valid["year"].unique()),
+        "years": years,
         "quarters": sorted(int(value) for value in valid["quarter"].unique()),
         "earliest_year": int(valid["year"].min()) if len(valid) else None,
         "latest_year": int(valid["year"].max()) if len(valid) else None,
+        "earliest_period": (
+            {"year": first_period[0], "quarter": first_period[1]}
+            if first_period else None
+        ),
+        "latest_period": (
+            {"year": last_period[0], "quarter": last_period[1]}
+            if last_period else None
+        ),
+        "missing_years": missing_years,
+        "missing_quarters": [
+            {"year": year, "quarter": quarter} for year, quarter in missing_periods
+        ],
+        "missing_state_period_combination_count": len(missing_state_periods),
+        "missing_state_period_combinations": [
+            {"state": state, "year": year, "quarter": quarter}
+            for state, year, quarter in missing_state_periods
+        ],
+        "very_low_transaction_volume_rows": int(
+            valid["volume_support"].eq("very_low_volume").sum()
+        ),
         "volume_support_rows": _count_by(valid, "volume_support"),
         "transaction_count_distribution": {
             str(key): float(value)
