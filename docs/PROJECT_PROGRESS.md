@@ -87,7 +87,7 @@ Last updated: 13 July 2026
 - Files modified: `app/streamlit_app.py`, `tests/test_framework.py`, `README.md`, `ROADMAP.md`, `docs/ARCHITECTURE_AND_USAGE.md`, and this progress log.
 - Tests performed: focused UI contract and Streamlit integration tests, complete unit-test discovery, bundle checksum comparison, compile validation, local Streamlit HTTP startup, and diff validation.
 - Test results: 57/57 tests passed; both trained bundle checksums were unchanged; Streamlit returned HTTP 200 locally; compile and diff checks passed.
-- Commit identifier: pending the verified phase commit.
+- Commit identifier: `4be51aa` (`feat: separate aggregate and property estimator modes`).
 - Remaining limitations: the app has no individual-property data or model, and the real aggregate sources remain historical (Penang 2017 and regional 2016–2018).
 - Dependencies: existing repository-owned aggregate model bundles and licensed aggregate datasets; no new runtime dependency.
 - Blockers: a legally usable, sufficiently representative property-level dataset is required before the second mode can predict.
