@@ -148,6 +148,7 @@ class EndToEndTests(unittest.TestCase):
     def test_streamlit_regional_area_path(self):
         from streamlit.testing.v1 import AppTest
         app=AppTest.from_file(str(Path(__file__).parents[1]/"app"/"streamlit_app.py"),default_timeout=10).run()
+        app.radio[0].set_value("Published regional price averages").run()
         app.selectbox[0].select("Selangor").run()
         app.button[-1].click().run()
         self.assertFalse(app.exception)

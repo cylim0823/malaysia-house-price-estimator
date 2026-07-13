@@ -28,6 +28,8 @@ The official aggregate path is intentionally separate: `official_averages.py` no
 
 `regional_area.py` combines the licensed JPPH terraced and high-rise district/region workbooks into 600 genuine observations, trains through 2017, preserves 2018 Q1-Q2 as the final test, and compares a location/property median with log ridge. Terraced data covers all 13 states plus Kuala Lumpur; high-rise options appear only for the seven state markets in the source. Putrajaya and Labuan remain unsupported.
 
+`aggregate_transactions.py` is a separate record model for grouped completed transactions. It preserves raw values, verifies value/count arithmetic, normalizes district annotations and source property categories, flags volume support and quarter changes, generates weighted metrics, and rejects unsupported combinations. Its features are only state, district, property type, year, and quarter; total value is forbidden and count is weight/support metadata. The Streamlit app exposes this as a distinct Penang 2017 mode.
+
 ## Installation and commands
 
 ```powershell
@@ -43,6 +45,7 @@ python -m house_price_estimator predict --model models/demo_bundle.pkl --input e
 python scripts/train_official_averages.py
 python scripts/train_penang_district.py
 python scripts/train_regional_area.py
+python scripts/process_aggregate_transactions.py
 python -m streamlit run app/streamlit_app.py
 ```
 

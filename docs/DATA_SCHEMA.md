@@ -2,6 +2,8 @@
 
 **Status:** Proposed schema design only. No source is approved, no records have been collected, and no implementation currently enforces this schema.
 
+This document defines the future individual-property schema. The implemented grouped completed-transaction schema is intentionally separate and documented in `AGGREGATE_TRANSACTION_DATASET.md`; forcing aggregate rows into this record model would misrepresent them.
+
 ## 1. Purpose
 
 Every future approved source should be converted into one canonical property-record schema so validation, deduplication, analysis, and modelling have consistent meanings. Source-specific fields may be retained, but they must not silently redefine canonical fields.

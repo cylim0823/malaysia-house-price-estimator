@@ -1,0 +1,106 @@
+{
+  "dataset_version": "penang-completed-transaction-aggregates-2017-v2",
+  "row_meaning": "aggregate group, not an individual property transaction",
+  "aggregate_rows": 212,
+  "transactions_represented": 11816,
+  "transaction_value_rm": 5171921352.0,
+  "coverage": {
+    "states": [
+      "Penang"
+    ],
+    "districts": [
+      "Barat Daya",
+      "Seberang Perai Selatan",
+      "Seberang Perai Tengah",
+      "Seberang Perai Utara",
+      "Timur Laut"
+    ],
+    "property_types": [
+      "cluster_house",
+      "condominium_apartment",
+      "detached",
+      "flat",
+      "low_cost_flat",
+      "low_cost_house",
+      "one_to_one_half_storey_semi_detached",
+      "one_to_one_half_storey_terraced",
+      "town_house",
+      "two_to_two_half_storey_semi_detached",
+      "two_to_two_half_storey_terraced"
+    ],
+    "years": [
+      2017
+    ],
+    "quarters": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "volume_support_rows": {
+    "medium_volume": 89,
+    "low_volume": 57,
+    "high_volume": 40,
+    "very_low_volume": 26
+  },
+  "missing_combinations": [
+    [
+      "Penang",
+      "Seberang Perai Selatan",
+      "condominium_apartment",
+      2017,
+      1
+    ],
+    [
+      "Penang",
+      "Seberang Perai Selatan",
+      "condominium_apartment",
+      2017,
+      2
+    ],
+    [
+      "Penang",
+      "Seberang Perai Selatan",
+      "condominium_apartment",
+      2017,
+      3
+    ],
+    [
+      "Penang",
+      "Seberang Perai Selatan",
+      "condominium_apartment",
+      2017,
+      4
+    ],
+    [
+      "Penang",
+      "Seberang Perai Selatan",
+      "flat",
+      2017,
+      1
+    ],
+    [
+      "Penang",
+      "Seberang Perai Selatan",
+      "flat",
+      2017,
+      2
+    ],
+    [
+      "Penang",
+      "Seberang Perai Selatan",
+      "flat",
+      2017,
+      3
+    ],
+    [
+      "Penang",
+      "Seberang Perai Tengah",
+      "town_house",
+      2017,
+      3
+    ]
+  ],
+  "suspicious_quarter_change_rows": 8
+}

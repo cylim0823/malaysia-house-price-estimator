@@ -39,6 +39,14 @@ not treated as permission to transcribe or train on those tables.
 - Work completed: public GitHub repository and Streamlit historical-average prototype are live.
 - Recommended next action: onboard a licensed transaction-level sample and keep the aggregate prototype clearly separated.
 
+## Aggregate forecasting and nationwide aggregate coverage
+
+- Exact blocker: the completed-transaction aggregate dataset covers only Penang in 2017.
+- Why progress cannot safely continue: four quarters per segment cannot validate multi-year forecasting, current 2026 estimates, advanced model selection, or nationwide transaction coverage.
+- Owner action required: provide additional compatible licensed years and states, retaining counts, values, district, type, year, quarter, source, and reuse metadata.
+- Work completed: 212 rows representing 11,816 transactions were validated; weighted baselines were provisionally evaluated from Q1-Q3 to Q4; the UI restricts itself to actual combinations.
+- Recommended next action: obtain at least two later licensed years before adding validation/test years and advanced aggregate models.
+
 ## Resolved — GitHub publication
 
 - Resolution: GitHub Desktop credentials were used to connect the local history safely; the public repository is https://github.com/cylim0823/malaysia-house-price-estimator.

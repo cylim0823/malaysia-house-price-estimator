@@ -1,5 +1,26 @@
 # Included Models
 
+## Aggregate completed-transaction baseline
+
+`aggregate_transaction_bundle.pkl` is built reproducibly with:
+
+```powershell
+python scripts/process_aggregate_transactions.py
+```
+
+- Source: Penang government transaction counts and values, Creative Commons Attribution
+- Aggregate rows: 212, representing 11,816 completed transactions
+- Coverage: five Penang districts, 11 source categories, 2017 Q1-Q4
+- Training: Q1-Q3; provisional test: Q4 (54 rows / 3,170 transactions)
+- Selected baseline: transaction-weighted district/property-type average
+- Unweighted test MAE: RM64,764.81
+- Transaction-weighted test MAE: RM36,676.57
+- Transaction-weighted RMSE: RM69,133.96
+- SHA-256: `7EC8CE8AF4A50B726B0A5543C28F45655CA3CA195426CB1B9DF22A74036FB453`
+
+Only one year is available, so this is a provisional aggregate baseline—not a
+current forecast, advanced model, or individual-property estimator.
+
 ## Regional terraced-house model
 
 `regional_terraced_bundle.pkl` is trained reproducibly with:

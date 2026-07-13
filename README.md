@@ -4,9 +4,9 @@
 
 Malaysia House Price Estimator is a planned machine-learning application for estimating residential property prices across Malaysia. It will combine data collection, cleaning, validation, exploratory analysis, feature engineering, regression modelling, model evaluation, and a simple web interface.
 
-The project includes a source-neutral engineering framework and a local area-level real-data prototype. Its combined regional dataset contains 600 JPPH quarterly averages: 460 terraced-house observations across 46 districts/regions in all 13 states plus Kuala Lumpur, and 140 high-rise observations for the locations published in that source. A separate Penang dataset contains 212 richer district/property-type/quarter completed-transaction averages. All selected sources are marked Creative Commons Attribution in Malaysia's government open-data archive.
+The project includes a source-neutral engineering framework and two separate real aggregate-data paths. The Penang completed-transaction explorer validates 212 district/property-type/quarter groups representing 11,816 completed transactions in 2017. The regional historical-price dataset contains 600 JPPH quarterly averages: 460 terraced observations across all 13 states plus Kuala Lumpur and 140 high-rise observations where published. All selected sources are marked Creative Commons Attribution in Malaysia's government open-data archive.
 
-**Important limitation:** regional data covers 2016 Q1 through 2018 Q2. Terraced observations span 14 state/territory markets; high-rise coverage is limited to seven state markets and selected areas. Putrajaya and Labuan are unsupported. Penang's separate completed-transaction aggregates cover 2017. The data contains no individual-property floor area, bedrooms, condition, tenure, project, street, or coordinates. Output is a historical area benchmark, not an individual home valuation or current-market prediction.
+**Important limitation:** every real row is an aggregate group, not an individual property. Penang transaction data covers 2017 only; regional published averages cover 2016 Q1 through 2018 Q2. The data contains no individual-property floor area, bedrooms, condition, tenure, project, street, or coordinates. Output is a historical group benchmark, not an individual home valuation or current-market prediction.
 
 Data quality is more important than interface complexity. The first implementation will focus on residential properties for sale and will expand only when sufficient verified, legally usable data is available.
 
@@ -193,6 +193,9 @@ All outputs are for educational and informational purposes only. They are not fi
 - [Real-data onboarding](docs/REAL_DATA_ONBOARDING.md)
 - [Real dataset assessment](docs/REAL_DATASET_ASSESSMENT.md)
 - [Streamlit deployment](docs/STREAMLIT_DEPLOYMENT.md)
+- [Aggregate transaction dataset](docs/AGGREGATE_TRANSACTION_DATASET.md)
+- [Real aggregate EDA](docs/REAL_DATA_EDA.md)
+- [Aggregate baseline evaluation](docs/REAL_MODEL_EVALUATION.md)
 
 ## Local validation
 
@@ -204,6 +207,7 @@ python -m unittest discover -s tests -v
 python scripts/train_official_averages.py
 python scripts/train_penang_district.py
 python scripts/train_regional_area.py
+python scripts/process_aggregate_transactions.py
 python -m streamlit run app/streamlit_app.py
 ```
 

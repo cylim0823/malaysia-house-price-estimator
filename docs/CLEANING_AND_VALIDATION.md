@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-The repository now contains a source-independent cleaning and validation core. It is tested only with clearly labelled synthetic fixtures. No real property data has been collected, no source adapter exists, and no output is suitable for model training yet.
+The repository contains a source-independent individual-property cleaning core tested with synthetic fixtures and a separate real aggregate validation pipeline. The aggregate pipeline applies only to grouped Penang completed-transaction statistics and must not be treated as individual-property cleaning or training.
 
 The core implementation lives under `src/house_price_estimator/cleaning/` and does not modify caller-owned records. Source-neutral ingestion, duplicate grouping, outlier review, EDA, and modelling are documented in `ARCHITECTURE_AND_USAGE.md`.
 

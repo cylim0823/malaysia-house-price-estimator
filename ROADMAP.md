@@ -6,11 +6,29 @@ The long-term goal is a validated residential sale-price estimator covering all 
 
 - **Engineering complete:** the source-neutral component is implemented, tested with synthetic fixtures, documented, and locally runnable.
 - **Limited real-data prototype complete:** licensed JPPH/NAPIC data now provides 600 terraced/high-rise area-quarter averages, spanning all 13 states plus Kuala Lumpur for terraced houses, and richer five-district Penang transaction aggregates. The regional expansion is local and not yet published.
+- **Real aggregate transaction pipeline complete:** 212 Penang 2017 group rows representing 11,816 completed transactions are preserved, validated, normalized, reported, weighted, and exposed in a separate historical explorer.
+- **Aggregate baseline provisionally evaluated:** Q1-Q3 train and Q4 test is time ordered, but one year is insufficient for future-price or current-market validation; advanced aggregate models are deferred.
 - **Property-level validation pending:** individual-home conclusions and current estimates still require an approved property-level dataset.
 - **GitHub publication complete:** the public repository is available under `cylim0823/malaysia-house-price-estimator`.
 - **Public deployment complete:** the historical-average Streamlit prototype is live on Streamlit Community Cloud.
 
 Current data decision: the JPPH district/region terraced and high-rise workbooks, four state-average workbooks, and two Penang district transaction datasets were approved because the government catalogue marks them Creative Commons Attribution. No clearly licensed property-level candidate passed provenance and reuse review; see `docs/REAL_DATASET_ASSESSMENT.md`.
+
+## Aggregate completed-transaction track
+
+- [x] Preserve the imported Penang aggregate CSV and machine-readable provenance
+- [x] Validate row arithmetic, fields, quarter/state/type controls, and duplicate keys
+- [x] Preserve raw district and property-type text while creating controlled values
+- [x] Flag transaction-volume support and suspicious quarter changes without deletion
+- [x] Generate aggregate quality and EDA reports
+- [x] Exclude transaction value and count from model features; use count as weight/support
+- [x] Compare weighted aggregate baselines on a Q1-Q3 to Q4 split
+- [x] Add a separate Streamlit aggregate explorer with dynamic actual coverage
+- [x] Test the aggregate workflow end to end
+- [ ] Add multiple later years before validating forecasting or advanced aggregate models
+- [ ] Expand aggregate transaction coverage beyond Penang
+
+This track does not complete the individual-property roadmap phases below.
 
 The local engineering framework spans schema, structured-file ingestion, cleaning, duplicate/outlier review, synthetic generation, EDA, feature engineering, group/time-safe splitting, baseline and optional advanced models, evaluation reports, saved bundles, prediction service, Streamlit, optional FastAPI, configuration, and CLI. Original checkboxes below remain tied to real-data completion criteria and do not imply genuine market validation.
 

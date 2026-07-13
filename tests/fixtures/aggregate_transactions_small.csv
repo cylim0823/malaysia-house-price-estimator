@@ -1,0 +1,9 @@
+state,district,property_type,year,quarter,transaction_count,transaction_value_rm,average_price_rm,price_type
+Penang,Timur Laut (George Town / northeast island),Flat,2017,1,10,2000000,200000,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Flat,2017,2,12,2520000,210000,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Flat,2017,3,15,3300000,220000,completed_transaction_average
+Penang,Timur Laut (George Town / northeast island),Flat,2017,4,20,4600000,230000,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,1,2,1000000,500000,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,2,6,3120000,520000,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,3,25,13750000,550000,completed_transaction_average
+Penang,Seberang Perai Tengah,Detached,2017,4,30,17400000,580000,completed_transaction_average

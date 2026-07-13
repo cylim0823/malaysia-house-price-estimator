@@ -12,6 +12,7 @@ Last updated: 13 July 2026
 | Synthetic demonstration generator | Complete | Not market evidence |
 | Licensed JPPH historical averages | 2,090 rows normalized and versioned | Aggregated 2009 Q1-2018 Q2 only |
 | Penang district transactions | 212 district/property-type/quarter averages | Aggregated 2017 completed transactions only |
+| Aggregate transaction pipeline | 212 rows validated; 11,816 transactions represented; weighted baseline and separate UI mode complete | Penang 2017 only; forecasting remains provisional |
 | Regional area prices | 600 quarterly averages across 53 state-area combinations and 14 states/territories | Terraced and partial high-rise coverage, 2016 Q1-2018 Q2 |
 | EDA | Reusable summaries complete | Real conclusions pending |
 | Features and splitting | Complete; training-only fitting and duplicate-group safety tested | Real time-field reliability pending |
@@ -28,7 +29,7 @@ Last updated: 13 July 2026
 ## Verification record
 
 - Editable package installation: passed.
-- Complete suite: 41 tests passed. The regional-area module includes 3 focused tests for nationwide normalization, strict property-type coverage, identical-holdout model selection, persistence, and unsupported-type rejection.
+- Complete suite: 51 tests passed. Aggregate coverage includes arithmetic, schema, normalization, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, and Streamlit paths.
 - Official model: log-target ridge regression trained on 1,980 observations and tested on the final 110 observations (2018 Q1-Q2).
 - Official holdout results: MAE RM94,268.28; RMSE RM276,407.99; R² 0.7670. State/property-type median baseline MAE RM101,457.44.
 - Penang district holdout: Q4 2017, 54 observations. The selected district/property-type median achieved MAE RM55,154.82, beating log ridge at RM79,520.97.
@@ -61,3 +62,18 @@ Last updated: 13 July 2026
 - Remaining limitations: published averages are historical aggregates without individual-home attributes. High-rise coverage is partial; Putrajaya and Labuan have no verified price observations. The model is not a current or individual-property valuation.
 - Dependencies: Creative Commons Attribution JPPH terraced and high-rise workbooks from Malaysia's archived government open-data catalogue.
 - Blockers: nationwide property-level training still requires a licensed record-level dataset; no listing scraper is approved.
+
+## Aggregate completed-transaction integration - 13 July 2026
+
+- Phase name: real aggregate transaction validation, weighting, evaluation, and UI integration.
+- Start state: a 212-row derived Penang CSV and a simple unweighted district median model existed, but there was no separate aggregate schema, raw import metadata, arithmetic audit, volume support, weighted metrics, or dedicated UI mode.
+- Completion state: the immutable CSV is preserved with checksum metadata; all rows are validated and normalized; quality, EDA, and weighted baseline reports are generated; and Streamlit has a separate aggregate explorer restricted to actual Penang 2017 combinations.
+- Files created: aggregate source module, processing script, raw/processed aggregate releases, metadata, quality/EDA/model reports, aggregate bundle, test fixture/tests, and three aggregate documentation files.
+- Files modified: application, README, roadmap, agent instructions, architecture, cleaning/schema, blockers, dataset assessment, deployment guide, and progress log.
+- Tests performed: focused aggregate unit tests, end-to-end save/load/predict test, Streamlit aggregate/regional smoke tests, full test discovery, compile checks, deterministic rebuild, checksum comparison, and diff validation.
+- Data results: 212 aggregate rows, 11,816 completed transactions, RM5,171,921,352 total represented value, zero arithmetic mismatches, zero duplicate keys, zero rejected rows, 84 warning rows, and eight missing combinations.
+- Model results: Q1-Q3 training has 158 rows/8,646 transactions; Q4 test has 54 rows/3,170 transactions. Selected segment weighted average has unweighted MAE RM64,764.81 and transaction-weighted MAE RM36,676.57.
+- Commit identifier: pending verified commit.
+- Remaining limitations: one year, one state, aggregate categories, no individual-property attributes, no current-market validation, and no advanced model justification.
+- Dependencies: two Penang government CSV releases labelled Creative Commons Attribution in the archived government catalogue.
+- Blockers: additional licensed years/states are required for multi-year forecasting and nationwide aggregate support; property-level data remains separately blocked.
