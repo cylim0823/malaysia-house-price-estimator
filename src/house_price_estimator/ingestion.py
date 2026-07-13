@@ -13,7 +13,7 @@ from uuid import uuid4
 from . import SCHEMA_VERSION
 from .schema import RawRecord
 
-SYNTHETIC_LABEL = "Synthetic demonstration data — not real Malaysian property market data."
+SYNTHETIC_LABEL = "Synthetic demonstration data - not real Malaysian property market data."
 
 
 @dataclass(frozen=True)
@@ -72,4 +72,3 @@ def ingest_file(path: str | Path, *, source_name: str, dataset_version: str,
                "schema_version": SCHEMA_VERSION, "dataset_version": dataset_version, "input_rows": len(rows),
                "accepted_rows": len(accepted), "rejected_rows": len(rejected)}
     return IngestionResult(tuple(accepted), tuple(rejected), summary)
-

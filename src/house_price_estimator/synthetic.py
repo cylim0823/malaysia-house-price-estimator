@@ -8,7 +8,7 @@ from typing import Any
 
 from .schema import State
 
-SYNTHETIC_LABEL = "Synthetic demonstration data — not real Malaysian property market data."
+SYNTHETIC_LABEL = "Synthetic demonstration data - not real Malaysian property market data."
 
 
 def generate_synthetic_records(count: int = 240, *, seed: int = 42, price_type: str = "asking",

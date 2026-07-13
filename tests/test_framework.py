@@ -121,9 +121,10 @@ class EndToEndTests(unittest.TestCase):
 
     def test_cli_end_to_end(self):
         with tempfile.TemporaryDirectory() as directory:
-            data=Path(directory)/"demo.json";out=Path(directory)/"artifacts";prediction_input=Path(directory)/"prediction.json"
+            data=Path(directory)/"demo.csv";out=Path(directory)/"artifacts";prediction_input=Path(directory)/"prediction.json"
             self.assertEqual(main(["generate-demo-data","--output",str(data),"--count","20"]),0)
-            self.assertEqual(main(["train-demo","--output-dir",str(out),"--count","96"]),0)
+            self.assertIn("synthetic_disclaimer",data.read_text(encoding="utf-8"))
+            self.assertEqual(main(["train-demo","--output-dir",str(out),"--input",str(data)]),0)
             created=PredictionBundle.load(out/"demo_bundle.pkl",trusted=True);state,district,kind=next(iter(created.segment_counts)).split("|",2)
             sample={"state":state,"district":district,"property_type":kind,"built_up_sqft":1000,"bedrooms":3,"bathrooms":2,"record_year":2026,"record_month":7}
             prediction_input.write_text(json.dumps(sample),encoding="utf-8")

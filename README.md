@@ -4,9 +4,9 @@
 
 Malaysia House Price Estimator is a planned machine-learning application for estimating residential property prices across Malaysia. It will combine data collection, cleaning, validation, exploratory analysis, feature engineering, regression modelling, model evaluation, and a simple web interface.
 
-The project now includes a locally testable engineering framework covering structured-file ingestion, cleaning, validation, deduplication, outlier review, synthetic demonstration data, EDA, leakage-safe splitting, baseline and advanced model comparison, evaluation, saved prediction bundles, a service layer, CLI, Streamlit MVP, and optional FastAPI adapter.
+The project includes a source-neutral engineering framework and a deployed first real-data prototype. The live Streamlit app uses 2,090 historical quarterly average-price observations from JPPH/NAPIC workbooks published in Malaysia's government open-data archive under Creative Commons Attribution.
 
-**Synthetic demonstration data — not real Malaysian property market data.** No real source, real dataset, real-market accuracy, supported production area, or public deployment has been approved or validated.
+**Important limitation:** the official data covers aggregated state/property-type averages from 2009 Q1 through 2018 Q2. It contains no individual-property floor area, bedrooms, condition, tenure, project, or exact-location fields. The live output is therefore a historical average-price estimate, not an individual home valuation or current-market prediction.
 
 Data quality is more important than interface complexity. The first implementation will focus on residential properties for sale and will expand only when sufficient verified, legally usable data is available.
 
@@ -201,12 +201,16 @@ With Python 3.11 or newer:
 ```powershell
 python -m pip install -e ".[ml,ui,api,charts,dev]"
 python -m unittest discover -s tests -v
-python -m house_price_estimator train-demo --output-dir models --count 240
+python scripts/train_official_averages.py
 python -m streamlit run app/streamlit_app.py
 ```
 
-See [Architecture and local usage](docs/ARCHITECTURE_AND_USAGE.md) for CLI and optional API commands. All demonstration records and metrics are synthetic; passing tests does not establish real-market accuracy or geographic support.
+See [Architecture and local usage](docs/ARCHITECTURE_AND_USAGE.md) for CLI and optional API commands. Synthetic fixtures remain only for pipeline tests. The official-average test metrics describe historical aggregates and do not establish individual-home accuracy.
 
 ## Public deployment status
 
-The repository is prepared for Streamlit Community Cloud with entrypoint `app/streamlit_app.py`. A small synthetic demonstration bundle is included so the deployed application does not need a dataset or training job at startup. GitHub Pages cannot run the Python model.
+Repository: https://github.com/cylim0823/malaysia-house-price-estimator
+
+Live app: https://malaysia-house-price-estimator-nnddkdymt6prvwdtkfww5y.streamlit.app
+
+The repository includes the licensed source workbooks, normalized CSV, reproducible training script, and trained historical-average model. GitHub Pages cannot run the Python model.

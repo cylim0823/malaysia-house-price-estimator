@@ -1,0 +1,46 @@
+{
+  "dataset_rows": 2090,
+  "train_rows": 1980,
+  "test_rows": 110,
+  "test_periods": [
+    8073,
+    8074
+  ],
+  "model": {
+    "mae_rm": 94268.27548455437,
+    "rmse_rm": 276407.9907631564,
+    "r2": 0.7670381527525922
+  },
+  "overall_median_baseline": {
+    "mae_rm": 270250.1835454546,
+    "rmse_rm": 615350.5334776266,
+    "r2": -0.15459261717979955
+  },
+  "state_property_type_median_baseline": {
+    "mae_rm": 101457.43749262065,
+    "rmse_rm": 145415.36159688642,
+    "r2": 0.9355230941121502
+  },
+  "states": [
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Kuala Lumpur",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Penang",
+    "Perak",
+    "Perlis",
+    "Sabah",
+    "Sarawak",
+    "Selangor",
+    "Terengganu"
+  ],
+  "property_types": [
+    "All houses",
+    "Detached house",
+    "Semi-detached house",
+    "Terraced house"
+  ]
+}

@@ -2,11 +2,9 @@
 
 ## Engineering status
 
-The repository contains a complete local demonstration framework from structured-file ingestion through prediction. It is designed to accept a licensed dataset later without replacing its major interfaces. All bundled demonstrations use the label:
+The repository contains a source-neutral property-level engineering framework plus a separate licensed historical-average pipeline. The deployed Streamlit app uses JPPH/NAPIC aggregate data; synthetic records remain limited to framework tests and demonstrations.
 
-> Synthetic demonstration data — not real Malaysian property market data.
-
-This framework does not establish genuine market accuracy, supported Malaysian coverage, or an official valuation.
+The official model estimates quarterly state/property-type averages for 2009 Q1 through 2018 Q2. It does not establish individual-property accuracy, current coverage, or an official valuation.
 
 ## Pipeline
 
@@ -24,6 +22,8 @@ This framework does not establish genuine market accuracy, supported Malaysian c
 12. `prediction.py` validates coverage and produces a central estimate, residual-quantile demonstration range, support level, and neutral asking-price comparison.
 13. `app/streamlit_app.py`, `api.py`, and `cli.py` adapt the service for users.
 
+The official aggregate path is intentionally separate: `official_averages.py` normalizes four JPPH workbooks, `scripts/train_official_averages.py` creates the normalized CSV, performs a time-based final holdout, compares baselines, and writes `models/official_average_bundle.pkl`, which the Streamlit app loads.
+
 ## Installation and commands
 
 ```powershell
@@ -36,6 +36,7 @@ python -m house_price_estimator train-demo --output-dir models --count 240
 python -m house_price_estimator evaluate --model models/demo_bundle.pkl
 python -m house_price_estimator model-info --model models/demo_bundle.pkl
 python -m house_price_estimator predict --model models/demo_bundle.pkl --input example_prediction.json
+python scripts/train_official_averages.py
 python -m streamlit run app/streamlit_app.py
 ```
 
@@ -53,4 +54,3 @@ Endpoints are `GET /health`, `GET /model-info`, and `POST /predict`. GitHub Page
 Bundles use pickle for trusted local artifacts. Pickle can execute code while loading, so `PredictionBundle.load` requires explicit `trusted=True`. Never load user-uploaded or otherwise untrusted model files.
 
 Use Python 3.11+, install the relevant optional dependency group, and generate `models/demo_bundle.pkl` before Streamlit or API startup. Parquet requires `pyarrow`. An unsupported coverage error means the exact state/district/property-type combination was absent from training.
-

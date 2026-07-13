@@ -2,6 +2,7 @@
 from __future__ import annotations
 from collections import Counter
 from pathlib import Path
+from typing import Any, Iterable
 import numpy as np
 from .bundle import PredictionBundle
 from .duplicates import group_duplicates
@@ -21,8 +22,16 @@ def prepare(records):
         rows.append(row)
     return detect_outliers(group_duplicates(rows))
 
-def train_demo(*,count=240,seed=42,output_dir:str|Path|None=None):
-    rows=[r for r in prepare(generate_synthetic_records(count,seed=seed,include_anomalies=True)) if r["outlier_status"]!="confirmed_data_error"]
+def train_demo(*, count: int = 240, seed: int = 42,
+               output_dir: str | Path | None = None,
+               records: Iterable[dict[str, Any]] | None = None):
+    """Train the demonstration bundle from supplied synthetic rows or the generator."""
+    source_rows = list(records) if records is not None else generate_synthetic_records(
+        count, seed=seed, include_anomalies=True
+    )
+    if not source_rows or not all(bool(row.get("is_synthetic")) for row in source_rows):
+        raise ValueError("train-demo accepts only clearly labelled synthetic records")
+    rows=[r for r in prepare(source_rows) if r["outlier_status"]!="confirmed_data_error"]
     split=split_records(rows,seed=seed,use_time=True); candidates=all_candidates(seed); scores={}
     for name,model in candidates.items():model.fit(list(split.train));scores[name]=regression_metrics([r["price"] for r in split.validation],model.predict(list(split.validation)))["mae"]
     best=min(scores.values()); complexity=("overall_median","state_median","segment_median","linear_ridge","hist_gradient_boosting","random_forest","hist_gradient_boosting_log","knn_experiment","catboost")

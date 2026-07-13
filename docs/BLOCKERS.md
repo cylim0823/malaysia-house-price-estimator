@@ -23,27 +23,21 @@ Last updated: 13 July 2026
 - Exact blocker: no approved, cleaned, deduplicated real dataset exists.
 - Why progress cannot safely continue: engineering can be exercised synthetically, but real EDA conclusions, accuracy, ranges, model selection, supported coverage, and nationwide expansion cannot be validated with fabricated market data.
 - Owner action required: resolve the approved-source blocker and provide the authorised data locally with licence metadata.
-- Work completed: local demonstration framework through ingestion, cleaning, EDA, splitting, modelling, evaluation, saved bundle, prediction service, CLI, Streamlit, and optional API. Synthetic outputs carry an explicit disclaimer.
+- Work completed: the source-neutral framework plus a licensed JPPH historical aggregate model and public Streamlit app. This does not resolve the property-level dependency.
 - Recommended next action: ingest a small authorised sample, reconcile its schema, then add source-specific validation before EDA.
 
-## Phase 10 — Public deployment
+## Phase 10 — Individual-property public deployment
 
-- Exact blocker: publishing requires explicit approval and deployment credentials; no validated application exists yet.
-- Why progress cannot safely continue: external publication is irreversible and could misrepresent model accuracy or data rights.
-- Owner action required: only after model validation, select an approved host and provide deployment authority/credentials through a secure mechanism.
-- Work completed: local Streamlit and optional FastAPI adapters are implemented and smoke-tested with the synthetic demonstration bundle.
-- Recommended next action: defer public deployment until real-data validation and a separate deployment review are complete.
+- Exact blocker: the published historical-average prototype cannot become an individual-property estimator without licensed property-level records.
+- Why progress cannot safely continue: aggregate state averages do not contain the required property attributes or transaction-level target.
+- Owner action required: provide or authorize a clearly licensed property-level dataset.
+- Work completed: public GitHub repository and Streamlit historical-average prototype are live.
+- Recommended next action: onboard a licensed transaction-level sample and keep the aggregate prototype clearly separated.
 
-## GitHub publication — CLI authentication
+## Resolved — GitHub publication
 
-- Exact blocker: the official portable GitHub CLI runs successfully but `gh auth status` reports that no GitHub host is authenticated.
-- Why progress cannot safely continue: repository creation and push require the owner's GitHub browser/device authorization. Passwords, tokens, and verification codes must not be handled by an agent.
-- Owner action required: run `gh auth login`, complete the browser flow for account `cylim0823`, and confirm with `gh auth status`.
-- Work completed: dataset assessment, deployable synthetic bundle, Streamlit configuration, dependency file, security exclusions, tests, local Git initialization, and initial commit.
-- Recommended next action: authenticate GitHub CLI, then create and push the public `malaysia-house-price-estimator` repository.
+- Resolution: GitHub Desktop credentials were used to connect the local history safely; the public repository is https://github.com/cylim0823/malaysia-house-price-estimator.
 
-## Streamlit Community Cloud — one-time authorization
+## Resolved — Streamlit Community Cloud authorization
 
-- Exact blocker: deployment requires the owner to sign in with GitHub and authorize Streamlit Community Cloud.
-- Owner action required: follow `docs/STREAMLIT_DEPLOYMENT.md` after the GitHub push and return the resulting public URL.
-- Work completed: the entrypoint, dependencies, repository-relative model path, small demo bundle, clear synthetic banner, and deployment instructions are ready.
+- Resolution: repository access was authorized and the app was deployed at https://malaysia-house-price-estimator-nnddkdymt6prvwdtkfww5y.streamlit.app.
