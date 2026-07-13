@@ -5,12 +5,12 @@ The long-term goal is a validated residential sale-price estimator covering all 
 ## Status dimensions
 
 - **Engineering complete:** the source-neutral component is implemented, tested with synthetic fixtures, documented, and locally runnable.
-- **Limited real-data prototype complete:** licensed JPPH/NAPIC state aggregates and Penang district transaction aggregates are normalized, modelled, tested, and deployed.
+- **Limited real-data prototype complete:** licensed JPPH/NAPIC data now provides selected district/region terraced coverage for 14 states/territories and richer five-district Penang transaction aggregates. The regional expansion is local and not yet published.
 - **Property-level validation pending:** individual-home conclusions and current estimates still require an approved property-level dataset.
 - **GitHub publication complete:** the public repository is available under `cylim0823/malaysia-house-price-estimator`.
 - **Public deployment complete:** the historical-average Streamlit prototype is live on Streamlit Community Cloud.
 
-Current data decision: five JPPH/NAPIC historical average-price workbooks and two Penang district transaction aggregate datasets were approved because the government catalogue marks them Creative Commons Attribution. No clearly licensed property-level candidate passed provenance and reuse review; see `docs/REAL_DATASET_ASSESSMENT.md`.
+Current data decision: the JPPH district/region terraced workbook, four state-average workbooks, and two Penang district transaction datasets were approved because the government catalogue marks them Creative Commons Attribution. No clearly licensed property-level candidate passed provenance and reuse review; see `docs/REAL_DATASET_ASSESSMENT.md`.
 
 The local engineering framework spans schema, structured-file ingestion, cleaning, duplicate/outlier review, synthetic generation, EDA, feature engineering, group/time-safe splitting, baseline and optional advanced models, evaluation reports, saved bundles, prediction service, Streamlit, optional FastAPI, configuration, and CLI. Original checkboxes below remain tied to real-data completion criteria and do not imply genuine market validation.
 

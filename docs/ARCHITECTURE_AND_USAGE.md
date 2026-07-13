@@ -24,7 +24,9 @@ The official model estimates quarterly state/property-type averages for 2009 Q1 
 
 The official aggregate path is intentionally separate: `official_averages.py` normalizes four JPPH workbooks, `scripts/train_official_averages.py` creates the normalized CSV, performs a time-based final holdout, compares baselines, and writes `models/official_average_bundle.pkl`, which the Streamlit app loads.
 
-`penang_district.py` joins licensed transaction counts and values at identical quarter/property-type/district keys, calculates completed-transaction averages, holds out Q4 2017, compares a grouped median with log ridge, and saves the better model. The Streamlit app uses this path whenever Penang is selected and retains state-level fallback for other supported locations.
+`penang_district.py` joins licensed transaction counts and values at identical quarter/property-type/district keys, calculates completed-transaction averages, holds out Q4 2017, compares a grouped median with log ridge, and saves the better model. The Streamlit app uses this richer path whenever Penang is selected.
+
+`regional_terraced.py` normalizes the licensed JPPH district/region workbook into 460 observations, trains through 2017, preserves 2018 Q1-Q2 as the final test, and compares area median with log ridge. This supplies 46 selectable areas across 14 states/territories; it does not claim other property types.
 
 ## Installation and commands
 
@@ -40,6 +42,7 @@ python -m house_price_estimator model-info --model models/demo_bundle.pkl
 python -m house_price_estimator predict --model models/demo_bundle.pkl --input example_prediction.json
 python scripts/train_official_averages.py
 python scripts/train_penang_district.py
+python scripts/train_regional_terraced.py
 python -m streamlit run app/streamlit_app.py
 ```
 

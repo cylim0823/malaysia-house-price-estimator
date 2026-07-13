@@ -331,3 +331,9 @@ training.
 The user later allowed collection in principle, but permission from the project
 owner does not grant rights over third-party listing content. Manual copying is
 not used to circumvent unclear automated-collection or machine-learning terms.
+
+The catalogue search found no additional Creative Commons district-price
+workbook for detached, semi-detached, condominium, or apartment categories.
+The approved JPPH terraced workbook was normalized into 460 quarterly rows for
+46 selected districts/regions across 14 states/territories. This is the maximum
+current multi-state area coverage supported by the verified archive sources.

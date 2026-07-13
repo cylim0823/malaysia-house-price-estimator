@@ -18,6 +18,7 @@ models/*
 !models/demo_bundle.pkl
 !models/official_average_bundle.pkl
 !models/penang_district_bundle.pkl
+!models/regional_terraced_bundle.pkl
 !models/README.md
 reports/generated/*
 /malaysia-house-price-estimator/

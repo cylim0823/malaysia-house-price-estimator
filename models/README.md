@@ -1,5 +1,27 @@
 # Included Models
 
+## Regional terraced-house model
+
+`regional_terraced_bundle.pkl` is trained reproducibly with:
+
+```powershell
+python scripts/train_regional_terraced.py
+```
+
+- Source: JPPH terraced-house prices by district/region, Creative Commons Attribution
+- Observations: 460 quarterly averages
+- Coverage: 46 selected areas across 14 states/territories, 2016 Q1-2018 Q2
+- Property type: terraced house only
+- Training: 2016-2017; final test: 2018 Q1-Q2 (92 observations)
+- Selected model: log-target ridge regression
+- Test MAE: RM15,126.49
+- Area-median baseline MAE: RM22,236.17
+- Test RMSE: RM20,207.57
+- Test R²: 0.9914
+- SHA-256: `C3683CBF55C5AF897B6D62B10D95E9495E788380786E85A946A07E898F57D7EC`
+
+These metrics describe published regional averages, not individual-property accuracy.
+
 ## Penang district transaction model
 
 `penang_district_bundle.pkl` is trained reproducibly with:

@@ -1,6 +1,6 @@
 # Streamlit Community Cloud Deployment
 
-The application entrypoint is `app/streamlit_app.py`. The repository includes the state historical-average bundle, Penang district bundle, normalized datasets, dependencies, and Streamlit configuration; no runtime credentials or paid service is required.
+The application entrypoint is `app/streamlit_app.py`. The local version loads the regional terraced bundle and richer Penang district bundle. The current changes intentionally remain unpublished until a later reviewed release.
 
 After the public GitHub repository is available:
 
