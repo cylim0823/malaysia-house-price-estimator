@@ -7,7 +7,7 @@ Last updated: 13 July 2026
 - Exact blocker: no property-level Malaysian residential sale dataset or listing source is approved for collection and machine-learning use.
 - Why progress cannot safely continue: collection would require a purchase, contractual/licence decision, written permission, credentials, or unsupported scraping. The owner explicitly prohibited scraping iProperty, Mudah, PropertyGuru, and EdgeProp.
 - Owner action required: obtain a NAPIC/JPPH sample schema, coverage counts, quotation, and written terms covering local model training, derived artefacts, publication, retention, and redistribution; alternatively provide a lawfully licensed property-level dataset and its field dictionary.
-- Work completed: source investigation, legal/technical classifications, canonical schema, source-independent cleaning core, licensed state aggregates, a five-district Penang benchmark, and terraced-house benchmarks for 46 selected areas across 14 states/territories. Manual copying or automated scraping of listing portals remains excluded unless the original source grants compatible collection and model-use permission.
+- Work completed: source investigation, legal/technical classifications, canonical schema, source-independent cleaning core, licensed state aggregates, a five-district Penang benchmark, and 600 terraced/high-rise regional observations. Terraced coverage spans all 13 states plus Kuala Lumpur. Manual copying or automated scraping of listing portals remains excluded unless the original source grants compatible collection and model-use permission.
 - Recommended next action: make an institutional/owner-authenticated NAPIC enquiry without purchasing or accepting terms until the response is reviewed.
 
 ## Phases 2 and 4 — Official geographic reference
@@ -20,7 +20,7 @@ Last updated: 13 July 2026
 
 ## Phases 5–11 — Real-data validation dependency
 
-- Exact blocker: no approved, cleaned, deduplicated real dataset exists.
+- Exact blocker: no approved, cleaned, deduplicated individual-property dataset exists. Licensed aggregate datasets are available but cannot support individual-home features or accuracy claims.
 - Why progress cannot safely continue: engineering can be exercised synthetically, but real EDA conclusions, accuracy, ranges, model selection, supported coverage, and nationwide expansion cannot be validated with fabricated market data.
 - Owner action required: resolve the approved-source blocker and provide the authorised data locally with licence metadata.
 - Work completed: the source-neutral framework plus a licensed JPPH historical aggregate model and public Streamlit app. This does not resolve the property-level dependency.

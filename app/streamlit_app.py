@@ -13,22 +13,23 @@ except ImportError as exc:
     raise RuntimeError("Install UI dependencies with: pip install -e .[ui]") from exc
 
 from house_price_estimator.penang_district import PenangDistrictBundle
-from house_price_estimator.regional_terraced import RegionalTerracedBundle
+from house_price_estimator.regional_area import RegionalAreaBundle
 
 
-REGIONAL_MODEL_PATH = PROJECT_ROOT / "models" / "regional_terraced_bundle.pkl"
+REGIONAL_MODEL_PATH = PROJECT_ROOT / "models" / "regional_area_bundle.pkl"
 PENANG_MODEL_PATH = PROJECT_ROOT / "models" / "penang_district_bundle.pkl"
-REGIONAL_DATASET_PATH = PROJECT_ROOT / "data" / "official" / "regional_terraced_area_prices.csv"
+REGIONAL_DATASET_PATH = PROJECT_ROOT / "data" / "official" / "regional_area_prices.csv"
 PENANG_DATASET_PATH = PROJECT_ROOT / "data" / "official" / "penang_district_transactions_2017.csv"
 SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-rumah-teres-mengikut-daerahwilayahnegeri"
+HIGHRISE_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-unit-bertingkat-tinggi-mengikut-daerah-wilayah"
 PENANG_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang"
 
 
 @st.cache_resource
-def load_models() -> tuple[RegionalTerracedBundle, PenangDistrictBundle]:
+def load_models() -> tuple[RegionalAreaBundle, PenangDistrictBundle]:
     """Load trusted repository-owned models once per app process."""
     return (
-        RegionalTerracedBundle.load(REGIONAL_MODEL_PATH),
+        RegionalAreaBundle.load(REGIONAL_MODEL_PATH),
         PenangDistrictBundle.load(PENANG_MODEL_PATH),
     )
 
@@ -44,9 +45,10 @@ def assessment(asking: float, lower: float, upper: float) -> str:
 st.set_page_config(page_title="Malaysia House Price Explorer", layout="centered")
 st.title("Malaysia House Price Explorer")
 st.info(
-    "Area-level historical prototype. Penang has five-district completed-transaction "
-    "benchmarks for 2017. Other supported states have selected district/region terraced-house "
-    "averages from 2016 Q1 through 2018 Q2."
+    "Area-level historical prototype covering all 13 states and Kuala Lumpur. Penang has "
+    "five-district completed-transaction benchmarks for 2017. Regional terraced-house "
+    "averages cover every supported state; high-rise averages are available only where "
+    "published by the source. Putrajaya and Labuan are not yet supported."
 )
 
 if not REGIONAL_MODEL_PATH.is_file() or not PENANG_MODEL_PATH.is_file():
@@ -57,15 +59,16 @@ regional_bundle, penang_bundle = load_models()
 
 with st.expander("Data sources, CSV downloads, and accuracy"):
     st.markdown(
-        f"Sources: [JPPH terraced prices by district/region]({SOURCE_URL}) and "
+        f"Sources: [JPPH terraced prices by district/region]({SOURCE_URL}), "
+        f"[JPPH high-rise prices by district/region]({HIGHRISE_SOURCE_URL}), and "
         f"[Penang district transaction counts]({PENANG_SOURCE_URL}). "
         "The government catalogue marks these datasets Creative Commons Attribution."
     )
     if REGIONAL_DATASET_PATH.is_file():
         st.download_button(
-            "Download normalized regional terraced CSV",
+            "Download normalized regional area-price CSV",
             REGIONAL_DATASET_PATH.read_bytes(),
-            file_name="regional_terraced_area_prices.csv",
+            file_name="regional_area_prices.csv",
             mime="text/csv",
         )
     if PENANG_DATASET_PATH.is_file():
@@ -76,7 +79,7 @@ with st.expander("Data sources, CSV downloads, and accuracy"):
             mime="text/csv",
         )
     st.write(
-        f"Regional terraced held-out MAE: RM {regional_bundle.test_metrics['mae_rm']:,.0f}. "
+        f"Regional combined held-out MAE: RM {regional_bundle.test_metrics['mae_rm']:,.0f}. "
         f"Penang district held-out MAE: RM {penang_bundle.test_metrics['mae_rm']:,.0f}."
     )
     st.caption(
@@ -123,19 +126,25 @@ if state == "Penang":
             st.info(f"Comparison: {assessment(asking, result['lower'], result['upper'])}")
 else:
     area = st.selectbox("District / region", regional_bundle.areas_by_state[state])
-    st.text_input("Supported property type", "Terraced house", disabled=True)
+    property_type = st.selectbox(
+        "Property type", regional_bundle.property_types(state, area)
+    )
     year = st.selectbox("Year", [2016, 2017, 2018], index=2)
     quarter_options = [1, 2] if year == 2018 else [1, 2, 3, 4]
     quarter = st.selectbox("Quarter", quarter_options)
     asking = st.number_input(
         "Optional comparison price (RM; 0 means omitted)", 0.0, value=0.0, step=10000.0
     )
-    if st.button("Show regional terraced benchmark", type="primary", use_container_width=True):
+    if st.button("Show regional benchmark", type="primary", use_container_width=True):
         result = regional_bundle.predict(
-            state=state, area=area, year=year, quarter=quarter
+            state=state,
+            area=area,
+            property_type=property_type,
+            year=year,
+            quarter=quarter,
         )
         st.subheader("Area result")
-        st.metric("Published terraced-house average", f"RM {result['observed_average']:,.0f}")
+        st.metric("Published historical average", f"RM {result['observed_average']:,.0f}")
         st.metric("Model benchmark", f"RM {result['model_estimate']:,.0f}")
         st.write(f"Indicative model range: **RM {result['lower']:,.0f} - RM {result['upper']:,.0f}**")
         if asking:

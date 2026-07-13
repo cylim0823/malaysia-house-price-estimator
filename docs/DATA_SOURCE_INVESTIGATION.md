@@ -332,8 +332,17 @@ The user later allowed collection in principle, but permission from the project
 owner does not grant rights over third-party listing content. Manual copying is
 not used to circumvent unclear automated-collection or machine-learning terms.
 
-The catalogue search found no additional Creative Commons district-price
-workbook for detached, semi-detached, condominium, or apartment categories.
-The approved JPPH terraced workbook was normalized into 460 quarterly rows for
-46 selected districts/regions across 14 states/territories. This is the maximum
-current multi-state area coverage supported by the verified archive sources.
+The catalogue also provides a Creative Commons Attribution high-rise price
+workbook. After excluding its national summary, it contributes 140 genuine
+quarterly observations across 14 published state/district/region series. It
+contains seven state markets, with sub-state areas for Kuala Lumpur, Selangor,
+and Penang. Combined with the terraced workbook, the regional dataset contains
+600 rows and 53 unique state-area combinations. Terraced coverage spans all 13
+states plus Kuala Lumpur; Putrajaya and Labuan are absent and therefore remain
+unsupported.
+
+- [High-rise prices by district/region](https://archive.data.gov.my/data/en_US/dataset/harga-unit-bertingkat-tinggi-mengikut-daerah-wilayah)
+
+The search found no additional compatible Creative Commons district-price
+workbook for detached or semi-detached categories. No values were copied from
+listing websites and no scraper was used.
