@@ -36,7 +36,7 @@ Last updated: 13 July 2026
 - End-to-end path: synthetic generation → preparation → deduplication/outliers → split → baseline/advanced comparison → evaluation → save → load → prediction.
 - Generated metrics and charts are labelled synthetic.
 - Deployable model artifacts, official normalized data, and the metrics report are versioned; temporary evaluation outputs remain ignored.
-- Local Git branch: `main`; official historical-average phase committed as `ef53310` and Penang district phase as `749be64`.
+- Local Git branch: `main`; official historical-average phase `ef53310`, Penang district phase `749be64`, and unpublished regional area phase `a4a242e`.
 
 ## Remaining limitations
 
