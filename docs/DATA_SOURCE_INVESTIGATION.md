@@ -346,3 +346,11 @@ unsupported.
 The search found no additional compatible Creative Commons district-price
 workbook for detached or semi-detached categories. No values were copied from
 listing websites and no scraper was used.
+
+The current NAPIC publication page was checked again on 13 July 2026. It lists
+Q1 2026 transaction tables for every state and federal territory, including
+Putrajaya and Labuan, plus quarterly residential price tables. However, the
+page states that all copyright is reserved and does not provide an explicit
+open-data or model-training licence for those publications. They were therefore
+not copied, parsed, or added to the repository. Written reuse terms would be
+required before using them as training data.

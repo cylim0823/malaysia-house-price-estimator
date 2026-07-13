@@ -10,6 +10,11 @@ Last updated: 13 July 2026
 - Work completed: source investigation, legal/technical classifications, canonical schema, source-independent cleaning core, licensed state aggregates, a five-district Penang benchmark, and 600 terraced/high-rise regional observations. Terraced coverage spans all 13 states plus Kuala Lumpur. Manual copying or automated scraping of listing portals remains excluded unless the original source grants compatible collection and model-use permission.
 - Recommended next action: make an institutional/owner-authenticated NAPIC enquiry without purchasing or accepting terms until the response is reviewed.
 
+The Q1 2026 NAPIC publication index confirms that tables exist for Putrajaya,
+Labuan, and every state, but the site marks its content copyright reserved and
+does not state compatible bulk/model-training reuse terms. Public visibility is
+not treated as permission to transcribe or train on those tables.
+
 ## Phases 2 and 4 — Official geographic reference
 
 - Exact blocker: no versioned, approved official district/code reference with confirmed reuse terms is stored in the repository.
