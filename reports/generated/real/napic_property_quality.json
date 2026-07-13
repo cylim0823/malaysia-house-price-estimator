@@ -1,0 +1,43 @@
+{
+  "raw_rows": 416627,
+  "model_eligible_rows": 416627,
+  "states": [
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Kuala Lumpur",
+    "Labuan",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Penang",
+    "Perak",
+    "Perlis",
+    "Putrajaya",
+    "Sabah",
+    "Sarawak",
+    "Selangor",
+    "Terengganu"
+  ],
+  "district_count": 129,
+  "property_types": [
+    "1 - 1 1/2 Storey Semi-Detached",
+    "1 - 1 1/2 Storey Terraced",
+    "2 - 2 1/2 Storey Semi-Detached",
+    "2 - 2 1/2 Storey Terraced",
+    "Cluster House",
+    "Condominium/Apartment",
+    "Detached",
+    "Flat",
+    "Low-Cost Flat",
+    "Low-Cost House",
+    "Town House"
+  ],
+  "earliest_transaction_month": "2021-01-01",
+  "latest_transaction_month": "2026-03-01",
+  "exact_duplicate_rows": 0,
+  "possible_outlier_rows_retained": 3114,
+  "missing_main_floor_area_rows": 107740,
+  "missing_land_area_rows": 1,
+  "source_warning_rows": 6607
+}
