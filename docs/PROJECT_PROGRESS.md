@@ -73,7 +73,7 @@ Last updated: 13 July 2026
 - Tests performed: focused aggregate unit tests, end-to-end save/load/predict test, Streamlit aggregate/regional smoke tests, full test discovery, compile checks, deterministic rebuild, checksum comparison, and diff validation.
 - Data results: 212 aggregate rows, 11,816 completed transactions, RM5,171,921,352 total represented value, zero arithmetic mismatches, zero duplicate keys, zero rejected rows, 84 warning rows, and eight missing combinations.
 - Model results: Q1-Q3 training has 158 rows/8,646 transactions; Q4 test has 54 rows/3,170 transactions. Selected segment weighted average has unweighted MAE RM64,764.81 and transaction-weighted MAE RM36,676.57.
-- Commit identifier: pending verified commit.
+- Commit identifier: `2ff810a` (`feat: integrate aggregate transaction explorer`).
 - Remaining limitations: one year, one state, aggregate categories, no individual-property attributes, no current-market validation, and no advanced model justification.
 - Dependencies: two Penang government CSV releases labelled Creative Commons Attribution in the archived government catalogue.
 - Blockers: additional licensed years/states are required for multi-year forecasting and nationwide aggregate support; property-level data remains separately blocked.
