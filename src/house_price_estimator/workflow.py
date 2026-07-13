@@ -10,7 +10,7 @@ from .evaluation import evaluate_records,regression_metrics,write_evaluation
 from .modelling import all_candidates
 from .outliers import detect_outliers
 from .splitting import split_records
-from .synthetic import generate_synthetic_records
+from .synthetic_data import generate_synthetic_records
 
 def prepare(records):
     rows=[]

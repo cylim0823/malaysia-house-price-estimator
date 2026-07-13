@@ -12,7 +12,7 @@ Last updated: 13 July 2026
 | Synthetic demonstration generator | Complete | Not market evidence |
 | Licensed JPPH historical averages | 2,090 rows normalized and versioned | Aggregated 2009 Q1-2018 Q2 only |
 | Penang district transactions | 212 district/property-type/quarter averages | Aggregated 2017 completed transactions only |
-| Aggregate transaction pipeline | 212 rows validated; 11,816 transactions represented; weighted baseline and separate UI mode complete | Penang 2017 only; forecasting remains provisional |
+| Aggregate transaction pipeline | Generic metadata-backed validation; 212 rows validated; 11,816 transactions represented | Current completed-transaction coverage is Penang 2017 only; forecasting remains provisional |
 | Regional area prices | 600 quarterly averages across 53 state-area combinations and 14 states/territories | Terraced and partial high-rise coverage, 2016 Q1-2018 Q2 |
 | EDA | Reusable summaries complete | Real conclusions pending |
 | Features and splitting | Complete; training-only fitting and duplicate-group safety tested | Real time-field reliability pending |
@@ -20,17 +20,17 @@ Last updated: 13 July 2026
 | Evaluation and prediction ranges | Complete with protected slices and residual quantiles | Real errors/ranges pending |
 | Saved bundle and prediction service | Complete | Supported production coverage pending |
 | CLI | Complete | Real-data commands require an approved mapping |
-| Streamlit | Historical explorer and disabled property-level preview complete locally | Individual-property model pending |
+| Streamlit | One metadata-driven historical form and disabled property-level preview complete locally | Individual-property model pending |
 | Optional FastAPI | Complete local adapter | Hosting pending |
 | GitHub publication | Public repository pushed | Complete for current prototype |
 | Streamlit deployment | Live official-average prototype | Individual-property version pending |
 | Public monitoring | Initial live boot verified | Ongoing monitoring not configured |
-| Repository organization | Simplified and behavior-preserving | No data/model meaning changed |
+| Repository organization | Seven primary reusable modules plus focused contracts and compatibility shims | No data/model meaning changed |
 
 ## Verification record
 
 - Editable package installation: passed.
-- Complete suite: 58 tests passed. Aggregate coverage includes arithmetic, schema, normalization, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, UI field isolation, artifact integrity, and Streamlit paths.
+- Complete suite: 63 tests passed. Aggregate coverage includes arithmetic, schema, source metadata, all 16 canonical locations, generic new-state onboarding, dynamic combinations, malformed inputs, duplicates, volume support, leakage exclusion, weighting, time ordering, persistence, unsupported input, UI field isolation, artifact integrity, and Streamlit paths.
 - Official model: log-target ridge regression trained on 1,980 observations and tested on the final 110 observations (2018 Q1-Q2).
 - Official holdout results: MAE RM94,268.28; RMSE RM276,407.99; R² 0.7670. State/property-type median baseline MAE RM101,457.44.
 - Penang district holdout: Q4 2017, 54 observations. The selected district/property-type median achieved MAE RM55,154.82, beating log ridge at RM79,520.97.
@@ -107,3 +107,38 @@ Last updated: 13 July 2026
 - Commit identifier: `43607d8` (`refactor: simplify repository structure`).
 - Remaining limitations: the package retains focused helper and source-specific modules rather than collapsing them into a monolith; this preserves independent testing and existing pickle import paths. The local Codex runtime may show an ignored empty `.agents/` directory. Individual-property data/model blockers are unchanged.
 - Dependencies and blockers: no dependency changed and no new blocker was introduced.
+
+## Nationwide-ready aggregate architecture - 13 July 2026
+
+- Phase name: behavior-preserving state generalization and runtime consolidation.
+- Start state: the active UI had separate Penang/regional render functions,
+  Penang source facts in core validation, fixed historical selectors, and a
+  hardcoded Q4 aggregate prediction rule.
+- Completion state: seven primary reusable modules define pipeline, sources,
+  locations, modelling, evaluation, prediction, and synthetic data. One
+  metadata-driven Streamlit form handles both datasets. Exact selector options
+  come from validated observation keys, and a synthetic Johor fixture proves a
+  new state can use the generic CSV adapter and pipeline.
+- Files created: `data/processed/dataset_catalog.json`,
+  `src/house_price_estimator/data_pipeline.py`, `data_sources.py`,
+  `location_catalog.py`, `synthetic_data.py`, `tests/test_location_catalog.py`,
+  and `docs/STATE_GENERALIZATION.md`.
+- Files modified: application, aggregate processing script, compatibility
+  modules/imports, regional period validation, normalized aggregate outputs,
+  aggregate model/report, tests, README, roadmap, agent instructions,
+  architecture/validation/deployment/model documentation, and this log.
+- Tests performed: focused catalog/pipeline/artifact tests, complete unit-test
+  discovery, deterministic real rebuild twice, fixed prediction comparison,
+  model metric comparison, byte-code compilation, diff validation, and local
+  Streamlit HTTP startup.
+- Test results: 63/63 tests pass; Streamlit returns HTTP 200; the real rebuild
+  remains at 212 valid rows, 11,816 transactions, zero rejects/duplicates/
+  arithmetic mismatches, MAE RM64,764.81, and weighted MAE RM36,676.57. The
+  fixed RM730,000 historical result is unchanged. Rebuilt bundle SHA-256 is
+  `3620E5B736812D625FE397F2238CAB06AC66F892BF76E7ADD047638DCC700A0C`.
+- Commit identifier: pending verified commit.
+- Remaining limitations: reusable code recognizes all 16 locations, but actual
+  completed-transaction coverage remains Penang 2017 and regional published
+  averages omit Putrajaya and Labuan. This is not nationwide price validation.
+- Dependencies and blockers: no dependency changed. Existing licensed-data,
+  district-reference, multi-year, and property-level blockers remain.

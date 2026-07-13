@@ -13,49 +13,26 @@ try:
 except ImportError as exc:
     raise RuntimeError("Install UI dependencies with: pip install -e .[ui]") from exc
 
-from house_price_estimator.aggregate_transactions import AggregateTransactionBundle
-from house_price_estimator.regional_area import RegionalAreaBundle
+from house_price_estimator.data_sources import (
+    load_dataset_metadata,
+    load_historical_bundle,
+)
+from house_price_estimator.prediction import HistoricalExplorer
 from house_price_estimator.schema import State
-from house_price_estimator.ui_contracts import (
-    aggregate_prediction_payload,
-    individual_field_visibility,
-)
+from house_price_estimator.ui_contracts import individual_field_visibility
 
 
-AGGREGATE_MODEL_PATH = (
-    PROJECT_ROOT / "models" / "real" / "aggregate_transaction_bundle.pkl"
-)
-REGIONAL_MODEL_PATH = PROJECT_ROOT / "models" / "real" / "regional_area_bundle.pkl"
-AGGREGATE_DATASET_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "processed"
-    / "aggregate_transactions"
-    / "penang_aggregate_transactions_v1.csv"
-)
-REGIONAL_DATASET_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "processed"
-    / "historical_prices"
-    / "regional_area_prices.csv"
-)
-TERRACED_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-rumah-teres-mengikut-daerahwilayahnegeri"
-HIGHRISE_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/harga-unit-bertingkat-tinggi-mengikut-daerah-wilayah"
-PENANG_SOURCE_URL = "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang"
-
+CATALOG_PATH = PROJECT_ROOT / "data" / "processed" / "dataset_catalog.json"
 MODE_HISTORICAL = "Historical Market Explorer"
 MODE_INDIVIDUAL = "Individual Property Estimator — Data Pending"
-SOURCE_PENANG = "Penang completed-transaction groups"
-SOURCE_REGIONAL = "Published regional historical averages"
 
 
 @st.cache_resource
-def load_models() -> tuple[AggregateTransactionBundle, RegionalAreaBundle]:
-    """Load trusted repository-owned bundles once per app process."""
-    return (
-        AggregateTransactionBundle.load(AGGREGATE_MODEL_PATH),
-        RegionalAreaBundle.load(REGIONAL_MODEL_PATH),
+def load_explorers() -> tuple[HistoricalExplorer, ...]:
+    """Load metadata and trusted repository-owned bundles once per process."""
+    return tuple(
+        HistoricalExplorer(metadata, load_historical_bundle(metadata, PROJECT_ROOT))
+        for metadata in load_dataset_metadata(CATALOG_PATH)
     )
 
 
@@ -85,22 +62,34 @@ def show_comparison(asking: float, historical_average: float) -> None:
     )
 
 
-def render_penang_explorer(aggregate_bundle: AggregateTransactionBundle) -> None:
-    st.subheader("Penang district completed-transaction groups")
-    st.caption("Validated coverage: Penang · five districts · 11 property groups · 2017 Q1–Q4")
-    state = st.selectbox("State", aggregate_bundle.states)
-    district = st.selectbox("District", aggregate_bundle.districts(state))
+def _period_label(period: tuple[int, int]) -> str:
+    return f"{period[0]} Q{period[1]}"
+
+
+def render_historical_explorer(explorer: HistoricalExplorer) -> None:
+    """Render one metadata-driven form for every approved aggregate dataset."""
+    metadata = explorer.metadata
+    coverage = explorer.coverage
+    st.subheader(metadata.title)
+    st.caption(
+        f"Validated data: {len(coverage.states)} state/territory market(s) · "
+        f"{len(coverage.combinations)} selectable combinations · "
+        f"{_period_label(coverage.earliest_period)}–{_period_label(coverage.latest_period)}"
+    )
+
+    state = st.selectbox("State or federal territory", coverage.states)
+    area = st.selectbox(metadata.area_label, coverage.areas(state))
     property_type = st.selectbox(
         "Aggregate property category",
-        aggregate_bundle.property_types(state, district),
+        coverage.property_types(state, area),
         format_func=property_type_label,
     )
-    periods = aggregate_bundle.periods(state, district, property_type)
-    years = sorted({candidate_year for candidate_year, _ in periods})
-    year = st.selectbox("Historical year", years)
-    quarters = [quarter for candidate_year, quarter in periods if candidate_year == year]
-    quarter = st.selectbox("Historical quarter", quarters)
-    asking = st.number_input(
+    years = coverage.years(state, area, property_type)
+    year = st.selectbox("Historical year", years, index=len(years) - 1)
+    quarter = st.selectbox(
+        "Historical quarter", coverage.quarters(state, area, property_type, year)
+    )
+    comparison = st.number_input(
         "Optional comparison price (RM)",
         min_value=0.0,
         value=0.0,
@@ -108,105 +97,13 @@ def render_penang_explorer(aggregate_bundle: AggregateTransactionBundle) -> None
         help="Leave at zero to omit. This does not turn the result into a property valuation.",
     )
 
-    if st.button("Show historical quarterly average", type="primary", width="stretch"):
-        payload = aggregate_prediction_payload(
-            {
-                "state": state,
-                "district": district,
-                "property_type": property_type,
-                "year": year,
-                "quarter": quarter,
-            }
-        )
-        result = aggregate_bundle.predict(**payload)
-        st.subheader("Historical quarterly group result")
-        st.metric(
-            "Recorded quarterly average completed transaction price",
-            f"RM {result['observed_average_price_rm']:,.0f}",
-        )
-        st.metric("Completed transactions represented", f"{result['transaction_count']:,}")
-        st.write(f"Transaction-volume support: **{result['volume_support'].replace('_', ' ')}**")
-        st.write(
-            f"**Selection:** {state} · {district} · {property_type_label(property_type)} · "
-            f"{year} Q{quarter}"
-        )
-        if not result["public_prediction_supported"]:
-            st.warning(
-                "Fewer than 20 transactions support this group. It is retained as history but "
-                "is excluded from public predictive support."
-            )
-        elif result["estimated_average_price_rm"] is not None:
-            st.metric(
-                "Provisional Q4 aggregate baseline",
-                f"RM {result['estimated_average_price_rm']:,.0f}",
-            )
-            st.caption("Baseline: 2017 Q1–Q3 segment-weighted training; Q4 evaluation only.")
-        else:
-            st.info("Q1–Q3 are historical training periods; no predictive estimate is shown.")
-        show_comparison(asking, result["observed_average_price_rm"])
-        nearby = [
-            {
-                "period": f"{item['year']} Q{item['quarter']}",
-                "average_price_rm": item["average_price_rm"],
-                "transactions": item["transaction_count"],
-                "volume_support": item["volume_support"],
-            }
-            for item in result["nearby_historical_quarters"]
-        ]
-        st.write("Nearby historical quarters")
-        st.dataframe(nearby, width="stretch", hide_index=True)
-        st.error(
-            "This is a 2017 district/property-group average. It is not a current 2026 value "
-            "and does not estimate a specific property."
-        )
-        st.caption(
-            f"Dataset: {result['dataset_version']} · Baseline: {result['baseline_used']} · "
-            f"Coverage: {result['available_date_range']}"
-        )
-
-    with st.expander("Data source, download, model, and limitations"):
-        st.markdown(
-            f"Source: [Penang residential transaction counts]({PENANG_SOURCE_URL}) and the "
-            "matching government transaction-value table; both catalogue entries are labelled "
-            "Creative Commons Attribution."
-        )
-        st.write(
-            "Rows are aggregate district/property-type/quarter groups. They do not contain "
-            "size, rooms, tenure, exact project, address, condition, or individual sale records."
-        )
-        if AGGREGATE_DATASET_PATH.is_file():
-            st.download_button(
-                "Download validated aggregate CSV",
-                AGGREGATE_DATASET_PATH.read_bytes(),
-                file_name="penang_aggregate_transactions_v1.csv",
-                mime="text/csv",
-            )
-        metrics = aggregate_bundle.test_metrics
-        st.write(
-            f"Provisional Q4 unweighted MAE: RM {metrics['mae_rm']:,.0f}; "
-            f"transaction-weighted MAE: RM {metrics['weighted_mae_rm']:,.0f}."
-        )
-
-
-def render_regional_explorer(regional_bundle: RegionalAreaBundle) -> None:
-    st.subheader("Published regional quarterly averages")
-    st.caption(
-        "Validated coverage: 53 state-area combinations · terraced and partial high-rise · "
-        "2016 Q1–2018 Q2"
-    )
-    state = st.selectbox("State or federal territory", regional_bundle.states)
-    area = st.selectbox("District / published region", regional_bundle.areas_by_state[state])
-    property_type = st.selectbox(
-        "Aggregate property category", regional_bundle.property_types(state, area)
-    )
-    year = st.selectbox("Historical year", [2016, 2017, 2018], index=2)
-    quarter_options = [1, 2] if year == 2018 else [1, 2, 3, 4]
-    quarter = st.selectbox("Historical quarter", quarter_options)
-    asking = st.number_input(
-        "Optional comparison price (RM)", 0.0, value=0.0, step=10_000.0
-    )
-    if st.button("Show historical regional average", type="primary", width="stretch"):
-        result = regional_bundle.predict(
+    if st.button(
+        "Show historical quarterly average",
+        type="primary",
+        width="stretch",
+        key=f"show-{metadata.dataset_id}",
+    ):
+        result = explorer.predict(
             state=state,
             area=area,
             property_type=property_type,
@@ -214,43 +111,90 @@ def render_regional_explorer(regional_bundle: RegionalAreaBundle) -> None:
             quarter=quarter,
         )
         st.subheader("Historical quarterly group result")
-        st.metric("Published historical quarterly average", f"RM {result['observed_average']:,.0f}")
-        st.metric("Historical aggregate baseline", f"RM {result['model_estimate']:,.0f}")
-        st.write(f"Historical baseline range: **RM {result['lower']:,.0f} – RM {result['upper']:,.0f}**")
-        st.write(f"**Selection:** {state} · {area} · {property_type} · {year} Q{quarter}")
-        st.write("Transactions represented: **not published in this aggregate source**")
-        st.write("Transaction-volume support: **not available**")
-        if asking:
-            st.info(f"Comparison: {assessment(asking, result['lower'], result['upper'])}")
+        st.metric(metadata.observed_price_label, f"RM {result.observed_average_price_rm:,.0f}")
+        if result.transaction_count is not None:
+            st.metric("Completed transactions represented", f"{result.transaction_count:,}")
+            st.write(
+                "Transaction-volume support: "
+                f"**{(result.volume_support or 'unknown').replace('_', ' ')}**"
+            )
+        else:
+            st.write("Transactions represented: **not published in this aggregate source**")
+            st.write("Transaction-volume support: **not available**")
+
+        if not result.public_prediction_supported:
+            st.warning(
+                "Fewer than 20 transactions support this group. It is retained as history but "
+                "is excluded from public predictive support."
+            )
+        elif result.model_estimate_rm is not None:
+            st.metric(metadata.prediction_label, f"RM {result.model_estimate_rm:,.0f}")
+            if result.lower_rm is not None and result.upper_rm is not None:
+                st.write(
+                    f"Historical baseline range: **RM {result.lower_rm:,.0f} – "
+                    f"RM {result.upper_rm:,.0f}**"
+                )
+                if comparison:
+                    st.info(assessment(comparison, result.lower_rm, result.upper_rm))
+        else:
+            st.info("This is a historical training period; no predictive estimate is shown.")
+
+        st.write(
+            f"**Selection:** {state} · {area} · {property_type_label(property_type)} · "
+            f"{year} Q{quarter}"
+        )
+        show_comparison(comparison, result.observed_average_price_rm)
+        if result.nearby_periods:
+            st.write("Nearby historical quarters")
+            st.dataframe(
+                [
+                    {
+                        "period": f"{item['year']} Q{item['quarter']}",
+                        "average_price_rm": item["average_price_rm"],
+                        "transactions": item["transaction_count"],
+                        "volume_support": item["volume_support"],
+                    }
+                    for item in result.nearby_periods
+                ],
+                width="stretch",
+                hide_index=True,
+            )
         st.error(
-            "These 2016–2018 published averages are historical regional benchmarks, not a "
-            "current 2026 valuation or an estimate for a specific property."
+            "This is a historical aggregate benchmark, not a current valuation or an estimate "
+            "for a specific property."
+        )
+        st.caption(
+            f"Dataset: {result.dataset_version} · Model: {result.model_name} · "
+            f"Coverage: {_period_label(coverage.earliest_period)}–"
+            f"{_period_label(coverage.latest_period)}"
         )
 
     with st.expander("Data sources, download, model, and limitations"):
-        st.markdown(
-            f"Sources: [JPPH terraced prices]({TERRACED_SOURCE_URL}) and "
-            f"[JPPH high-rise prices]({HIGHRISE_SOURCE_URL}), labelled Creative Commons "
-            "Attribution in the government archive."
-        )
+        st.write(f"Publisher: **{metadata.source_name}**")
+        for index, url in enumerate(metadata.source_urls, start=1):
+            st.markdown(f"[Source catalogue entry {index}]({url})")
         st.write(
-            "Terraced coverage spans all 13 states plus Kuala Lumpur. High-rise coverage is "
-            "partial; Putrajaya and Labuan are unsupported. Rows are published area averages."
+            f"Licence status: **{metadata.licence_status}** · "
+            f"Redistribution allowed: **{'yes' if metadata.redistribution_allowed else 'no'}**"
         )
-        if REGIONAL_DATASET_PATH.is_file():
+        for limitation in metadata.limitations:
+            st.write(f"- {limitation}")
+        data_path = PROJECT_ROOT / metadata.processed_data_path
+        if metadata.redistribution_allowed and data_path.is_file():
             st.download_button(
-                "Download normalized regional aggregate CSV",
-                REGIONAL_DATASET_PATH.read_bytes(),
-                file_name="regional_area_prices.csv",
+                "Download validated aggregate CSV",
+                data_path.read_bytes(),
+                file_name=data_path.name,
                 mime="text/csv",
+                key=f"download-{metadata.dataset_id}",
             )
 
 
 def render_individual_pending() -> None:
-    st.header("Individual Property Estimator — Data Pending")
+    st.header(MODE_INDIVIDUAL)
     st.warning(
         "Individual-property prediction is not yet available because the current real dataset "
-        "contains district-level quarterly aggregates and does not contain size, room, tenure, "
+        "contains aggregate historical groups and does not contain size, room, tenure, "
         "car-park, or project-level attributes."
     )
     st.info("The disabled fields below show the planned property-level input design only.")
@@ -312,11 +256,11 @@ def render_individual_pending() -> None:
 st.set_page_config(page_title="Malaysia House Price Explorer", layout="centered")
 st.title("Malaysia House Price Explorer")
 
-if not AGGREGATE_MODEL_PATH.is_file() or not REGIONAL_MODEL_PATH.is_file():
-    st.error("A required trained aggregate model bundle is missing from this deployment.")
+if not CATALOG_PATH.is_file():
+    st.error("The validated dataset catalog is missing from this deployment.")
     st.stop()
 
-aggregate_bundle, regional_bundle = load_models()
+explorers = load_explorers()
 mode = st.radio("Application mode", [MODE_HISTORICAL, MODE_INDIVIDUAL])
 
 if mode == MODE_HISTORICAL:
@@ -325,11 +269,9 @@ if mode == MODE_HISTORICAL:
         "This tool estimates or displays the average completed transaction price for a district, "
         "property type, and quarter. It does not estimate the value of a specific property."
     )
-    source = st.selectbox("Historical aggregate dataset", [SOURCE_PENANG, SOURCE_REGIONAL])
-    if source == SOURCE_PENANG:
-        render_penang_explorer(aggregate_bundle)
-    else:
-        render_regional_explorer(regional_bundle)
+    titles = {explorer.metadata.title: explorer for explorer in explorers}
+    selected_title = st.selectbox("Historical aggregate dataset", tuple(titles))
+    render_historical_explorer(titles[selected_title])
 else:
     render_individual_pending()
 

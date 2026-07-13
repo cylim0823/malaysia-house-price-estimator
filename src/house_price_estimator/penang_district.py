@@ -1,4 +1,8 @@
-"""Penang district transaction benchmarks from licensed government open data."""
+"""Legacy Penang benchmark retained only for existing pickle compatibility.
+
+New ingestion uses :class:`data_sources.PenangOpenDataAdapter`; new modelling
+uses the generic aggregate workflow in :mod:`data_pipeline`.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass

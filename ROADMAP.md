@@ -14,6 +14,20 @@ The long-term goal is a validated residential sale-price estimator covering all 
 
 Current data decision: the JPPH district/region terraced and high-rise workbooks, four state-average workbooks, and two Penang district transaction datasets were approved because the government catalogue marks them Creative Commons Attribution. No clearly licensed property-level candidate passed provenance and reuse review; see `docs/REAL_DATASET_ASSESSMENT.md`.
 
+## Verified state-generalization refactor — 13 July 2026
+
+- [x] Define all 13 states and three federal territories in one location catalog
+- [x] Isolate source mappings in source adapters and source/legal facts in metadata
+- [x] Map aggregate validation into one source-neutral record structure
+- [x] Generate state, area, property-type, year, and quarter selectors from actual combinations
+- [x] Remove Penang-specific rendering and fixed historical selectors from Streamlit
+- [x] Derive aggregate holdout and supported period from validated data
+- [x] Preserve existing predictions, historical values, metrics, coverage, and legacy bundle loading
+- [x] Add regression tests for nationwide canonical names, metadata, dynamic coverage, and unsupported combinations
+
+This completes reusable engineering for onboarding additional approved aggregate
+datasets. It does not complete actual nationwide transaction coverage.
+
 ## Verified structural maintenance — 13 July 2026
 
 This maintenance work changes organization only and does not complete any

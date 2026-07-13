@@ -21,6 +21,7 @@ data/processed/*
 !data/processed/aggregate_transactions/**
 !data/processed/historical_prices/
 !data/processed/historical_prices/**
+!data/processed/dataset_catalog.json
 models/*
 !models/README.md
 !models/demo/

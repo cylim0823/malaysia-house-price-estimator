@@ -6,7 +6,7 @@ from .bundle import PredictionBundle
 from .eda import dataset_summary
 from .ingestion import ingest_file
 from .prediction import PredictionService
-from .synthetic import SYNTHETIC_LABEL,generate_synthetic_records
+from .synthetic_data import SYNTHETIC_LABEL,generate_synthetic_records
 from .workflow import prepare,train_demo
 
 def _write_json(path, value):Path(path).parent.mkdir(parents=True,exist_ok=True);Path(path).write_text(json.dumps(value,indent=2,default=str),encoding="utf-8")

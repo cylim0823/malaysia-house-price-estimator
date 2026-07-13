@@ -13,29 +13,31 @@ Synthetic records remain limited to engineering tests and demonstrations.
 
 ## Package responsibilities
 
-The package is organized into four groups:
+Seven primary modules define the reusable runtime:
 
-1. **Data pipeline:** `schema.py`, `ingestion.py`, and `cleaning/` define typed
-   records, structured-file import, parsing, normalization, and rejected-row
-   retention. `duplicates.py`, `outliers.py`, and `eda.py` provide independent
-   review and reporting stages.
-2. **Modelling and prediction:** `features.py`, `splitting.py`, `modelling.py`,
-   `evaluation.py`, `bundle.py`, `prediction.py`, and `workflow.py` implement
-   training-only preprocessing, group-safe splits, model comparison, metrics,
-   persistence, and safe prediction contracts.
-3. **Licensed aggregate sources:** `official_averages.py`,
-   `penang_district.py`, `regional_terraced.py`, `regional_area.py`, and
-   `aggregate_transactions.py` preserve the distinct source schemas and model
-   meanings. They remain separate because they are independently reproducible
-   and existing pickle artefacts refer to their module paths.
-4. **Interfaces:** `cli.py` is the command-line interface, `api.py` is the
-   optional FastAPI adapter, and `ui_contracts.py` prevents property-level
-   inputs from entering an aggregate model. Business logic remains outside the
-   Streamlit file.
+1. `data_pipeline.py` validates the generic aggregate schema, preserves rejected
+   rows, reports quality, derives the temporal holdout, trains weighted
+   baselines, and saves the aggregate bundle.
+2. `data_sources.py` loads dataset metadata and isolates source-column adapters.
+3. `location_catalog.py` owns the 16 canonical Malaysian locations and builds
+   exact selector coverage from validated observation combinations.
+4. `modelling.py` contains reusable individual-record candidate models.
+5. `evaluation.py` contains reusable regression metrics and report writers.
+6. `prediction.py` provides source-neutral historical and future property
+   prediction contracts outside Streamlit.
+7. `synthetic_data.py` generates clearly labelled test/demo records only.
 
-No duplicate implementation or compatibility wrapper is retained. Keeping the
-small source-specific modules avoids a monolithic data pipeline and preserves
-saved-model compatibility.
+Focused schema, ingestion, cleaning, duplicate/outlier review, persistence,
+CLI/API, and UI-contract modules remain separate because they express distinct
+contracts. `aggregate_transactions.py` and `synthetic.py` are tiny compatibility
+imports for existing bundles and callers. Older licensed benchmark modules are
+kept loadable because repository pickle artifacts record their module paths;
+new source onboarding does not copy those modules.
+
+The Streamlit file contains presentation only. It iterates over
+`data/processed/dataset_catalog.json`, loads a `HistoricalExplorer`, and renders
+the same form for every dataset. There is no state-specific page or state
+conditional in the active application.
 
 ## Data, model, and report layout
 
@@ -70,15 +72,16 @@ python -m unittest discover -s tests -v
 streamlit run app/streamlit_app.py
 ```
 
-Rebuild real aggregate datasets, models, and reports:
+Rebuild the active real aggregate datasets, models, and reports:
 
 ```powershell
-python scripts/train_official_averages.py
-python scripts/train_penang_district.py
-python scripts/train_regional_terraced.py
 python scripts/train_regional_area.py
 python scripts/process_aggregate_transactions.py
 ```
+
+The other training scripts reproduce legacy comparison artifacts and are not
+templates for adding a state. New sources use an adapter, catalog metadata, and
+the generic aggregate pipeline.
 
 Exercise the source-neutral synthetic workflow:
 

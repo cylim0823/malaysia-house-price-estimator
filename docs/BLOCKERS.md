@@ -44,7 +44,7 @@ not treated as permission to transcribe or train on those tables.
 - Exact blocker: the completed-transaction aggregate dataset covers only Penang in 2017.
 - Why progress cannot safely continue: four quarters per segment cannot validate multi-year forecasting, current 2026 estimates, advanced model selection, or nationwide transaction coverage.
 - Owner action required: provide additional compatible licensed years and states, retaining counts, values, district, type, year, quarter, source, and reuse metadata.
-- Work completed: 212 rows representing 11,816 transactions were validated; weighted baselines were provisionally evaluated from Q1-Q3 to Q4; the UI restricts itself to actual combinations.
+- Work completed: the source-neutral catalog, adapters, aggregate record, validation, modelling, prediction, and UI architecture is ready for any state. The current 212 Penang rows representing 11,816 transactions were validated; weighted baselines were provisionally evaluated from Q1-Q3 to Q4; the UI restricts itself to actual combinations.
 - Recommended next action: obtain at least two later licensed years before adding validation/test years and advanced aggregate models.
 
 ## Resolved — GitHub publication

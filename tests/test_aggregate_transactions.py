@@ -5,7 +5,7 @@ import unittest
 
 import pandas as pd
 
-from house_price_estimator.aggregate_transactions import (
+from house_price_estimator.data_pipeline import (
     AggregateTransactionBundle,
     FORBIDDEN_MODEL_FEATURES,
     MODEL_FEATURES,
@@ -36,6 +36,22 @@ class AggregateValidationTests(unittest.TestCase):
         self.assertEqual(first["property_type"], "flat")
         self.assertEqual(result.quality_report["arithmetic_mismatch_rows"], 0)
         self.assertEqual(result.quality_report["sum_of_transaction_count"], 120)
+
+    def test_source_metadata_is_injected_without_state_specific_core_defaults(self):
+        result = load_and_validate_aggregate_csv(
+            FIXTURE,
+            metadata={
+                "source_name": "Approved test source",
+                "source_dataset": "test-dataset",
+                "dataset_version": "test-v1",
+                "source_document": "Test document",
+            },
+        )
+        first = result.processed.iloc[0]
+        self.assertEqual(first["source_name"], "Approved test source")
+        self.assertEqual(first["source_dataset"], "test-dataset")
+        self.assertEqual(first["dataset_version"], "test-v1")
+        self.assertIn("warnings", first["validation_notes"])
 
     def test_required_columns_and_controlled_property_type(self):
         with self.assertRaisesRegex(ValueError, "missing required"):

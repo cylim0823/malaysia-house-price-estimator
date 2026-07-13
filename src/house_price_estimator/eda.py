@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections import Counter
 from statistics import median
 from typing import Any, Iterable
-from .synthetic import SYNTHETIC_LABEL
+from .synthetic_data import SYNTHETIC_LABEL
 
 def dataset_summary(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
     rows=list(records); prices=[float(r["price"]) for r in rows if isinstance(r.get("price"),(int,float)) and float(r["price"])>0]
@@ -23,4 +23,3 @@ def dataset_summary(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
             "price_per_sqft":{"count":len(psf),"median":median(psf) if psf else None},
             "date_coverage":{"start":dates[0] if dates else None,"end":dates[-1] if dates else None},
             "eligible_count":sum(bool(r.get("is_model_eligible",True)) for r in rows)}
-

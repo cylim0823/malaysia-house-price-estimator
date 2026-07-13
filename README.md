@@ -4,7 +4,7 @@
 
 Malaysia House Price Estimator is a planned machine-learning application for estimating residential property prices across Malaysia. It will combine data collection, cleaning, validation, exploratory analysis, feature engineering, regression modelling, model evaluation, and a simple web interface.
 
-The project includes a source-neutral engineering framework and two separate real aggregate-data paths. The Penang completed-transaction explorer validates 212 district/property-type/quarter groups representing 11,816 completed transactions in 2017. The regional historical-price dataset contains 600 JPPH quarterly averages: 460 terraced observations across all 13 states plus Kuala Lumpur and 140 high-rise observations where published. All selected sources are marked Creative Commons Attribution in Malaysia's government open-data archive.
+The project includes a source-neutral engineering framework and one metadata-driven historical explorer over two real aggregate datasets. The Penang completed-transaction dataset validates 212 district/property-type/quarter groups representing 11,816 completed transactions in 2017. The regional historical-price dataset contains 600 JPPH quarterly averages: 460 terraced observations across all 13 states plus Kuala Lumpur and 140 high-rise observations where published. All selected sources are marked Creative Commons Attribution in Malaysia's government open-data archive.
 
 **Important limitation:** every real row is an aggregate group, not an individual property. Penang transaction data covers 2017 only; regional published averages cover 2016 Q1 through 2018 Q2. The data contains no individual-property floor area, bedrooms, condition, tenure, project, street, or coordinates. Output is a historical group benchmark, not an individual home valuation or current-market prediction.
 
@@ -75,8 +75,9 @@ python -m house_price_estimator predict --model models/demo/demo_bundle.pkl --in
 ### Main files
 
 - `app/streamlit_app.py` is the only Streamlit entrypoint.
-- `src/house_price_estimator/aggregate_transactions.py` validates and models grouped completed transactions.
-- `src/house_price_estimator/regional_area.py` builds the licensed regional historical benchmark.
+- `src/house_price_estimator/data_pipeline.py` validates and models generic grouped aggregate records.
+- `src/house_price_estimator/data_sources.py` contains approved source adapters and metadata loading.
+- `src/house_price_estimator/location_catalog.py` defines all 16 canonical locations and dynamic coverage selectors.
 - `src/house_price_estimator/modelling.py` and `evaluation.py` contain reusable model and metric logic.
 - `src/house_price_estimator/prediction.py` validates prediction inputs and output contracts.
 - `src/house_price_estimator/cli.py` provides the supported command-line interface.
@@ -269,6 +270,7 @@ All outputs are for educational and informational purposes only. They are not fi
 - [Real aggregate EDA](docs/REAL_DATA_EDA.md)
 - [Aggregate baseline evaluation](docs/REAL_MODEL_EVALUATION.md)
 - [Individual property data requirements](docs/INDIVIDUAL_PROPERTY_DATA_REQUIREMENTS.md)
+- [State-generalization audit](docs/STATE_GENERALIZATION.md)
 
 ## Full local validation
 
@@ -277,8 +279,6 @@ With Python 3.11 or newer:
 ```powershell
 python -m pip install -e ".[ml,ui,api,charts,dev]"
 python -m unittest discover -s tests -v
-python scripts/train_official_averages.py
-python scripts/train_penang_district.py
 python scripts/train_regional_area.py
 python scripts/process_aggregate_transactions.py
 streamlit run app/streamlit_app.py

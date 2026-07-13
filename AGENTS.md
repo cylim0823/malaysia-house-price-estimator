@@ -6,6 +6,11 @@ This project aims to estimate Malaysian residential property sale prices. Its in
 
 The repository contains a locally testable engineering framework, a clearly labelled synthetic demonstration workflow, and licensed historical aggregate-data explorers. The Penang dataset contains grouped completed-transaction statistics, not individual records; the JPPH path contains published regional averages. Neither establishes individual-property accuracy or current-market coverage. Engineering completion never implies individual-property validation.
 
+Historical dataset selection and coverage are metadata-driven. New approved
+aggregate sources must use `data_sources.py`, map to the generic schema in
+`data_pipeline.py`, and register legal/coverage metadata; do not add a new
+state-specific cleaner, trainer, prediction service, or Streamlit page.
+
 ## Required reading
 
 Before changing the repository:

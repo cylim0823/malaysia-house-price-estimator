@@ -1,0 +1,55 @@
+{
+  "catalog_version": "1.0.0",
+  "datasets": [
+    {
+      "dataset_id": "penang-completed-transactions-2017",
+      "title": "Completed-transaction district groups",
+      "source_name": "Penang State Government",
+      "source_urls": [
+        "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-di-pulau-pinang",
+        "https://archive.data.gov.my/data/en_US/dataset/pecahan-bilangan-pindah-milik-harta-kediaman-mengikut-jenis-dan-daerah-rm-juta-di-pulau-pinang"
+      ],
+      "source_documents": ["Residential transaction counts and values by property type and district, 2017"],
+      "price_type": "completed_transaction_average",
+      "dataset_version": "penang-completed-transaction-aggregates-2017-v2",
+      "schema_version": "aggregate-1.0.0",
+      "licence_status": "Creative Commons Attribution",
+      "redistribution_allowed": true,
+      "model_kind": "aggregate_transactions",
+      "model_path": "models/real/aggregate_transaction_bundle.pkl",
+      "processed_data_path": "data/processed/aggregate_transactions/penang_aggregate_transactions_v1.csv",
+      "area_label": "District",
+      "observed_price_label": "Recorded quarterly average completed transaction price",
+      "prediction_label": "Provisional evaluated-period aggregate baseline",
+      "limitations": [
+        "Rows are aggregate district/property-type/quarter groups, not individual sales.",
+        "Coverage is historical and does not establish current-market accuracy."
+      ]
+    },
+    {
+      "dataset_id": "jpph-regional-averages-2016-2018q2",
+      "title": "Published regional historical averages",
+      "source_name": "JPPH / NAPIC",
+      "source_urls": [
+        "https://archive.data.gov.my/data/en_US/dataset/harga-rumah-teres-mengikut-daerahwilayahnegeri",
+        "https://archive.data.gov.my/data/en_US/dataset/harga-unit-bertingkat-tinggi-mengikut-daerah-wilayah"
+      ],
+      "source_documents": ["Terraced prices by district/region/state", "High-rise prices by district/region"],
+      "price_type": "published_average",
+      "dataset_version": "jpph-regional-area-2016-2018q2-v1",
+      "schema_version": "aggregate-1.0.0",
+      "licence_status": "Creative Commons Attribution",
+      "redistribution_allowed": true,
+      "model_kind": "published_averages",
+      "model_path": "models/real/regional_area_bundle.pkl",
+      "processed_data_path": "data/processed/historical_prices/regional_area_prices.csv",
+      "area_label": "District / published region",
+      "observed_price_label": "Published historical quarterly average",
+      "prediction_label": "Historical aggregate baseline",
+      "limitations": [
+        "Rows are published area averages and do not include transaction counts.",
+        "Coverage is historical and does not establish current-market accuracy."
+      ]
+    }
+  ]
+}

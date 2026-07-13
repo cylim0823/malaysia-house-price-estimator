@@ -16,7 +16,7 @@ python scripts/process_aggregate_transactions.py
 - Unweighted test MAE: RM64,764.81
 - Transaction-weighted test MAE: RM36,676.57
 - Transaction-weighted RMSE: RM69,133.96
-- SHA-256: `7EC8CE8AF4A50B726B0A5543C28F45655CA3CA195426CB1B9DF22A74036FB453`
+- SHA-256: `3620E5B736812D625FE397F2238CAB06AC66F892BF76E7ADD047638DCC700A0C`
 
 Only one year is available, so this is a provisional aggregate baseline—not a
 current forecast, advanced model, or individual-property estimator.
@@ -43,7 +43,7 @@ python scripts/train_regional_terraced.py
 
 These metrics describe published regional averages, not individual-property accuracy.
 
-## Penang district transaction model
+## Legacy Penang district transaction model
 
 `real/penang_district_bundle.pkl` is trained reproducibly with:
 
@@ -60,7 +60,7 @@ python scripts/train_penang_district.py
 - Log-target ridge comparison MAE: RM79,520.97
 - SHA-256: `162074FE474103D331004DE47EEE1ADB372F0C1A2C473AC2BC55EA506597E0BC`
 
-The simple baseline was selected because it outperformed ridge regression on the untouched quarter.
+The simple baseline was selected because it outperformed ridge regression on the untouched quarter. It remains reproducible for historical comparison and pickle compatibility, but the application and new dataset onboarding use the generic aggregate bundle instead.
 
 ## Official historical-average model
 

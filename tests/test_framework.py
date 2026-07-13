@@ -16,7 +16,7 @@ from house_price_estimator.outliers import detect_outliers
 from house_price_estimator.prediction import PredictionService
 from house_price_estimator.schema import PriceType, RawRecord, State
 from house_price_estimator.splitting import split_records
-from house_price_estimator.synthetic import SYNTHETIC_LABEL, generate_synthetic_records
+from house_price_estimator.synthetic_data import SYNTHETIC_LABEL, generate_synthetic_records
 from house_price_estimator.workflow import prepare, train_demo
 from house_price_estimator.config import ProjectConfig
 
@@ -145,7 +145,7 @@ class EndToEndTests(unittest.TestCase):
             "data/external/napic/all_houses_by_state.xlsx":"4f492c97174ef4d437b9785ede7b290a9020fe55d51292c0a3b3aede69e1f371",
             "data/external/penang/residential_transaction_counts_2017.csv":"be4dcbe8d39e6e9d2b1f49b4023765033fe81036bb52e14d01172f289f22a05f",
             "models/demo/demo_bundle.pkl":"e67df7fd53da6fd42199e9130457d0a6de6cccefc8e08c6c18fa01e6831c1739",
-            "models/real/aggregate_transaction_bundle.pkl":"7ec8ce8af4a50b726b0a5543c28f45655ca3ca195426cb1b9df22a74036fb453",
+            "models/real/aggregate_transaction_bundle.pkl":"3620e5b736812d625fe397f2238cab06ac66f892bf76e7add047638dcc700a0c",
             "models/real/regional_area_bundle.pkl":"bb697ab6e46aa94590411dc50765ec0a5b95c0f6804509a8267726ad384ad87d",
         }
         for relative,checksum in expected.items():
@@ -174,7 +174,7 @@ class EndToEndTests(unittest.TestCase):
             "Published regional historical averages"
         ).run()
         next(item for item in app.selectbox if item.label == "State or federal territory").select("Selangor").run()
-        next(item for item in app.button if item.label == "Show historical regional average").click().run()
+        next(item for item in app.button if item.label == "Show historical quarterly average").click().run()
         self.assertFalse(app.exception)
         self.assertGreaterEqual(len(app.metric), 2)
 

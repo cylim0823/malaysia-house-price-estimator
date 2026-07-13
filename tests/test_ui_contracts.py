@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from house_price_estimator.aggregate_transactions import AggregateTransactionBundle
+from house_price_estimator.data_pipeline import AggregateTransactionBundle
 from house_price_estimator.ui_contracts import (
     AGGREGATE_PREDICTION_FIELDS,
     INDIVIDUAL_PROPERTY_FIELDS,

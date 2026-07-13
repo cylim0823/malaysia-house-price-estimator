@@ -13,7 +13,7 @@
     "transaction_value_rm"
   ],
   "sample_weight": "transaction_count",
-  "temporal_limitation": "Only 2017 is available. Q1-Q3 to Q4 evaluation is provisional and does not validate current or multi-year forecasting.",
+  "temporal_limitation": "Latest-period evaluation is provisional and does not validate current-market or multi-year forecasting without suitable temporal coverage.",
   "split_strategy": "train_2017_q1_q3_test_2017_q4",
   "train_aggregate_rows": 158,
   "train_transactions": 8646,

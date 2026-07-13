@@ -5,7 +5,9 @@ from typing import Any
 import numpy as np
 from .bundle import PredictionBundle
 from .cleaning.normalization import normalize_property_type,normalize_state
-from .synthetic import SYNTHETIC_LABEL
+from .synthetic_data import SYNTHETIC_LABEL
+from .data_sources import DatasetMetadata
+from .location_catalog import CoverageCatalog
 
 @dataclass(frozen=True)
 class PredictionResult:
@@ -36,3 +38,82 @@ class PredictionService:
           ("Educational estimate; not an official valuation.","Coverage and error bands require validation with licensed real data."),
           {"model_version":self.bundle.model_version,"dataset_version":self.bundle.dataset_version,"schema_version":self.bundle.schema_version},
           ("built_up_sqft","state","district","property_type"),SYNTHETIC_LABEL if self.bundle.is_synthetic else None)
+
+
+@dataclass(frozen=True)
+class HistoricalResult:
+    """Source-neutral result returned by every historical explorer."""
+
+    observed_average_price_rm: float
+    model_estimate_rm: float | None
+    lower_rm: float | None
+    upper_rm: float | None
+    transaction_count: int | None
+    volume_support: str | None
+    public_prediction_supported: bool
+    nearby_periods: tuple[dict[str, Any], ...]
+    model_name: str
+    dataset_version: str
+
+
+class HistoricalExplorer:
+    """Reusable selectors and prediction interface for historical datasets."""
+
+    def __init__(self, metadata: DatasetMetadata, bundle: Any) -> None:
+        self.metadata = metadata
+        self.bundle = bundle
+        self.coverage = CoverageCatalog.from_observation_keys(bundle.observations)
+
+    def predict(
+        self,
+        *,
+        state: str,
+        area: str,
+        property_type: str,
+        year: int,
+        quarter: int,
+    ) -> HistoricalResult:
+        if quarter not in self.coverage.quarters(state, area, property_type, year):
+            raise ValueError("Unsupported historical combination")
+        if self.metadata.model_kind == "aggregate_transactions":
+            raw = self.bundle.predict(
+                state=state,
+                district=area,
+                property_type=property_type,
+                year=year,
+                quarter=quarter,
+            )
+            estimate = raw["estimated_average_price_rm"]
+            return HistoricalResult(
+                observed_average_price_rm=float(raw["observed_average_price_rm"]),
+                model_estimate_rm=float(estimate) if estimate is not None else None,
+                lower_rm=None,
+                upper_rm=None,
+                transaction_count=int(raw["transaction_count"]),
+                volume_support=str(raw["volume_support"]),
+                public_prediction_supported=bool(raw["public_prediction_supported"]),
+                nearby_periods=tuple(raw["nearby_historical_quarters"]),
+                model_name=str(raw["baseline_used"]),
+                dataset_version=str(raw["dataset_version"]),
+            )
+        if self.metadata.model_kind == "published_averages":
+            raw = self.bundle.predict(
+                state=state,
+                area=area,
+                property_type=property_type,
+                year=year,
+                quarter=quarter,
+            )
+            return HistoricalResult(
+                observed_average_price_rm=float(raw["observed_average"]),
+                model_estimate_rm=float(raw["model_estimate"]),
+                lower_rm=float(raw["lower"]),
+                upper_rm=float(raw["upper"]),
+                transaction_count=None,
+                volume_support=None,
+                public_prediction_supported=True,
+                nearby_periods=(),
+                model_name=str(self.bundle.selected_model),
+                dataset_version=str(self.bundle.dataset_version),
+            )
+        raise ValueError(f"Unsupported historical model kind: {self.metadata.model_kind}")

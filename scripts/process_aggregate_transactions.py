@@ -1,4 +1,4 @@
-"""Preserve, validate, report, and train the Penang aggregate transaction data."""
+"""Preserve, validate, report, and train a configured aggregate dataset."""
 from __future__ import annotations
 
 import hashlib
@@ -10,18 +10,12 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from house_price_estimator.aggregate_transactions import (  # noqa: E402
-    COLLECTED_AT,
-    DATASET_VERSION,
+from house_price_estimator.data_pipeline import (  # noqa: E402
     SCHEMA_VERSION,
-    SOURCE_DOCUMENT,
-    SOURCE_NAME,
-    SOURCE_TABLE,
-    SOURCE_URL,
-    SOURCE_VALUE_URL,
     load_and_validate_aggregate_csv,
     train_aggregate_baselines,
 )
+from house_price_estimator.data_sources import load_dataset_metadata  # noqa: E402
 
 
 def _sha256(path: Path) -> str:
@@ -33,6 +27,8 @@ def _sha256(path: Path) -> str:
 
 
 def main() -> None:
+    catalog = load_dataset_metadata(ROOT / "data" / "processed" / "dataset_catalog.json")
+    source = next(item for item in catalog if item.model_kind == "aggregate_transactions")
     imported = (
         ROOT
         / "data"
@@ -52,23 +48,36 @@ def main() -> None:
         "original_filename": imported.name,
         "file_size_bytes": raw_path.stat().st_size,
         "sha256": _sha256(raw_path),
-        "import_date": COLLECTED_AT,
-        "source_name": SOURCE_NAME,
-        "source_url": SOURCE_URL,
-        "source_urls": [SOURCE_URL, SOURCE_VALUE_URL],
-        "source_document": SOURCE_DOCUMENT,
-        "source_page_or_table": SOURCE_TABLE,
-        "licence": "Creative Commons Attribution (catalogue label)",
-        "price_type": "completed_transaction_average",
-        "schema_version": SCHEMA_VERSION,
-        "dataset_version": DATASET_VERSION,
+        "import_date": "2026-07-13",
+        "source_name": source.source_name,
+        "source_url": source.source_urls[0],
+        "source_urls": list(source.source_urls),
+        "source_document": source.source_documents[0],
+        "source_page_or_table": "Quarter/property-type/district tables",
+        "licence": source.licence_status,
+        "price_type": source.price_type,
+        "schema_version": source.schema_version,
+        "dataset_version": source.dataset_version,
         "row_meaning": "One aggregate state-district-property-type-year-quarter group",
     }
     (raw_dir / "metadata.json").write_text(
         json.dumps(metadata, indent=2), encoding="utf-8"
     )
 
-    result = load_and_validate_aggregate_csv(raw_path)
+    result = load_and_validate_aggregate_csv(
+        raw_path,
+        metadata={
+            "source_name": source.source_name,
+            "source_dataset": source.dataset_id,
+            "source_url": source.source_urls[0],
+            "source_document": source.source_documents[0],
+            "source_page": None,
+            "source_page_or_table": "Quarter/property-type/district tables",
+            "collected_at": metadata["import_date"],
+            "dataset_version": source.dataset_version,
+            "schema_version": source.schema_version,
+        },
+    )
     processed_dir = ROOT / "data" / "processed" / "aggregate_transactions"
     processed_dir.mkdir(parents=True, exist_ok=True)
     processed_path = processed_dir / "penang_aggregate_transactions_v1.csv"
@@ -82,7 +91,7 @@ def main() -> None:
         json.dumps(result.quality_report, indent=2), encoding="utf-8"
     )
     eda = {
-        "dataset_version": DATASET_VERSION,
+        "dataset_version": source.dataset_version,
         "row_meaning": "aggregate group, not an individual property transaction",
         "aggregate_rows": result.quality_report["aggregate_row_count"],
         "transactions_represented": result.quality_report["sum_of_transaction_count"],
