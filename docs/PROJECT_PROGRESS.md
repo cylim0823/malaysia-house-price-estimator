@@ -57,7 +57,7 @@ Last updated: 13 July 2026
 - Files modified: `README.md`, `ROADMAP.md`, `app/streamlit_app.py`, the NAPIC source README, architecture/source/blocker documentation, and this progress log.
 - Tests performed: focused `unittest` module, full `unittest` discovery, Python byte-code compilation, deterministic retraining, source checksum, and `git diff --check`.
 - Test results: 41/41 tests passed. The 2018 Q1-Q2 holdout contains 120 rows; selected location/property median MAE is RM19,397.46, RMSE RM29,576.51, and RÂ² 0.9782. Log ridge MAE is RM20,507.33.
-- Commit identifier: pending local commit.
+- Commit identifier: `aa7a8bb` (`feat: expand regional property training data`).
 - Remaining limitations: published averages are historical aggregates without individual-home attributes. High-rise coverage is partial; Putrajaya and Labuan have no verified price observations. The model is not a current or individual-property valuation.
 - Dependencies: Creative Commons Attribution JPPH terraced and high-rise workbooks from Malaysia's archived government open-data catalogue.
 - Blockers: nationwide property-level training still requires a licensed record-level dataset; no listing scraper is approved.
