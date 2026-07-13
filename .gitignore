@@ -18,3 +18,4 @@ models/*
 !models/demo_bundle.pkl
 !models/README.md
 reports/generated/*
+/malaysia-house-price-estimator/
